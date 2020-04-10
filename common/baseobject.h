@@ -1,0 +1,143 @@
+#ifndef BASEOBJECT_H
+#define BASEOBJECT_H
+
+
+#include <QObject>
+#include <QMap>
+#include <QVariant>
+#include <QVector>
+#include <QPointer>
+
+#include "mvp_enums.h"
+#include "libshared_global.h"
+#include "listobjstr.h"
+
+#define SETPROP(n) if(n!=p){n=p;emit propertyChanged(this);}
+#define SETGETPROP(type,n) void set##n(type p){if(F##n!=p){F##n=p;emit propertyChanged(this);}} \
+                           type n(){return F##n;}
+#define MYPROP(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true ) \
+                       protected: \
+                       type F##n; \
+                       public: \
+                       void set##n(const type &p){ \
+                            if(F##n!=p){ \
+                                F##n=p; \
+                                doPropertyChanged();}} \
+                       const type &n()const  {return F##n;}
+
+#define MYSTATE(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true STORED false) \
+                       protected: \
+                       type F##n; \
+                       public: \
+                       void set##n(const type &p){ \
+                            if(F##n!=p){ \
+                                F##n=p; \
+                                doStateChanged();}} \
+                       const type &n()const {return F##n;}
+#define MYSTATES(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true STORED false) \
+                       protected: \
+                       type F##n; \
+                       public: \
+                       void set##n(const type &p); \
+                       const type &n()const {return F##n;}
+
+
+
+QString objectId2Str(const quint64 &id);
+quint64 str2objectId(const QString &s);
+
+// Базовый объект :
+// основа всей библиотеки классов
+// имеет ID - уникальный всегда
+// IDSTR для использования в скриптах - уникальный в группе
+// имеет свойства - сохраняются и загружаются
+// и состояния - не сохраняются
+// обмен с внешним миром через SignalDescription
+// должен однозначно определять свое сотояние функцией updateStates()
+
+
+class LIBSHARED_EXPORT BaseObject : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(quint64 ID READ id WRITE setid DESIGNABLE true)
+    Q_PROPERTY(QString  IDSTR READ idstr WRITE setidstr DESIGNABLE true)
+    Q_PROPERTY(QString  TYPENAME READ TYPENAME DESIGNABLE true STORED false)
+
+
+public:
+
+    explicit BaseObject(QObject *parent = nullptr);
+    virtual ~BaseObject(){}
+    QString TYPENAME() const {return metaObject()->className();}
+    // уникальный везде, основа для линков
+    void setid(const quint64 &otherId){FId=quint64(otherId);}
+    const quint64 &id() const {return FId;}
+
+    // допольнительный ID строковой
+    virtual void setidstr(QString p){SETPROP(Fidstr);}
+    virtual QString  idstr() const {return Fidstr;}
+
+    virtual bool isCanAddObject(QObject *O) const {Q_UNUSED(O);return false;}
+    virtual void addObject(QObject *O) {O->setParent(this);}
+
+    // определяет сохранять или нет
+    virtual bool isStoredXML() const{return true;}
+    // восстановление параметров после загрузки(линки)
+    virtual void updateAfterLoad();
+    // самопроверка
+    virtual void validation(ListObjStr *l) const {Q_UNUSED(l);}
+
+    void setPropertyChanged(bool p){FisPropertyChanged=p;}
+    bool isPropertyChanged() const {return FisPropertyChanged;}
+    void setStateChanged(bool p){FisStateChanged=p;}
+    bool isStateChanged() const {return FisStateChanged;}
+    void setStateChangedEmit(bool p){FisStateChangedEmit=p;}
+    void emitPropertyChanged(){emit propertyChanged(this);}
+    void emitStateChanged(){emit stateChanged(this);}
+    virtual void resetStates();
+
+    void setTag(int key, QVariant val);
+    QVariant getTag(int key) const;
+
+    void addTagObject(QObject *ob,int key=0);
+    void delTagObject(QObject *ob);
+    QObjectList tagObjects() const;
+    QObject* tagObject(int key) const;
+
+    bool disableUpdateStates=false;
+    virtual void updateStates(); // основной жизненный цикл
+
+
+public slots:
+
+
+
+protected:
+    quint64 FId;
+    QString Fidstr;
+    QVector<QPointer<QObject> >vTagObjects;
+    QMap<int,QPointer<QObject>> mTagObjects;
+
+    bool FisPropertyChanged;
+    bool FisStateChanged;
+    bool FisStateChangedEmit;
+
+    virtual void doPropertyChanged();
+    virtual void doStateChanged();
+    void validationEmptySignals(ListObjStr *l) const;
+    void validationEmptyLinks(ListObjStr *l) const;
+
+    QMap<int,QVariant> mTags;
+
+signals:
+    void propertyChanged(QObject *O);
+    void stateChanged(QObject *O);
+
+
+};
+
+
+
+
+
+#endif // BASEOBJECT_H

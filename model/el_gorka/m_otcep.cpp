@@ -17,7 +17,14 @@ void m_Otcep::setSTATE_LOCATION(const TOtcepLocation &p)
 int m_Otcep::STATE_SP() const
 {
     if (FSTATE_MAR==0) return 0;
-    return otceps->mSP2MAR[FSTATE_MAR];
+    if (otceps->mMAR2SP.contains(FSTATE_MAR)) return otceps->mMAR2SP[FSTATE_MAR];
+    return 0;
+}
+
+void m_Otcep::setSTATE_SP(int p)
+{
+    if (otceps->mSP2MAR.contains(p)) setSTATE_MAR(otceps->mSP2MAR[p]);else
+    setSTATE_MAR(0);
 }
 
 m_Otcep::m_Otcep(m_Otceps *parent,int num) : m_Base(parent)
@@ -96,11 +103,31 @@ void m_Otcep::resetStates()
 
 }
 
+void m_Otcep::acceptStaticData(m_Otcep *o)
+{
+    FSTATE_LOCATION=o->STATE_LOCATION();
+    FSTATE_MAR=o->STATE_MAR();
+    FSTATE_VAGON_CNT=o->STATE_VAGON_CNT();
+    FSTATE_OSY_CNT=o->STATE_SL_OSY_CNT();
+    FSTATE_VES=o->STATE_VES();
+    //FSTATE_BAZA=o->STATE_BAZA();
+    FSTATE_LEN=o->STATE_LEN();
+
+    FSTATE_SL_VAGON_CNT=o->STATE_SL_VAGON_CNT();
+    FSTATE_SL_OSY_CNT=o->STATE_SL_OSY_CNT();
+    FSTATE_SL_VES=o->STATE_SL_VES();
+    FSTATE_SL_BAZA=o->STATE_SL_BAZA();
+
+    vVag.clear();
+    vVag=o->vVag;
+}
+
 void m_Otcep::updateAfterLoad()
 {
     FSIGNAL_ADDR.acceptGtBuffer();
     connect(FSIGNAL_ADDR.getBuffer(),&GtBuffer::bufferChanged,this,&m_Otcep::slotChanged);
 }
+
 
 
 void m_Otcep::setLenByVagon()
@@ -155,7 +182,7 @@ void m_Otcep::updateStates()
         if (FSTATE_33) return ;
 
 
-        t_Descr *Descr=(t_Descr *)FSIGNAL_ADDR.value_data(sizeof(t_Descr));
+        const t_Descr *Descr=(const t_Descr *)FSIGNAL_ADDR.value_data(sizeof(t_Descr));
         if (Descr==nullptr){
             setSTATE_ENABLED(false);
             return ;
@@ -234,9 +261,12 @@ void m_Otcep::updateStates()
             descr_RCF=otceps->find_RC(Descr->end-1);
 
             if ((RCS!=descr_RCS)||(RCF!=descr_RCF)) {
+
                 RCS=descr_RCS;
                 RCF=descr_RCF;
                 setBusyRC();
+
+                if ((RCF!=nullptr)&&( RCF->metaObject()->className()==qPrintable("m_RC_Gor_ZKR"))) FSTATE_ZKR_PROGRESS=true; else FSTATE_ZKR_PROGRESS=false;
             }
             doStateChanged();
         }

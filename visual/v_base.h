@@ -4,15 +4,21 @@
 #include <QRectF>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+
 #include "proxygraphicsitem.h"
 
 #include "externflags.h"
 #include "signaldescription.h"
 #include "mcolorpalette.h"
-#include "groupbaseobjects.h"
+
+#include "baseobject.h"
+
 #include "visualgrouppropertyes.h"
 
+
 class Visual_Screen;
+
+
 
 
 #define MYPROPS(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true ) \
@@ -37,7 +43,7 @@ class Visual_Screen;
 
 
 
-class LIBSHARED_EXPORT v_Base : public GroupBaseObjects
+class LIBSHARED_EXPORT v_Base : public BaseObject
 {
     Q_OBJECT
     Q_FLAGS(TExtStates)
@@ -204,14 +210,12 @@ protected:
     QPainterPath _shape;
 
     virtual void doPropertyChanged(){
-        FisPropertyChanged=true;
         prepareGeometryChange();
         calculateGeometry();
         emit propertyChanged(this);
         emit geometryChange(this);
     }
     virtual void doStateChanged(){
-        FisStateChanged=true;
         prepareGeometryChange();
         calculateGeometry();
         update();

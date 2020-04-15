@@ -16,7 +16,7 @@ public:
     ObjectLink TARGET() const {return FTARGET;}
     void setTARGET(ObjectLink p);
 public:
-    Q_INVOKABLE v_Strel_A_Indicator(v_Base *parent = 0);
+    Q_INVOKABLE v_Strel_A_Indicator(v_Base *parent = nullptr);
     virtual ~v_Strel_A_Indicator(){}
     virtual void updateAfterLoad();
     virtual void calculateGeometry(); // перестраивает внтренние координаты

@@ -109,7 +109,6 @@ QVariant v_Model::modelProperty(const QString &propertyName) const
 void v_Model::updateStates()
 {
     v_Base::updateStates();
-    updateStatesFromModel();
 
 }
 
@@ -178,6 +177,16 @@ bool v_Model::isNotAccepted33(QColor &clrB)
         return true;
     }
     return false;
+}
+
+bool v_Model::modelStateChanged()
+{
+    m_Base *M=modelObject();
+    if (!M) return false;
+    if (M->stateChangedCount()!=_modelStateChangedCount){
+        _modelStateChangedCount=M->stateChangedCount();
+        return true;
+    }
 }
 
 bool v_Model::modelPropertyBool(QString propertyName, bool defaultValue) const

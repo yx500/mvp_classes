@@ -11,7 +11,7 @@
 #include "v_model.h"
 #include <qmath.h>
 
-#include "groupbaseobjects.h"
+#include "BaseObject.h"
 #include "baseobjecttools.h"
 #include "mcolorpalette.h"
 
@@ -266,18 +266,16 @@ void MVP_Scene::slotAnimate()
 
 void MVP_Scene::slotUpdateState()
 {
-//    // обновляем свойства от моделей
-//    // медленное обновление на случай не отрабатывания увязки модель-> отображение
+    // обновляем свойства от моделей
+    // медленное обновление на случай не отрабатывания увязки модель-> отображение
 
-//    foreach (QGraphicsItem *item,items()){
-//        ProxyGraphicsItem * PV=qgraphicsitem_cast<ProxyGraphicsItem *>(item);
-//        if (PV){
-//            v_Base* v=PV->getvBase();
-//            if (v) v->updateStates();
-//            v_Model * vm=qobject_cast<v_Model *>(v);
-//            if (vm) vm->updateStatesFromModel();
-//        }
-//     }
+    foreach (QGraphicsItem *item,items()){
+        ProxyGraphicsItem * PV=qgraphicsitem_cast<ProxyGraphicsItem *>(item);
+        if (PV){
+            v_Model * vm=qobject_cast<v_Model *>(PV->getvBase());
+            if (vm) vm->updateStatesFromModel();
+        }
+     }
 }
 
 

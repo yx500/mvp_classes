@@ -11,17 +11,14 @@ REGISTERPROPERTY(m_Strel_Gor_Y,SIGNAL_A,"СИГНАЛ АВТОМАТ","Сигн�
 m_Strel_Gor_Y::m_Strel_Gor_Y(QObject *parent) : m_Strel_Gor(parent)
 {
     FSIGNAL_PRP.clear();FSIGNAL_PRM.clear();FSIGNAL_A.clear();
-    FSIGNAL_UVK_PRP.clear();FSIGNAL_UVK_PRM.clear();
+    FSIGNAL_UVK_PRP.clear();FSIGNAL_UVK_PRM.clear();FSIGNAL_UVK_AV.clear();
     FTU_PRP=0;FTU_PRM=0;FNEGAB_RC_CNT_P=0;FNEGAB_RC_CNT_M=0;
     FIPD.clear();
     FRTDS.clear();
 
-    FSTATE_PRP=false;
-    FSTATE_PRM=false;
-    FSTATE_A=false;
-    FSTATE_NEGAB_RC=false;
     ipd=nullptr;
     rtds=nullptr;
+    resetStates();
 }
 
 void m_Strel_Gor_Y::validation(ListObjStr *l) const
@@ -71,6 +68,7 @@ void m_Strel_Gor_Y::resetStates()
     FSTATE_NEGAB_RC=false;
     FSTATE_UVK_PRP=false;
     FSTATE_UVK_PRM=false;
+    FSTATE_UVK_AV=false;
 }
 
 
@@ -94,7 +92,8 @@ void m_Strel_Gor_Y::updateStates()
         if ((rc)&&(rc->STATE_BUSY()!=MVP_Enums::TRCBusy::free)) {bNEGAB_RC=true;break;}
     }
     setSTATE_NEGAB_RC(bNEGAB_RC);
-    setSTATE_UVK_PRP(FSIGNAL_UVK_PRP.value_1bit());
-    setSTATE_UVK_PRM(FSIGNAL_UVK_PRM.value_1bit());
+    setSignalState(FSIGNAL_UVK_PRP,FSTATE_UVK_PRP);
+    setSignalState(FSIGNAL_UVK_PRM,FSTATE_UVK_PRM);
+    setSignalState(FSIGNAL_UVK_AV,FSTATE_UVK_AV);
 }
 

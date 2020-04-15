@@ -7,8 +7,8 @@ REGISTERELEMENT(m_RC_Gor_ZKR,"РЦ ЗКР","MODEL ГОРКА")
 
 m_RC_Gor_ZKR::m_RC_Gor_ZKR(QObject *parent) : m_RC_Gor(parent)
 {
-    controllerARSNadvig=0;
-    svetZKR=0;
+    controllerARSNadvig=nullptr;
+    svetZKR=nullptr;
     FPUTNADVIG=0;
     FSIGNAL_ROSPUSK.clear();
     FSIGNAL_STATE.clear();
@@ -19,8 +19,10 @@ m_RC_Gor_ZKR::m_RC_Gor_ZKR(QObject *parent) : m_RC_Gor(parent)
 void m_RC_Gor_ZKR::resetStates()
 {
     m_RC_Gor::resetStates();
-    FSTATE_ERROR=0;
+    FSTATE_ERROR=false;
+    FSTATE_ROSPUSK=false;
 }
+
 
 
 

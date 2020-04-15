@@ -14,7 +14,6 @@ v_Otcep::v_Otcep(QObject *parent) : v_Model(parent)
     direct=MVP_Enums::left2right;
     setZValue(30);
     setVisible(false);
-    FIDS_RC_BUSY.clear();
 }
 
 void v_Otcep::setModelObject(BaseObject *B)
@@ -30,114 +29,13 @@ void v_Otcep::validation(ListObjStr *l) const
 
 void v_Otcep::resetStates()
 {
-    FIDS_RC_BUSY.clear();
 }
 
 void v_Otcep::updateStates()
 {
     v_Model::updateStates();
 
-    if (FIDS_RC_BUSY.isEmpty()){
-        setVisible(false);
-        return;
-    }
 
-    number=0;
-    if (mOtcep) {
-        number=mOtcep->NUM();
-        if (mOtcep->STATE_LOCATION()==m_Otcep::locationUnknow){
-            setVisible(false);
-            return;
-        }
-        color=Qt::white;
-        if ((mOtcep->STATE_ERROR()!=0)) color=Qt::red;
-    }
-
-    // находим РЦ
-
-    target=nullptr;
-    targetLine.clear();
-    if (mOtcep){
-        foreach (m_RC * mrc,mOtcep->vBusyRc){
-            v_RC*vrc=(qobject_cast<v_Otceps*>(parent()))->m_RC2v_RCV(mrc);
-            if (vrc!=nullptr){
-                if (target==nullptr) target=vrc;
-                QPolygonF vrc_centreLine=vrc->centreLine();
-                QPFunction::sortByX(vrc_centreLine,MVP_Enums::left2right);
-                if ((mrc==mOtcep->RCS) && (mOtcep->RCS==mOtcep->RCF)) {
-                    qreal p1=1;
-                    qreal p2=1;
-                    if ((mrc->LEN()>0)&&(mOtcep->STATE_RCS_XOFFSET()>0)&&(mOtcep->STATE_RCF_XOFFSET()>0)) {
-                        p1=1.*mOtcep->STATE_RCS_XOFFSET()/mrc->LEN();
-                        p2=1.*mOtcep->STATE_RCF_XOFFSET()/mrc->LEN();
-                    }
-                    if (p1>1) p1=1;
-                    if (p2>1) p2=1;
-                    if (p1<p2) p1=p2;
-                    if (vrc->DIRECT_D0()==MVP_Enums::left2right)
-                        vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, p1, p2); else
-                        vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 1-p1, 1-p2);
-                } else
-                    if (mrc==mOtcep->RCS){
-                        qreal p=1;
-                        if ((mrc->LEN()>0)&&(mOtcep->STATE_RCS_XOFFSET()>0)) p=1.*mOtcep->STATE_RCS_XOFFSET()/mrc->LEN();
-                        if (p>1) p=1;
-                        if (vrc->DIRECT_D0()==MVP_Enums::left2right)
-                            vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 0, p); else
-                            vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 1-p, 1);
-                    } else
-                        if (mrc==mOtcep->RCF){
-                            qreal p=1;
-                            if ((mrc->LEN()>0) &&(mOtcep->STATE_RCF_XOFFSET()>0))p=1.*mOtcep->STATE_RCF_XOFFSET()/mrc->LEN();
-                            if (p>1) p=1;
-                            if (vrc->DIRECT_D0()==MVP_Enums::left2right)
-                                vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, p, 1); else
-                                vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 0, 1-p);
-                        }
-                foreach (QPointF targetP, vrc_centreLine) {
-                    if (screen())
-                        targetP=vrc-> getProxyGraphicsItem()->mapToItem(screen()->getProxyGraphicsItem(),targetP);
-                    if (targetLine.indexOf(targetP)<0)
-                        targetLine.push_back(targetP);
-                }
-            }
-        }
-    } /*else {
-        QStringList lIDS_RC_BUSY=FIDS_RC_BUSY.split(';');
-        if (!lIDS_RC_BUSY.isEmpty()){
-            QString ids1=lIDS_RC_BUSY.first();
-            quint64 id1=str2objectId(ids1);
-            if (id1!=0) {
-                foreach (QString ids, lIDS_RC_BUSY) {
-                    quint64 id=str2objectId(ids);
-                    foreach (v_RC *vrc, lRC) {
-                        if ((vrc->modelObject())&&(vrc->modelObject()->id()==id1)){
-                            target=vrc;
-                        }
-                        if ((vrc->modelObject())&&(vrc->modelObject()->id()==id)){
-                            QPolygonF vrc_centreLine=vrc->centreLine();
-                            foreach (QPointF targetP, vrc_centreLine) {
-                                if (screen())
-                                    targetP=vrc->getProxyGraphicsItem()->mapToItem(screen()->getProxyGraphicsItem(),targetP);
-                                if (targetLine.indexOf(targetP)<0)
-                                    targetLine.push_back(targetP);
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-    }*/
-
-    //QPFunction::sortByX(targetLine,MVP_Enums::left2right);
-
-    if (target){
-        setVisible(true);
-        calculateGeometry();
-    } else {
-        setVisible(false);
-    }
 }
 
 void v_Otcep::calculateGeometry()
@@ -203,13 +101,6 @@ void v_Otcep::calculateGeometry()
     _boundingRect=R.united(PP.boundingRect());
 }
 
-void v_Otcep::slotModelStateChanged(QObject *)
-{
-    updateStatesFromModel();
-    updateStates();
-    update();
-}
-
 void v_Otcep::d_paint(QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
     QBrush B=QBrush(color);
@@ -233,5 +124,72 @@ void v_Otcep::d_paint(QPainter *painter, const QStyleOptionGraphicsItem *option)
 void v_Otcep::updateStatesFromModel()
 {
     v_Model::updateStatesFromModel();
-    setIDS_RC_BUSY(modelPropertyesStr("IDS_RC_BUSY",""));
+    number=0;
+    if (mOtcep) {
+        number=mOtcep->NUM();
+        if (mOtcep->STATE_LOCATION()==m_Otcep::locationUnknow){
+            setVisible(false);
+            return;
+        }
+        color=Qt::white;
+        if ((mOtcep->STATE_ERROR()!=0)) color=Qt::red;
+    }
+
+    // находим РЦ
+
+    target=nullptr;
+    targetLine.clear();
+    if (mOtcep){
+        foreach (m_RC * mrc,mOtcep->vBusyRc){
+            v_RC*vrc=(qobject_cast<v_Otceps*>(parent()))->m_RC2v_RCV(mrc);
+            if (vrc!=nullptr){
+                if (target==nullptr) target=vrc;
+                QPolygonF vrc_centreLine=vrc->centreLine();
+                QPFunction::sortByX(vrc_centreLine,MVP_Enums::left2right);
+                if ((mrc==mOtcep->RCS) && (mOtcep->RCS==mOtcep->RCF)) {
+                    qreal p1=1;
+                    qreal p2=1;
+                    if ((mrc->LEN()>0)&&(mOtcep->STATE_RCS_XOFFSET()>0)&&(mOtcep->STATE_RCF_XOFFSET()>0)) {
+                        p1=1.*mOtcep->STATE_RCS_XOFFSET()/mrc->LEN();
+                        p2=1.*mOtcep->STATE_RCF_XOFFSET()/mrc->LEN();
+                    }
+                    if (p1>1) p1=1;
+                    if (p2>1) p2=1;
+                    if (p1<p2) p1=p2;
+                    if (vrc->DIRECT_D0()==MVP_Enums::left2right)
+                        vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, p1, p2); else
+                        vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 1-p1, 1-p2);
+                } else
+                    if (mrc==mOtcep->RCS){
+                        qreal p=1;
+                        if ((mrc->LEN()>0)&&(mOtcep->STATE_RCS_XOFFSET()>0)) p=1.*mOtcep->STATE_RCS_XOFFSET()/mrc->LEN();
+                        if (p>1) p=1;
+                        if (vrc->DIRECT_D0()==MVP_Enums::left2right)
+                            vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 0, p); else
+                            vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 1-p, 1);
+                    } else
+                        if (mrc==mOtcep->RCF){
+                            qreal p=1;
+                            if ((mrc->LEN()>0) &&(mOtcep->STATE_RCF_XOFFSET()>0))p=1.*mOtcep->STATE_RCF_XOFFSET()/mrc->LEN();
+                            if (p>1) p=1;
+                            if (vrc->DIRECT_D0()==MVP_Enums::left2right)
+                                vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, p, 1); else
+                                vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 0, 1-p);
+                        }
+                foreach (QPointF targetP, vrc_centreLine) {
+                    if (screen())
+                        targetP=vrc-> getProxyGraphicsItem()->mapToItem(screen()->getProxyGraphicsItem(),targetP);
+                    if (targetLine.indexOf(targetP)<0)
+                        targetLine.push_back(targetP);
+                }
+            }
+        }
+    }
+
+    if (target){
+        setVisible(true);
+        calculateGeometry();
+    } else {
+        setVisible(false);
+    }
 }

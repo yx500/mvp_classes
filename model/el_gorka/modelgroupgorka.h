@@ -17,10 +17,10 @@ class LIBSHARED_EXPORT ModelGroupGorka : public ModelRootGroup
 
 public:
     enum RegimRospusk{
-        regimUnknow=0,
-        regimRospusk,
-        regimPausa,
-        regimStop
+        regimUnknow=-1,
+        regimRospusk=1,
+        regimPausa=2,
+        regimStop=0
     };
 
     MYPROP(SignalDescription,SIGNAL_ROSPUSK)

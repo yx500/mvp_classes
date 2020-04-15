@@ -21,9 +21,7 @@ BaseObject::BaseObject(QObject *parent) :
 {
     FId=0;
     Fidstr.clear();
-    FisPropertyChanged=false;
-    FisStateChanged=false;
-    FisStateChangedEmit=true;
+    xmlFile.clear();
 }
 
 
@@ -66,12 +64,19 @@ void BaseObject::updateStates()
     if (disableUpdateStates) return;
     foreach (QObject *O, children()) {
         auto B=qobject_cast<BaseObject*>(O);
-        if ((B!=nullptr) && (!B->disableUpdateStates)) B->updateStates();
+        if ((B!=nullptr) && (!B->disableUpdateStates))
+        {
+            B->_prepare_updateStates();
+            B->updateStates();
+            B->_emit_after();
+        }
     }
+
 }
 
 void BaseObject::resetStates()
 {
+    _stateChangedCount=0;
     QList<BaseObject*> l=findChildren<BaseObject*>(QString(),Qt::FindDirectChildrenOnly);
     foreach (BaseObject*B, l) {
         B->resetStates();
@@ -79,13 +84,13 @@ void BaseObject::resetStates()
 }
 
 void BaseObject::doPropertyChanged(){
-    FisPropertyChanged=true;
     emit propertyChanged(this);
 }
 void BaseObject::doStateChanged(){
-    FisStateChanged=true;
-    if (FisStateChangedEmit)
-        emit stateChanged(this);
+    _stateChangedCount++;
+    if (onlyOneEmitEnabled)
+            stateChangedEmit=true; else
+            emit stateChanged(this);
 }
 
 
@@ -125,6 +130,19 @@ void BaseObject::validationEmptyLinks(ListObjStr *l) const
             }
         }
     }
+}
+
+void BaseObject::_prepare_updateStates()
+{
+    onlyOneEmitEnabled=true;
+    stateChangedEmit=false;
+}
+
+void BaseObject::_emit_after()
+{
+    if (stateChangedEmit) emit stateChanged(this);
+    onlyOneEmitEnabled=false;
+    stateChangedEmit=false;
 }
 
 void BaseObject::addTagObject(QObject *ob,int key)

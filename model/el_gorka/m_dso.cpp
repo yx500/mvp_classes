@@ -4,12 +4,7 @@
 #include <QDebug>
 #include "mvp_objectfactory.h"
 
-#pragma pack(push, 1)
-struct  DSO_Data{
-    quint8 direct;
-    qlonglong count;
-};
-#pragma pack(pop)
+
 
 
 m_DSO::m_DSO(QObject *parent) :

@@ -26,7 +26,7 @@ SignalDescription::SignalDescription(const SignalDescription &other)
     FChanelOffset=other.chanelOffset();
     FisInvers=other.isInvers();
     FisNotUse=other.isNotUse();
-    FisInnerUse=other.isNotUse();
+    FisInnerUse=other.isInnerUse();
     gtBuffer=other.gtBuffer;
 }
 
@@ -173,8 +173,9 @@ void SignalDescription::setbit8(quint8* buf, size_t pos, int val)
 }
 
 
-void SignalDescription::setValue_1bit(bool v)
+void SignalDescription::setValue_1bit(bool v) const
 {
+    if (FChanelName.isEmpty()) return ;
     int sz=0;
     const char *A=chanelData(sz);
     if (A==nullptr) return;
@@ -189,8 +190,9 @@ void SignalDescription::setValue_1bit(bool v)
      setbit8(&TSBUF[nbyte],nbit,v);
 }
 
-void SignalDescription::setValue_1byte(quint8 v)
+void SignalDescription::setValue_1byte(quint8 v) const
 {
+    if (FChanelName.isEmpty()) return ;
     int sz=0;
     const char *A=chanelData(sz);
     if (A==nullptr) return;
@@ -201,7 +203,7 @@ void SignalDescription::setValue_1byte(quint8 v)
 }
 
 
-void SignalDescription::setData(const void *v, int sz)
+void SignalDescription::setData(const void *v, int sz) const
 {
     if (FChanelName.isEmpty()) return ;
     int sz1=0;

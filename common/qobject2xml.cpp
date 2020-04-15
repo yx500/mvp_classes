@@ -11,7 +11,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "groupbaseobjects.h"
+#include "BaseObject.h"
 #include "mvp_system.h"
 
 
@@ -62,7 +62,7 @@ QString QObject2XML::write_QObject(QObject *O)
 QString ObjectXmlFile(QObject*O)
 {
     if (!O) return "";
-    GroupBaseObjects *B=qobject_cast<GroupBaseObjects *>(O);
+    BaseObject *B=qobject_cast<BaseObject *>(O);
     if (B){
         if (!B->XMLfile().isEmpty()) return B->XMLfile();
     }
@@ -114,7 +114,7 @@ void QObject2XML::_write(QObject *O, QXmlStreamWriter *xml)
     }
     // дети
     for (int i=0;i<O->children().size();i++){
-        GroupBaseObjects *GB=qobject_cast<GroupBaseObjects *>(O->children().at(i));
+        BaseObject *GB=qobject_cast<BaseObject *>(O->children().at(i));
         // проверяем на внешнее сохранение
         if ((GB) && (!GB->XMLfile().isEmpty())){
             QString fullfn=GB->XMLfile();
@@ -184,7 +184,7 @@ QObject *QObject2XML::_read(QXmlStreamReader *xml)
                         error=error|XML->error;
                         errorLog+=XML->errorLog;
                         if (O){
-                            GroupBaseObjects *GB=qobject_cast<GroupBaseObjects *>(O);
+                            BaseObject *GB=qobject_cast<BaseObject *>(O);
                             if (GB) GB->setXMLfile(fullfn);
                         }
                         delete XML;
@@ -276,11 +276,11 @@ bool QObject2XML::_go2class(QXmlStreamReader *xml, QString className)
     return false;
 }
 
-QList<GroupBaseObjects*> QObject2XML::extendedObjects(QObject *O)
+QList<BaseObject*> QObject2XML::extendedObjects(QObject *O)
 {
-    QList<GroupBaseObjects*> m;
-    QList<GroupBaseObjects*> l=O->findChildren<GroupBaseObjects*>();
-    foreach (GroupBaseObjects*B, l) {
+    QList<BaseObject*> m;
+    QList<BaseObject*> l=O->findChildren<BaseObject*>();
+    foreach (BaseObject*B, l) {
         if (!B->isStoredXML()) continue;
         if (B->XMLfile().isEmpty()) continue;
         m.push_back(B);
@@ -313,7 +313,7 @@ QObject *QObject2XML::readFile(QString fn)
     QXmlStreamReader xml(file);
     if (xml.readNextStartElement()) {
         O=_read(&xml);
-        GroupBaseObjects *B=qobject_cast<GroupBaseObjects *>(O);
+        BaseObject *B=qobject_cast<BaseObject *>(O);
         if (B) B->setXMLfile(fn);
     }
     file->close();
@@ -354,9 +354,9 @@ void QObject2XML::writeFile(QObject *O, QString fn)
 }
 
 
-bool QObject2XML::isChanged(GroupBaseObjects *O,QString fullfn)
+bool QObject2XML::isChanged(BaseObject *O,QString fullfn)
 {
-    GroupBaseObjects *B=qobject_cast<GroupBaseObjects *>(O);
+    BaseObject *B=qobject_cast<BaseObject *>(O);
     if (!B) return false;
     if (!B->isStoredXML()) return false;
     if (B->XMLfile().isEmpty()) return true;

@@ -26,6 +26,7 @@ ModelGroupGorka::ModelGroupGorka(BaseObject *parent) :
      FSIGNAL_PAUSA.clear();
      FSIGNAL_STOP.clear();
      resetStates();
+
 }
 
 ModelGroupGorka::~ModelGroupGorka()
@@ -110,9 +111,8 @@ void ModelGroupGorka::validation(ListObjStr *l) const
 void ModelGroupGorka::updateAfterLoad()
 {
     ModelRootGroup::updateAfterLoad();
+    //FId=QDateTime::currentDateTime().msecsTo(QDateTime(QDate(2015,01,01),QTime(0,0)));
 
-    //Otceps->set_lrc(lrc);
-    //Otceps->registerChanels();
 }
 
 void ModelGroupGorka::updateStates()
@@ -123,7 +123,9 @@ void ModelGroupGorka::updateStates()
 
 void ModelGroupGorka::updateRegim()
 {
+    if  (FSIGNAL_ROSPUSK.isInnerUse())return;
     RegimRospusk r=regimUnknow;
+
     if (FSIGNAL_ROSPUSK.value_1bit()==1) r=regimRospusk;
     if (FSIGNAL_PAUSA.value_1bit()==1)   r=regimPausa;
     if (FSIGNAL_STOP.value_1bit()==1)    r=regimStop;

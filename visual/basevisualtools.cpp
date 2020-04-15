@@ -9,9 +9,9 @@
 #include "v_model.h"
 
 /*
-GroupBaseObjects *cloneVisual(v_Base *V, QObject2XML *XML, bool withModels)
+BaseObject *cloneVisual(v_Base *V, QObject2XML *XML, bool withModels)
 {
-    GroupBaseObjects *clonedGroup=new GroupBaseObjects();
+    BaseObject *clonedGroup=new BaseObject();
     // запихиваем в новую группу вместе с подъобедками
     V->prepareToSave();
     QString xmlObject=XML->write(V);
@@ -81,11 +81,11 @@ QString copyQObjects2XMLBOX(QList<QObject *>lcpy,bool bWithModels)
 
     QObject2XML XML;
     QString xmlCopyGroup="";
-    GroupBaseObjects *BOX=new GroupBaseObjects();   BOX->setObjectName("BOX");
-    GroupBaseObjects *OBJ=new GroupBaseObjects(BOX);OBJ->setObjectName("OBJ");
-    GroupBaseObjects *LNK=nullptr;
+    BaseObject *BOX=new BaseObject();   BOX->setObjectName("BOX");
+    BaseObject *OBJ=new BaseObject(BOX);OBJ->setObjectName("OBJ");
+    BaseObject *LNK=nullptr;
     if (bWithModels){
-        LNK=new GroupBaseObjects(BOX);LNK->setObjectName("LNK");
+        LNK=new BaseObject(BOX);LNK->setObjectName("LNK");
     }
 
     // клонируем
@@ -117,13 +117,13 @@ QList<QObject *> pasteXMLBOX(QString &xmlCopyGroup, QObject *Parent, bool bWithM
     QObject2XML XML;
     QList<QObject *> l;
     QObject *qBOX=XML.read(xmlCopyGroup);
-    GroupBaseObjects *BOX=qobject_cast<GroupBaseObjects *>(qBOX);
+    BaseObject *BOX=qobject_cast<BaseObject *>(qBOX);
     if (!BOX) return l;
-    GroupBaseObjects *OBJ=BOX->findChild<GroupBaseObjects *>("OBJ",Qt::FindDirectChildrenOnly);
+    BaseObject *OBJ=BOX->findChild<BaseObject *>("OBJ",Qt::FindDirectChildrenOnly);
     if (!OBJ) return l;
-    GroupBaseObjects *LNK=nullptr;
+    BaseObject *LNK=nullptr;
     if (bWithModels){
-        LNK=BOX->findChild<GroupBaseObjects *>("LNK",Qt::FindDirectChildrenOnly);
+        LNK=BOX->findChild<BaseObject *>("LNK",Qt::FindDirectChildrenOnly);
         if (!LNK) return l;
     }
 

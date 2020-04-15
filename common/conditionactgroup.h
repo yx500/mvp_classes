@@ -6,7 +6,7 @@
  *
 */
 
-#include "groupbaseobjects.h"
+#include "BaseObject.h"
 #include "conditionactitem.h"
 #include "objectlink.h"
 
@@ -16,7 +16,7 @@ struct TActStepSum{
     QString V;
 };
 
-class ConditionActGroup : public GroupBaseObjects
+class ConditionActGroup : public BaseObject
 {
     Q_OBJECT
     Q_PROPERTY(ObjectLink   LNKG READ LNKG WRITE setLNKG DESIGNABLE true)

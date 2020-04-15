@@ -19,7 +19,7 @@ public:
         QString comment;
         QString prop_name;
     };
-
+    bool contains_error=false;
     ListObjStr(){}
     ListObjStr(const ListObjStr &other){
         l=other.list();
@@ -47,11 +47,13 @@ public:
     }
     void error(const QObject *O,QString text,QString comment=QString(),QString prop_name=QString()){
         message(O,"Ошибка",text,comment,prop_name);
+        contains_error=true;
     }
-    void clear(){l.clear();}
+    void clear(){l.clear();contains_error=false;}
     void append(ListObjStr &l1){
         for (int i=0;i<l1.plist()->size();i++)
-            l.push_back(l1.plist()->at(i));
+            l.push_back(l1.plist ()->at(i));
+        if (l1.contains_error) contains_error=true;
     }
     QStringList toStringList(){
         QStringList sl;

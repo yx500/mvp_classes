@@ -8,7 +8,7 @@
  * Контейнер для классов визуализации
  * */
 
-class LIBSHARED_EXPORT VisualRootGroup : public GroupBaseObjects
+class LIBSHARED_EXPORT VisualRootGroup : public BaseObject
 {
     Q_OBJECT
 public:

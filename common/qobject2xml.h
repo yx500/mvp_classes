@@ -13,7 +13,7 @@ class QXmlStreamWriter;
 class QXmlStreamReader;
 class MVP_ObjectFactory;
 class BaseObject;
-class GroupBaseObjects;
+class BaseObject;
 
 class LIBSHARED_EXPORT QObject2XML
 {
@@ -29,8 +29,8 @@ public:
     void writeFile(QObject *O,QString fn);
     void writeQByteArray(QObject *O, QByteArray *array);
 
-    bool isChanged(GroupBaseObjects *O, QString fullfn);
-    QList<GroupBaseObjects *> extendedObjects(QObject *O);
+    bool isChanged(BaseObject *O, QString fullfn);
+    QList<BaseObject *> extendedObjects(QObject *O);
     bool error;
     QStringList errorLog;
 

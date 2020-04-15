@@ -3,7 +3,6 @@
 
 #include "v_base.h"
 #include "m_base.h"
-#include "baseobject.h"
 #include "objectlink.h"
 #include <QMetaProperty>
 
@@ -62,6 +61,8 @@ public slots:
 protected:
     ObjectLink FLNKMODEL;
     bool isNotAccepted33(QColor &clrB);
+    quint64 _modelStateChangedCount=0;
+    bool modelStateChanged();
     bool    modelPropertyBool(QString propertyName,bool defaultValue=false) const;
     int     modelPropertyInt(QString propertyName, int defaultValue=0) const;
     qreal   modelPropertyQreal(QString propertyName, qreal defaultValue=0) const;

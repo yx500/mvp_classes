@@ -21,7 +21,7 @@ public:
     
 
 public:
-    Q_INVOKABLE m_RC_Gor(QObject *parent = 0);
+    Q_INVOKABLE m_RC_Gor(QObject *parent = nullptr);
     virtual ~m_RC_Gor(){}
     virtual void validation(ListObjStr *l) const;
     virtual void resetStates();

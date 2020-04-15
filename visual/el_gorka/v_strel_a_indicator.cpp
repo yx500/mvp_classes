@@ -13,7 +13,7 @@ REGISTERCOLOR(v_Strel_A_Indicator,strel_auto,"Стрелка АВТОМАТ",Qt:
 v_Strel_A_Indicator::v_Strel_A_Indicator(v_Base *parent) : v_Base(parent)
 {
     FTARGET.clear();
-    strel=0;
+    strel=nullptr;
     FSIZE=QSizeF(2,1);
     calculateGeometry();
 }
@@ -31,7 +31,7 @@ void v_Strel_A_Indicator::setTARGET(ObjectLink p)
 void v_Strel_A_Indicator::updateAfterLoad()
 {
     v_Base::updateAfterLoad();
-    if (FTARGET.id()==0){
+    if (FTARGET.id()!=0){
         strel=qobject_cast<m_Base*>(reLink(this,FTARGET));
         if (!strel)
             qCritical() << objectName() << "Ошибочная ссылка TARGET" <<endl ;

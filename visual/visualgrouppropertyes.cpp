@@ -7,7 +7,7 @@
 REGISTERELEMENT(VisualGroupPropertyes,"Список общих свойств","VISUAL БАЗОВЫЕ")
 
 
-VisualGroupPropertyes::VisualGroupPropertyes(QObject *parent) : GroupBaseObjects(parent)
+VisualGroupPropertyes::VisualGroupPropertyes(QObject *parent) : BaseObject(parent)
 {
     target=nullptr;
 }
@@ -98,7 +98,7 @@ VisualGroupProperty *VisualGroupPropertyes::add(QString objectPropName, QString 
 
 void VisualGroupPropertyes::updateAfterLoad()
 {
-    GroupBaseObjects::updateAfterLoad();
+    BaseObject::updateAfterLoad();
     QList<VisualGroupProperty *> l=findChildren<VisualGroupProperty *>();
     foreach (VisualGroupProperty*p, l) {
         mName2Prop[p->idstr()]=p;

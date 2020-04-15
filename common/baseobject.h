@@ -82,16 +82,15 @@ public:
 
     // определяет сохранять или нет
     virtual bool isStoredXML() const{return true;}
+
     // восстановление параметров после загрузки(линки)
     virtual void updateAfterLoad();
+    QString XMLfile() const {return xmlFile;}
+    void setXMLfile(QString p){xmlFile=p;}
+
     // самопроверка
     virtual void validation(ListObjStr *l) const {Q_UNUSED(l);}
 
-    void setPropertyChanged(bool p){FisPropertyChanged=p;}
-    bool isPropertyChanged() const {return FisPropertyChanged;}
-    void setStateChanged(bool p){FisStateChanged=p;}
-    bool isStateChanged() const {return FisStateChanged;}
-    void setStateChangedEmit(bool p){FisStateChangedEmit=p;}
     void emitPropertyChanged(){emit propertyChanged(this);}
     void emitStateChanged(){emit stateChanged(this);}
     virtual void resetStates();
@@ -106,6 +105,9 @@ public:
 
     bool disableUpdateStates=false;
     virtual void updateStates(); // основной жизненный цикл
+    void _prepare_updateStates();
+    void _emit_after();
+    quint64 stateChangedCount() const {return _stateChangedCount;}
 
 
 public slots:
@@ -115,12 +117,10 @@ public slots:
 protected:
     quint64 FId;
     QString Fidstr;
+    QString xmlFile;
     QVector<QPointer<QObject> >vTagObjects;
     QMap<int,QPointer<QObject>> mTagObjects;
 
-    bool FisPropertyChanged;
-    bool FisStateChanged;
-    bool FisStateChangedEmit;
 
     virtual void doPropertyChanged();
     virtual void doStateChanged();
@@ -128,6 +128,11 @@ protected:
     void validationEmptyLinks(ListObjStr *l) const;
 
     QMap<int,QVariant> mTags;
+
+private:
+    bool onlyOneEmitEnabled=false;
+    bool stateChangedEmit=false;
+    quint64 _stateChangedCount=0;
 
 signals:
     void propertyChanged(QObject *O);

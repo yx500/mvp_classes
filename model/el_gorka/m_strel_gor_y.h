@@ -17,6 +17,7 @@ public:
 
     MYPROP(SignalDescription, SIGNAL_UVK_PRP)
     MYPROP(SignalDescription, SIGNAL_UVK_PRM)
+    MYPROP(SignalDescription, SIGNAL_UVK_AV)
 
     MYPROP(int, TU_PRP)
     MYPROP(int, TU_PRM)
@@ -34,6 +35,7 @@ public:
 
     MYSTATE(bool, STATE_UVK_PRP)
     MYSTATE(bool, STATE_UVK_PRM)
+    MYSTATE(bool, STATE_UVK_AV)
 
 public:
     Q_INVOKABLE m_Strel_Gor_Y(QObject *parent = nullptr);
@@ -42,6 +44,8 @@ public:
     virtual void updateAfterLoad();
     virtual void resetStates();
     virtual void updateStates();
+    m_IPD *get_ipd()const{return  ipd;}
+    m_RTDS *get_rtds()const{return  rtds;}
 
 protected:
     m_IPD *ipd;

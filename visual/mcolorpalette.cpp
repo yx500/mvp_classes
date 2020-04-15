@@ -8,7 +8,7 @@
 REGISTERELEMENT(MColorPalette,"Палитра цветов","VISUAL БАЗОВЫЕ")
 
 static int _idcounter=0;
-MColorPalette::MColorPalette(QObject *parent) : GroupBaseObjects(parent)
+MColorPalette::MColorPalette(QObject *parent) : BaseObject(parent)
 {
     setObjectName("Текущая палитра");
     timer=nullptr;
@@ -129,7 +129,7 @@ bool MColorPalette::existsColor(QString idstr) const
 
 void MColorPalette::updateAfterLoad()
 {
-    GroupBaseObjects::updateAfterLoad();
+    BaseObject::updateAfterLoad();
     QList <MColor*> l=findChildren<MColor*>();
     foreach (MColor*mclr, l) {
         mclr->updateAfterLoad();

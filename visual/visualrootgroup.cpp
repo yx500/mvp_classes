@@ -4,13 +4,13 @@
 #include "mcolorpalette.h"
 REGISTERELEMENT(VisualRootGroup,"VISUAL","VISUAL БАЗОВЫЕ")
 
-VisualRootGroup::VisualRootGroup(QObject *parent) : GroupBaseObjects(parent)
+VisualRootGroup::VisualRootGroup(QObject *parent) : BaseObject(parent)
 {
 }
 
 void VisualRootGroup::updateAfterLoad()
 {
-    GroupBaseObjects::updateAfterLoad();
+    BaseObject::updateAfterLoad();
 
     // загрузим поллитру
     if ((!FPALETTE_FILENAME.isEmpty()&&(!XMLfile().isEmpty()))){

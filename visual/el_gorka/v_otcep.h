@@ -11,9 +11,8 @@ class v_Otcep : public v_Model
 {
     Q_OBJECT
 public:
-    MYSTATE(QString,IDS_RC_BUSY)
 public:
-    explicit v_Otcep(QObject *parent = 0);
+    explicit v_Otcep(QObject *parent = nullptr);
     virtual ~v_Otcep(){}
     virtual bool isStoredXML() const{return false;}
     virtual void setModelObject(BaseObject *B);
@@ -32,10 +31,8 @@ public:
 
 
 public slots:
-    virtual void slotModelStateChanged(QObject *O);  // следим за моделью
 protected:
     m_Otcep *mOtcep;
-    //QList<v_RC*> lRC;
     v_RC* target;
     QPolygonF targetLine;
 

@@ -49,7 +49,7 @@ void Visual_Screen::setGRIDDY(int p)
 
 void Visual_Screen::updateAfterLoad()
 {
-    GroupBaseObjects::updateAfterLoad();
+    v_Base::updateAfterLoad();
     FVisualGroupPropertyes=findChildren<VisualGroupPropertyes*>(QString(),Qt::FindDirectChildrenOnly).first();
     if (FVisualGroupPropertyes){
         connect(FVisualGroupPropertyes,SIGNAL(visualGroupPropertyesChanged(QObject*)),this,SLOT(slotVisualGroupPropertyesChanged(QObject*)));

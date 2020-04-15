@@ -56,6 +56,7 @@ public:
     QDateTime timeDataChanged;
     QByteArray A;
     int msecPeriodLive;
+    bool static_mode=false; // признак что буффер не для обмена
     void assign(const GtBuffer *B){
         type=B->type;
         name=B->name;

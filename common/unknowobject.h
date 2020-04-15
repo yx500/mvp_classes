@@ -5,13 +5,13 @@
  * объект - заглушка
  * */
 
-#include "groupbaseobjects.h"
+#include "BaseObject.h"
 
-class UnknowObject : public GroupBaseObjects
+class UnknowObject : public BaseObject
 {
     Q_OBJECT
 public:
-    explicit UnknowObject(QObject *parent = nullptr): GroupBaseObjects(parent){}
+    explicit UnknowObject(QObject *parent = nullptr): BaseObject(parent){}
     QString storedType;
 
 signals:

@@ -5,7 +5,12 @@
 #include "m_rc.h"
 
 // абстрактный класс для всех типов ДСО
-
+#pragma pack(push, 1)
+struct  DSO_Data{
+    quint8 direct;
+    qlonglong count;
+};
+#pragma pack(pop)
 class m_DSO : public m_Base
 {
     Q_OBJECT
@@ -23,7 +28,7 @@ public:
     MYSTATE(int,STATE_SRAB)
 
 public:
-    Q_INVOKABLE m_DSO(QObject *parent = 0);
+    Q_INVOKABLE m_DSO(QObject *parent = nullptr);
     virtual ~m_DSO(){}
     virtual void resetStates();
     virtual QString defaultGroupName() const {return "ДСО";}

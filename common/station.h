@@ -1,13 +1,13 @@
 #ifndef STATION_H
 #define STATION_H
 
-#include "modelrootgroup.h"
+#include "BaseObject.h"
 
 class QTimer;
 
 // универсальный контейнер для всего
 
-class Station : public GroupBaseObjects
+class Station : public BaseObject
 {
     Q_OBJECT
     Q_PROPERTY(int UPDATE_STATES_INTERVAL READ UPDATE_STATES_INTERVAL WRITE setUPDATE_STATES_INTERVAL DESIGNABLE true)

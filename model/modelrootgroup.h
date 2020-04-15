@@ -4,8 +4,7 @@
 #include "modelgroup.h"
 
 // Класс контейнер для всех моделей
-// создает сортированный список для updateStates,work
-class LIBSHARED_EXPORT ModelRootGroup : public GroupBaseObjects
+class LIBSHARED_EXPORT ModelRootGroup : public ModelGroup
 {
     Q_OBJECT
 public:
@@ -14,13 +13,10 @@ public:
 
     virtual bool isCanAddObject(QObject *O) const;
     virtual void addObject(QObject *O) ;
-    virtual void updateAfterLoad();
 
 signals:
 
 protected:
-//    QList<m_Base *> l_m_Base;
-//    void reSortUpdateStates();
 };
 
 #endif // MODELROOTGROUP_H

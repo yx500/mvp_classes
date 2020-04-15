@@ -21,7 +21,7 @@ void ConditionActGroup::setLNKG(const ObjectLink& p)
 
 }
 
-ConditionActGroup::ConditionActGroup(QObject *parent) : GroupBaseObjects(parent)
+ConditionActGroup::ConditionActGroup(QObject *parent) : BaseObject(parent)
 {
     G=nullptr;
     _updateStatesEntered=false;

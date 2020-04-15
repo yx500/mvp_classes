@@ -1,13 +1,12 @@
 #ifndef MODELGROUP_H
 #define MODELGROUP_H
 
-#include "groupbaseobjects.h"
 #include "m_base.h"
 
 
 // Класс контейнер для всех моделей определенной группы, сделан для удобства
 
-class ModelGroup : public GroupBaseObjects
+class ModelGroup : public m_Base
 {
     Q_OBJECT
 public:

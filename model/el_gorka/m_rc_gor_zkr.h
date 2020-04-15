@@ -32,13 +32,13 @@ public:
 
     MYPROP(SignalDescription,SIGNAL_STATE)
 
-    MYSTATE(int, STATE_ROSPUSK)
+    MYSTATE(bool, STATE_ROSPUSK)
 
-    MYSTATE(int, STATE_ERROR)
+    MYSTATE(bool, STATE_ERROR)
 
 
 public:
-    Q_INVOKABLE m_RC_Gor_ZKR(QObject *parent = 0);
+    Q_INVOKABLE m_RC_Gor_ZKR(QObject *parent = nullptr);
     virtual ~m_RC_Gor_ZKR(){}
     virtual void resetStates();
     virtual void validation(ListObjStr *l) const;

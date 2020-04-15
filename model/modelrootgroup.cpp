@@ -4,7 +4,7 @@
 #include "mvp_objectfactory.h"
 REGISTERELEMENT(ModelRootGroup,"Корневая группа моделей","БАЗОВЫЕ")
 
-ModelRootGroup::ModelRootGroup(BaseObject *parent) : GroupBaseObjects(parent)
+ModelRootGroup::ModelRootGroup(BaseObject *parent) : ModelGroup(parent)
 {
 
 }
@@ -36,23 +36,9 @@ void ModelRootGroup::addObject(QObject *O)
             MG->setParent(this);
         }
     }
-    //reSortUpdateStates();
 }
 
-void ModelRootGroup::updateAfterLoad()
-{
-    GroupBaseObjects::updateAfterLoad();
-    //reSortUpdateStates();
 
-
-}
-
-//bool workLevelLessThan(const m_Base *M1, const m_Base *M2)
-//{
-//    if (M1->workLevel() < M2->workLevel()) return true;
-//    if (M1->workLevel() > M2->workLevel()) return false;
-//    return M1->id()<M2->id();
-//}
 
 
 //void ModelRootGroup::reSortUpdateStates()

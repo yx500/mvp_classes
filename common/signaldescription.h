@@ -54,11 +54,9 @@ public:
 
     void setSignalTS(QString chanelName,int chanelOffset);
 
-    void setValue_1bit(bool v);
-    void setValue_1byte(quint8 v);
-    void setValue_2byte(int v);
-    void setValue_4byte(quint32 v);
-    void setData(const void * v,int sz);
+    void setValue_1bit(bool v) const;
+    void setValue_1byte(quint8 v) const;
+    void setData(const void * v,int sz) const;
 
     static GtBuffer *getBuffer(int type,QString name);
     static bool value_1bit(GtBuffer *B,int chanelOffset);
@@ -78,11 +76,11 @@ public:
 
     bool	operator == (const SignalDescription &other) const {
         return (FChanelName==other.chanelName() &&
-                    FChanelType==other.chanelType() && (FChanelOffset==other.chanelOffset()) && FisInvers==other.isInvers() && FisNotUse==other.isNotUse());
+                    FChanelType==other.chanelType() && (FChanelOffset==other.chanelOffset()) && FisInvers==other.isInvers() && FisNotUse==other.isNotUse()&& FisInnerUse==other.isInnerUse());
     }
     bool	operator != (const SignalDescription &other) const {
         return (FChanelName!=other.chanelName()) ||
-                    ( FChanelType!=other.chanelType() || FChanelOffset!=other.chanelOffset() || FisInvers!=other.isInvers()  ||FisNotUse!=other.isNotUse() );
+                    ( FChanelType!=other.chanelType() || FChanelOffset!=other.chanelOffset() || FisInvers!=other.isInvers()  ||FisNotUse!=other.isNotUse() || FisInnerUse!=other.isInnerUse());
     }
 
 private:

@@ -19,7 +19,7 @@ public:
 
 public:
 
-    Q_INVOKABLE m_Strel_Gor(QObject *parent = 0);
+    Q_INVOKABLE m_Strel_Gor(QObject *parent = nullptr);
     virtual ~m_Strel_Gor(){}
     virtual void validation(ListObjStr *l) const;
     virtual void resetStates();

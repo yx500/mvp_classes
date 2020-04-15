@@ -7,12 +7,12 @@
 
 #include <QMap>
 
-#include "groupbaseobjects.h"
+#include "BaseObject.h"
 #include "visualgroupproperty.h"
-#include "v_base.h"
 
+class v_Base;
 
-class VisualGroupPropertyes : public GroupBaseObjects
+class VisualGroupPropertyes : public BaseObject
 {
     Q_OBJECT
 public:

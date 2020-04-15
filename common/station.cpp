@@ -14,7 +14,7 @@ REGISTERELEMENT(Station,"Станция","БАЗОВЫЕ")
 
 
 Station::Station(QObject *parent) :
-    GroupBaseObjects(parent)
+    BaseObject(parent)
 {
     timerUPDATE_STATES=new QTimer();
     timerUPDATE_STATES->stop();
@@ -28,12 +28,12 @@ Station::~Station()
 
 void Station::updateAfterLoad()
 {
-    GroupBaseObjects::updateAfterLoad();
+    BaseObject::updateAfterLoad();
 }
 
 bool Station::isCanAddObject(QObject *O) const
 {
-    if (qobject_cast<GroupBaseObjects *>(O)) return true;
+    if (qobject_cast<BaseObject *>(O)) return true;
     return false;
 }
 

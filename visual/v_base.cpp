@@ -36,7 +36,7 @@ REGISTERCOLOR(v_Base,flag_op_critical,"Флаг ОП авария",Qt::darkRed);
 
 
 v_Base::v_Base(QObject *parent) :
-    GroupBaseObjects(parent),
+    BaseObject(parent),
     FINVERTDRAWX(false),
     FINVERTDRAWY(false),
     FSELECTRECT(),
@@ -533,7 +533,7 @@ QPolygonF v_Base::centreLine() const
 
 void v_Base::updateStates()
 {
-    GroupBaseObjects::updateStates();
+    BaseObject::updateStates();
     t_mk_flag mk_flag;
     ExternFlags::getFlag(FEXTFLAGSRC,0/*src*/,FId,mk_flag);
     setSTATE_MK_FLAG(mk_flag.type);

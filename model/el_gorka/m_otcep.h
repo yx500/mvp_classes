@@ -26,12 +26,13 @@ class m_Otcep : public m_Base
 {
     Q_OBJECT
     Q_PROPERTY(int NUM READ NUM DESIGNABLE true STORED false )
-    Q_PROPERTY(int STATE_SP READ STATE_SP DESIGNABLE true STORED false )
+    Q_PROPERTY(int STATE_SP READ STATE_SP WRITE setSTATE_SP DESIGNABLE true STORED false )
     MYPROP(SignalDescription,SIGNAL_ADDR)
 public:
     MYSTATE(bool, STATE_ENABLED)  // участвует в роспуске
     int NUM() const {return FNUM;}
     int STATE_SP() const;
+    void setSTATE_SP(int p);
 
     enum TOtcepLocation{
         locationUnknow=0, //
@@ -109,6 +110,7 @@ public:
     virtual void updateAfterLoad();
     virtual QString defaultGroupName() const {return "ОТЦЕПЫ";}
     virtual bool isStoredXML() const{return false;}
+    void acceptStaticData(m_Otcep *o);
 
     QVector<tSlVagon> vVag;
     QList<m_RC *> vBusyRc;

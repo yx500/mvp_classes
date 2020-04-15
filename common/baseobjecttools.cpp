@@ -470,7 +470,7 @@ QString fullObjectName(QObject *O)
     QObject *P=O->parent();
     while (P){
         N=P->objectName()+"/"+N;
-        auto *G=qobject_cast<GroupBaseObjects *>(P);
+        auto *G=qobject_cast<BaseObject *>(P);
         if ((G)&&(!G->XMLfile().isEmpty())) break;
         P=P->parent();
     }

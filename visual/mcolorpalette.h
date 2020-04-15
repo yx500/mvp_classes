@@ -5,10 +5,10 @@
  * */
 #include "mcolor.h"
 #include <QMap>
-#include "groupbaseobjects.h"
+#include "BaseObject.h"
 
 
-class MColorPalette : public GroupBaseObjects
+class MColorPalette : public BaseObject
 {
     Q_OBJECT
 public:

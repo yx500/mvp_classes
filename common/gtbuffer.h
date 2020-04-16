@@ -43,7 +43,8 @@ public:
         timeDataChanged=QDateTime();
         tick=0;
         A.clear();
-        A.resize(1024);
+        A.resize(1000);
+        A.fill(0);
         msecPeriodLive=0;
     }
 

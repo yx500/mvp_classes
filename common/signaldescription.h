@@ -56,7 +56,8 @@ public:
 
     void setValue_1bit(bool v) const;
     void setValue_1byte(quint8 v) const;
-    void setData(const void * v,int sz) const;
+    void setValue_data(const void * v,int sz) const;
+    void setBufferData(const void * v,int sz) const;
 
     static GtBuffer *getBuffer(int type,QString name);
     static bool value_1bit(GtBuffer *B,int chanelOffset);

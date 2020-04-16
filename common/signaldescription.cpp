@@ -202,17 +202,21 @@ void SignalDescription::setValue_1byte(quint8 v) const
 
 }
 
-
-void SignalDescription::setData(const void *v, int sz) const
+void SignalDescription::setValue_data(const void *v, int sz) const
 {
-    if (FChanelName.isEmpty()) return ;
-    int sz1=0;
-    const char *A=chanelData(sz1);
-    if (A==nullptr) return;
+     if (gtBuffer==nullptr) return;
+     int chanelOffset=FChanelOffset*sz;
+     if (chanelOffset+sz>gtBuffer->A.size()) gtBuffer->A.resize(sz);
+     memcpy(gtBuffer->A.data(),v,sz);
+}
+
+
+void SignalDescription::setBufferData(const void *v, int sz) const
+{
+    if (gtBuffer==nullptr) return;
     int chanelOffset=FChanelOffset*sz;
-    if (chanelOffset+sz>=sz1) return ;
-    quint8 *BUF=(quint8 *)A;
-    memcpy(&BUF[chanelOffset],v,sz);
+    if (sz!=gtBuffer->A.size()) gtBuffer->A.resize(sz);
+    memcpy(gtBuffer->A.data(),v,sz);
 }
 
 QString SignalDescription::toString() const

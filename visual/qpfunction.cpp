@@ -617,7 +617,7 @@ bool pointXUnLessThan(const QPointF &P1, const QPointF &P2)
 void QPFunction::sortByX(QPolygonF &PL, MVP_Enums::TDirect d)
 {
     if (d==MVP_Enums::left2right)
-        qSort(PL.begin(),PL.end(),pointXLessThan); else
-        qSort(PL.begin(),PL.end(),pointXUnLessThan);
+        std::sort(PL.begin(),PL.end(),pointXLessThan); else
+        std::sort(PL.begin(),PL.end(),pointXUnLessThan);
 }
 

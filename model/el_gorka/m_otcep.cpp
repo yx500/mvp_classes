@@ -124,6 +124,7 @@ void m_Otcep::acceptStaticData(m_Otcep *o)
 
 void m_Otcep::updateAfterLoad()
 {
+    m_Base::updateAfterLoad();
     FSIGNAL_ADDR.acceptGtBuffer();
     connect(FSIGNAL_ADDR.getBuffer(),&GtBuffer::bufferChanged,this,&m_Otcep::slotChanged);
 }

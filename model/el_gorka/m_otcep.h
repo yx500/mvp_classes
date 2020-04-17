@@ -26,6 +26,7 @@ class m_Otcep : public m_Base
 {
     Q_OBJECT
     Q_PROPERTY(int NUM READ NUM DESIGNABLE true STORED false )
+    Q_PROPERTY(int STATE_NUM READ NUM DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_SP READ STATE_SP WRITE setSTATE_SP DESIGNABLE true STORED false )
     MYPROP(SignalDescription,SIGNAL_ADDR)
 public:
@@ -49,6 +50,8 @@ public:
     MYSTATE(bool,STATE_NAGON)
     MYSTATE(int, STATE_ERROR)
     MYSTATE(int, STATE_ID_ROSP)
+    MYSTATE(int, STATE_UR)
+    MYSTATE(int, STATE_KZP)
 
     // основные характеристики
     MYSTATE(int,  STATE_VAGON_CNT)
@@ -61,11 +64,13 @@ public:
     MYSTATE(int,  STATE_SL_OSY_CNT)
     MYSTATE(qreal,STATE_SL_VES)
     MYSTATE(bool, STATE_SL_BAZA)
+    MYSTATE(bool, STATE_SL_KAT)
     // ЗКР
     MYSTATE(bool, STATE_ZKR_PROGRESS)    // отцеп не выехал с ЗКР
     MYSTATE(int,  STATE_ZKR_VAGON_CNT)
     MYSTATE(int,  STATE_ZKR_OSY_CNT)
     MYSTATE(bool, STATE_ZKR_BAZA)
+    MYSTATE(bool, STATE_ZKR_KAT)
     // KZP
     enum TOnParkState{
         kzpUnknow=0,

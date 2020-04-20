@@ -187,7 +187,9 @@ bool v_Model::modelStateChanged()
         _modelStateChangedCount=M->stateChangedCount();
         return true;
     }
+    return false;
 }
+
 
 bool v_Model::modelPropertyBool(QString propertyName, bool defaultValue) const
 {

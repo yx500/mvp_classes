@@ -8,19 +8,17 @@ REGISTERELEMENT(m_Otceps,"ОТЦЕПЫ","MODEL ГОРКА")
 
 m_Otceps::m_Otceps(QObject *parent) : m_Base(parent)
 {
+    FTYPE_DESCR=0;
     setObjectName("ОТЦЕПЫ");
     for (int i=0;i<MAXCOUNT_OTCEPS;i++){
-        OTCEPS[i]=new m_Otcep(this,i+1);
-        l_otceps.push_back(OTCEPS[i]);
+        l_otceps.push_back(new m_Otcep(this,i+1));
     }
 }
 
 m_Otceps::~m_Otceps()
 {
     l_otceps.clear();
-    for (int i=0;i<MAXCOUNT_OTCEPS;i++){
-        delete OTCEPS[i];
-    }
+
 }
 
 void m_Otceps::resetStates()
@@ -40,6 +38,9 @@ void m_Otceps::validation(ListObjStr *l) const
                     (rc1->SIGNAL_BUSY().chanelOffset()==rc2->SIGNAL_BUSY().chanelOffset())){
                 l->error(this,"РЦ с одинаковым сигналом занятия",QString("%1 %2").arg(rc1->objectName(),rc2->objectName()));
             }
+            if (rc1->idstr()==rc2->idstr()) {
+                l->error(this,"РЦ с одинаковым IDS",QString("%1 %2").arg(rc1->objectName(),rc2->objectName()));
+            }
         }
         m_RC_Gor_Park*rcp=qobject_cast<m_RC_Gor_Park*>(rc1);
         if ((rcp) && (rcp->PARK_WAY()<=0)) l->error(this,"РЦ без номера пути парка",QString("%1").arg(rc1->objectName()));
@@ -52,15 +53,30 @@ void m_Otceps::validation(ListObjStr *l) const
 void m_Otceps::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    for (int i=0;i<MAXCOUNT_OTCEPS;i++)
-        OTCEPS[i]->updateAfterLoad();
+    foreach (m_Otcep*otcep, l_otceps) {
+        if (FTYPE_DESCR==0){
+            QString packetName=QString("descr%1").arg(otcep->NUM());
+            otcep->setSIGNAL_DATA(SignalDescription(9,packetName,0));
+        }
+        if (FTYPE_DESCR==1){
+            QString packetName=QString("descr%1").arg(otcep->NUM());
+            otcep->setSIGNAL_DATA(SignalDescription(109,packetName,0));
+        }
+        otcep->updateAfterLoad();
 
-    registerChanels();
+    }
+    if (FTYPE_DESCR==0){
+        for (int i=0;i<MaxVagon;i++){
+            chanelVag[i]=SignalDescription::getBuffer(15,QString("vag%1").arg(i+1));
+            connect(chanelVag[i],&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
+        }
+    }
     if (parent()){
         l_rc=parent()->findChildren<m_RC*>();
         foreach (m_RC *rc, l_rc) {
             if ((!rc->SIGNAL_BUSY().isNotUse()) &&(rc->SIGNAL_BUSY().chanelOffset()!=0))
                 mOffset2Rc[rc->SIGNAL_BUSY().chanelOffset()]=rc;
+                mIDS2Rc[rc->idstr()]=rc;
         }
         QList<m_RC_Gor_Park*> l_rcp=parent()->findChildren<m_RC_Gor_Park*>();
         foreach (m_RC_Gor_Park*rcp, l_rcp) {
@@ -73,31 +89,22 @@ void m_Otceps::updateAfterLoad()
 
 QList<m_Otcep *> m_Otceps::otceps() const
 {
-    QList<m_Otcep *> vOtceps;
-    for (int i=0;i<MAXCOUNT_OTCEPS;i++)
-        if (OTCEPS[i]->STATE_LOCATION()!=m_Otcep::locationUnknow) vOtceps.push_back(OTCEPS[i]);
-    return vOtceps;
+    return l_otceps;
+
 }
 
-QList<m_Otcep *> m_Otceps::all_otceps() const
-{
-    QList<m_Otcep *> vOtceps;
-    for (int i=0;i<MAXCOUNT_OTCEPS;i++)
-        vOtceps.push_back(OTCEPS[i]);
-    return vOtceps;
-}
 
 m_Otcep *m_Otceps::otcepByNum(int n)
 {
-    for (int i=0;i<MAXCOUNT_OTCEPS;i++)
-        if (OTCEPS[i]->NUM()==n) return  OTCEPS[i];
+    foreach (m_Otcep*otcep, l_otceps)
+        if (otcep->NUM()==n) return otcep;
     return nullptr;
 }
 
 m_Otcep *m_Otceps::otcepOnRc(m_RC *rc)
 {
-    for (int i=0;i<MAXCOUNT_OTCEPS;i++)
-        if ((OTCEPS[i]->STATE_LOCATION()!=m_Otcep::locationUnknow)&& (OTCEPS[i]->vBusyRc.indexOf(rc)>=0)) return  OTCEPS[i];
+    foreach (m_Otcep*otcep, l_otceps)
+        if ((otcep->STATE_LOCATION()!=m_Otcep::locationUnknow)&& (otcep->vBusyRc.indexOf(rc)>=0)) return  otcep;
     return 0;
 }
 
@@ -105,13 +112,6 @@ m_RC *m_Otceps::find_RC(int chanelOffset)
 {
     if (!mOffset2Rc.contains(chanelOffset)) return nullptr;
     return mOffset2Rc[chanelOffset];
-//    if (l_rc.size()==0)
-//        l_rc=parent()->findChildren<m_RC*>();
-//    foreach (m_RC*rc, l_rc) {
-//        if (chanelOffset==rc->SIGNAL_BUSY().chanelOffset())
-//            return rc;
-//    }
-    return nullptr;
 }
 
 void m_Otceps::set_lrc(QList<m_RC *> &l)
@@ -119,43 +119,39 @@ void m_Otceps::set_lrc(QList<m_RC *> &l)
     l_rc=l;
 }
 
-void m_Otceps::registerChanels()
-{
-    for (int i=0;i<MaxVagon;i++){
-        chanelVag[i]=SignalDescription::getBuffer(15,QString("vag%1").arg(i+1));
-        connect(chanelVag[i],&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
-    }
 
-}
 
 void m_Otceps::updateVagons()
 {
     if (disableUpdateStates) return;
-    for (int i=0;i<MAXCOUNT_OTCEPS;i++){
-        if (OTCEPS[i]->disableUpdateStates) continue;
-        OTCEPS[i]->vVag.clear();
+    tSlVagon * SlVagon0=(tSlVagon *)chanelVag[0]->A.data();
+    int idrosp=SlVagon0->Id;
+    foreach (m_Otcep*otcep, l_otceps) {
+        int idr=0;
+        int sp=0;
+        if (otcep->disableUpdateStates) continue;
+        otcep->vVag.clear();
         int lenvag=0;
-        for (int i=0;i<MaxVagon;i++){
-            tSlVagon * SlVagon=(tSlVagon *)chanelVag[i]->A.data();
+        for (int j=0;j<MaxVagon;j++){
+            tSlVagon * SlVagon=(tSlVagon *)chanelVag[j]->A.data();
             if (SlVagon){
                 if (SlVagon->NO==0) break;
+                if (SlVagon->Id!=idrosp)break;
                 if (SlVagon->NO<0) continue;
-                if (OTCEPS[i]->NUM()==SlVagon->NO){
-                    OTCEPS[i]->setSTATE_ENABLED(true);
-                    if (OTCEPS[i]->STATE_ID_ROSP()==0)
-                        OTCEPS[i]->setSTATE_ID_ROSP(SlVagon->Id);
-                    if (OTCEPS[i]->STATE_MAR()==0)
-                        OTCEPS[i]->setSTATE_MAR(mSP2MAR[SlVagon->SP]);
-                    OTCEPS[i]->vVag.push_back(*SlVagon);
+                if (otcep->NUM()==SlVagon->NO){
+                    idr=SlVagon->Id;
+                    sp=SlVagon->SP;
+                    otcep->vVag.push_back(*SlVagon);
                     int Ln=0;
                     if (SlVagon->Ln==0) Ln=15;
                     if (SlVagon->Ln>1000) Ln=SlVagon->Ln/1000;
                     lenvag+=Ln;
-
                 }
             }
         }
-        OTCEPS[i]->setSTATE_LEN_BY_VAGON(lenvag);
+        otcep->setSTATE_ID_ROSP_VAG(idr);
+        otcep->setSTATE_SP_VAG(sp);
+        otcep->setSTATE_LEN_BY_VAGON(lenvag);
     }
 }
 
@@ -163,10 +159,10 @@ void m_Otceps::updateVagons()
 m_Otcep *m_Otceps::otcepADDR_SLOT(int ADDR_SLOT,int ADDR,int NTP)
 {
     if ((NTP>=1)&&(NTP<=3)){
-        for (int i=0;i<MAXCOUNT_OTCEPS;i++){
-            if (OTCEPS[i]->STATE_LOCATION()!=m_Otcep::locationUnknow){
+        foreach (m_Otcep*otcep, l_otceps) {
+            if (otcep->STATE_LOCATION()!=m_Otcep::locationUnknow){
                 int a=(ADDR_SLOT-1)*100+ADDR;
-                if (OTCEPS[i]->stored_Descr.addr_tp[NTP-1]==a)return  OTCEPS[i];
+                if (otcep->stored_Descr.addr_tp[NTP-1]==a)return  otcep;
             }
         }
     }
@@ -185,6 +181,6 @@ m_Otcep *m_Otceps::topOtcep() const
 void m_Otceps::updateStates()
 {
     if (disableUpdateStates) return;
-//    m_Base::updateStates();
-//    updateVagons();
+    //    m_Base::updateStates();
+    //    updateVagons();
 }

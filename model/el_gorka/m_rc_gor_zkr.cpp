@@ -5,13 +5,20 @@
 #include "mvp_objectfactory.h"
 REGISTERELEMENT(m_RC_Gor_ZKR,"РЦ ЗКР","MODEL ГОРКА")
 
+REGISTERPROPERTY(m_RC_Gor_ZKR,RTDS_USL_OR,"Условия срабатывания РТДС","и / или","")
+
+
+
 m_RC_Gor_ZKR::m_RC_Gor_ZKR(QObject *parent) : m_RC_Gor(parent)
 {
     controllerARSNadvig=nullptr;
     svetZKR=nullptr;
     FPUTNADVIG=0;
     FSIGNAL_ROSPUSK.clear();
-    FSIGNAL_STATE.clear();
+    FSIGNAL_STATE_ERROR_RTDS.clear();
+    FSIGNAL_STATE_ERROR_NERASCEP.clear();
+    FSIGNAL_STATE_ERROR_OSYCOUNT.clear();
+    FRTDS_USL_OR=false;
     memset(dso,0,sizeof(dso));
     resetStates();
 }
@@ -19,8 +26,10 @@ m_RC_Gor_ZKR::m_RC_Gor_ZKR(QObject *parent) : m_RC_Gor(parent)
 void m_RC_Gor_ZKR::resetStates()
 {
     m_RC_Gor::resetStates();
-    FSTATE_ERROR=false;
+    FSTATE_ERROR_RTDS=false;
     FSTATE_ROSPUSK=false;
+    FSTATE_ERROR_NERASCEP=false;
+    FSTATE_ERROR_OSYCOUNT=false;
 }
 
 
@@ -65,5 +74,8 @@ bool m_RC_Gor_ZKR::is33()
 void m_RC_Gor_ZKR::updateStates()
 {
     m_RC_Gor::updateStates();
-    setSTATE_ROSPUSK(FSIGNAL_ROSPUSK.value_1bit());
+    setSignalState(FSIGNAL_ROSPUSK,FSTATE_ROSPUSK);
+    setSignalState(FSIGNAL_STATE_ERROR_RTDS,FSTATE_ERROR_RTDS);
+    setSignalState(FSIGNAL_STATE_ERROR_NERASCEP,FSTATE_ERROR_NERASCEP);
+    setSignalState(FSIGNAL_STATE_ERROR_OSYCOUNT,FSTATE_ERROR_OSYCOUNT);
 }

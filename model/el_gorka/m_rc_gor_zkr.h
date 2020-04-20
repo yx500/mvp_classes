@@ -30,11 +30,19 @@ public:
     MYPROP(int,PUTNADVIG)
     MYPROP(SignalDescription,SIGNAL_ROSPUSK)
 
-    MYPROP(SignalDescription,SIGNAL_STATE)
+    MYPROP(SignalDescription,SIGNAL_STATE_ERROR_RTDS)
+    MYPROP(SignalDescription,SIGNAL_STATE_ERROR_NERASCEP)
+    MYPROP(SignalDescription,SIGNAL_STATE_ERROR_OSYCOUNT)
+
+
+    MYPROP(bool,RTDS_USL_OR)
+
 
     MYSTATE(bool, STATE_ROSPUSK)
 
-    MYSTATE(bool, STATE_ERROR)
+    MYSTATE(bool, STATE_ERROR_RTDS)
+    MYSTATE(bool, STATE_ERROR_NERASCEP)
+    MYSTATE(bool, STATE_ERROR_OSYCOUNT)
 
 
 public:

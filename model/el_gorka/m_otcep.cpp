@@ -32,8 +32,7 @@ m_Otcep::m_Otcep(m_Otceps *parent,int num) : m_Base(parent)
     otceps=qobject_cast<m_Otceps*>(parent);
     FNUM=num;
     setObjectName(QString("Отцеп %1").arg(FNUM));
-    QString packetName=QString("descr%1").arg(FNUM);
-    FSIGNAL_ADDR=SignalDescription(9,packetName,0);
+
     resetStates();
     vVag.reserve(MaxVagon);
     vBusyRc.reserve(32);
@@ -52,6 +51,8 @@ void m_Otcep::resetStates()
     FSTATE_NAGON=0;
     FSTATE_ERROR=0;
     FSTATE_ID_ROSP=0;
+    FSTATE_UR=0;
+    FSTATE_KZP=0;
 
     FSTATE_VAGON_CNT=0;
     FSTATE_OSY_CNT=0;
@@ -92,9 +93,8 @@ void m_Otcep::resetStates()
     FSTATE_V_OUT_3=_undefV_;
 
     FSTATE_CHANGE_COUNTER=0;
-    FIDS_RC_BUSY.clear();
-
-    FIDS_RC_BUSY.clear();
+    FIDS_RCS.clear();
+    FIDS_RCF.clear();
     RCS=nullptr;
     RCF=nullptr;
     vVag.clear();
@@ -125,8 +125,8 @@ void m_Otcep::acceptStaticData(m_Otcep *o)
 void m_Otcep::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    FSIGNAL_ADDR.acceptGtBuffer();
-    connect(FSIGNAL_ADDR.getBuffer(),&GtBuffer::bufferChanged,this,&m_Otcep::slotChanged);
+    FSIGNAL_DATA.acceptGtBuffer();
+    connect(FSIGNAL_DATA.getBuffer(),&GtBuffer::bufferChanged,this,&m_Otcep::slotChanged);
 }
 
 
@@ -146,12 +146,10 @@ void m_Otcep::setBusyRC()
 {
     vBusyRc.clear();
     m_RC * RC;
-    QStringList lIDS_RC_BUSY;
     if ((RCS!=nullptr)&&(RCF!=nullptr)){
         RC=RCS;
         while (RC!=nullptr){
             vBusyRc.push_back(RC);
-            lIDS_RC_BUSY.append(QString("%1").arg(RC->id()));
             if (RC==RCF) break;
             RC=RC->getNextRCpolcfb(1);
             if (vBusyRc.size()>40) {
@@ -164,26 +162,34 @@ void m_Otcep::setBusyRC()
         if (RCS!=nullptr) vBusyRc.push_back(RCS);
         if (RCF!=nullptr) vBusyRc.push_back(RCF);
     }
-    setIDS_RC_BUSY(lIDS_RC_BUSY.join(';'));
+    QString S;
+    if (RCS!=nullptr) S=RCS->idstr();else S="";
+    setIDS_RCS(S);
+    if (RCF!=nullptr) S=RCF->idstr();else S="";
+    setIDS_RCF(S);
 }
 
 bool m_Otcep::is33()
 {
     if (m_Base::is33()) return true;
-    return FSIGNAL_ADDR.is33();
+    return FSIGNAL_DATA.is33();
 }
 
 void m_Otcep::updateStates()
 {
     if (disableUpdateStates) return;
-    if (FSIGNAL_ADDR.isInnerUse()) return;
+    if (FSIGNAL_DATA.isInnerUse()) return;
+    m_Base::updateStates();
+    if (FSTATE_33) return ;
+    if (FSIGNAL_DATA.chanelType()==9) updateStates_0();
+    if (FSIGNAL_DATA.chanelType()==9) updateStates_1();
+
+}
+
+void m_Otcep::updateStates_0()
+{
     // стандартная обработка
-        m_Base::updateStates();
-
-        if (FSTATE_33) return ;
-
-
-        const t_Descr *Descr=(const t_Descr *)FSIGNAL_ADDR.value_data(sizeof(t_Descr));
+        const t_Descr *Descr=(const t_Descr *)FSIGNAL_DATA.value_data(sizeof(t_Descr));
         if (Descr==nullptr){
             setSTATE_ENABLED(false);
             return ;
@@ -271,5 +277,23 @@ void m_Otcep::updateStates()
             }
             doStateChanged();
         }
+}
+
+void m_Otcep::updateStates_1()
+{
+    if (FSIGNAL_DATA.getBuffer()==nullptr) return;
+    QString S=QString::fromUtf8(FSIGNAL_DATA.getBuffer()->A);
+    QStringList ls=S.split(";");
+    foreach (auto &s, ls) {
+        QStringList ls1=s.split("=");
+        if (ls1.size()==2){
+            QVariant V;
+            V.clear();
+            V=ls1[1];
+            QString stateName="STATE_"+ls1[0];
+            setProperty(qPrintable(stateName),V);
+        }
+    }
+
 }
 

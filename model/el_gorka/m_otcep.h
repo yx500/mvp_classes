@@ -28,7 +28,7 @@ class m_Otcep : public m_Base
     Q_PROPERTY(int NUM READ NUM DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_NUM READ NUM DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_SP READ STATE_SP WRITE setSTATE_SP DESIGNABLE true STORED false )
-    MYPROP(SignalDescription,SIGNAL_ADDR)
+    MYPROP(SignalDescription,SIGNAL_DATA)
 public:
     MYSTATE(bool, STATE_ENABLED)  // участвует в роспуске
     int NUM() const {return FNUM;}
@@ -52,6 +52,9 @@ public:
     MYSTATE(int, STATE_ID_ROSP)
     MYSTATE(int, STATE_UR)
     MYSTATE(int, STATE_KZP)
+
+    MYSTATE(int, STATE_ID_ROSP_VAG)
+    MYSTATE(int, STATE_SP_VAG)
 
     // основные характеристики
     MYSTATE(int,  STATE_VAGON_CNT)
@@ -102,7 +105,8 @@ public:
     MYSTATE(qreal, STATE_V_OUT_3)
 
     MYSTATE(int, STATE_CHANGE_COUNTER)
-    MYSTATE(QString,IDS_RC_BUSY)
+    MYSTATE(QString,IDS_RCS)
+    MYSTATE(QString,IDS_RCF)
 
 
 
@@ -141,6 +145,8 @@ public slots:
 protected:
     int FNUM;
     m_Otceps*otceps;
+    void updateStates_0();
+    void updateStates_1();
 
 };
 

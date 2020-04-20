@@ -37,7 +37,7 @@ void v_Otceps::updateAfterLoad()
 {
     v_Model::updateAfterLoad();
     if (mOtceps){
-        QList<m_Otcep *> l=mOtceps->all_otceps();
+        QList<m_Otcep *> l=mOtceps->otceps();
         foreach (m_Otcep *m, l) {
             v_Otcep *v=new v_Otcep(this);
             v->setModelObject(m);

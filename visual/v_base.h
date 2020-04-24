@@ -54,7 +54,6 @@ class LIBSHARED_EXPORT v_Base : public BaseObject
     Q_PROPERTY(qreal OPACITY READ opacity WRITE setOpacity NOTIFY geometryChange DESIGNABLE true)
     Q_PROPERTY(qreal ROTATION READ rotation WRITE setRotation NOTIFY geometryChange DESIGNABLE true)
     Q_PROPERTY(qreal SCALE READ scale WRITE setScale NOTIFY geometryChange DESIGNABLE true)
-    Q_PROPERTY(QString COMMON_PROPERTYES READ COMMON_PROPERTYES WRITE setCOMMON_PROPERTYES DESIGNABLE true)
     Q_PROPERTY(bool STATE_VISIBLE READ isVisible WRITE setVisible DESIGNABLE true STORED false)
     Q_PROPERTY(bool STATE_SELECTED READ isSelected WRITE setSelected DESIGNABLE true STORED false)
 
@@ -63,6 +62,7 @@ class LIBSHARED_EXPORT v_Base : public BaseObject
     MYPROP(QRectF,SELECTRECT)
     MYPROP(QRectF,FLAGRECT)
     MYPROP(int,  LEVELDETAIL)
+    MYPROP(QVariantHash,COMMON_PROPERTYESH)
 
     MYPROP(quint64,MK_ID)
     MYPROP(QString,EXTFLAGSRC)
@@ -71,10 +71,7 @@ class LIBSHARED_EXPORT v_Base : public BaseObject
     public:
         DECLARECOLOR(FON)
 
-      QString COMMON_PROPERTYES() const;
-    void setCOMMON_PROPERTYES(QString &p);
-    void addCOMMON_PROPERTY(QString selfProperty,QString groupProperty){mCOMMON_PROPERTYESG2S[groupProperty]=selfProperty;}
-    const QMap<QString,QString>&COMMON_PROPERTYESG2S()const{return mCOMMON_PROPERTYESG2S;}
+    void addCOMMON_PROPERTY(QString selfProperty,QString groupProperty){FCOMMON_PROPERTYESH[groupProperty]=selfProperty;}
 
 
     void setxy(QPointF p); // в kоординатах сетки
@@ -197,7 +194,6 @@ public slots:
 
 protected:
     ProxyGraphicsItem * proxyGraphicsItem;
-    QMap<QString,QString>mCOMMON_PROPERTYESG2S;
     bool isSceneEditorMode() const;
 
     QPointF Fxy;  // в коордианатах сетки

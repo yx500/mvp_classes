@@ -4,15 +4,9 @@
 #include "v_stat_text.h"
 #include "signaldescription.h"
 
-class v_Lamp1x : public v_Base
+class v_Lamp1x : public v_StaticText
 {
     Q_OBJECT
-    MYPROP(MVP_Enums::TTextFlags, FLAGS)
-    MYPROP(int,SH)
-    MYPROP(QFont,FONT)
-    MYPROP(QSizeF,SIZEALLIGNRECT)
-    MYPROP(bool,ROUND_RECT)
-    MYPROP(bool,SH_IN_RECT)
     MYPROP(SignalDescription, SIGNAL_1)
 
     Q_PROPERTY(int STATE_SIGNAL READ getSTATE_SIGNAL WRITE setSTATE_SIGNAL DESIGNABLE true STORED false) \
@@ -56,17 +50,16 @@ public:
     virtual int getSTATE_SIGNAL()const {return FSTATE_SIGNAL;}
     void setSTATE_SIGNAL(int p);
 
-    virtual void d_paint(QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void resetStates();
-    virtual void calculateGeometry(); // перестраивает внтренние координаты
 
-
+    virtual QString getText();
+    virtual QColor getTextColor();
+    virtual QColor getRectColor();
+    virtual QColor getBrusColor();
 
     virtual void updateStates();
 
 protected:
-    QRectF  allign_rect;
-    qreal RTEXTH;
     QString FSCOLOR_P[16];
     QString FSCOLOR_B[16];
     QString FSTEXT[16];

@@ -127,6 +127,8 @@ QVector<ClassRegData> MVP_ObjectFactory::getVectorOfElementsRegData()
     return vClassRegData;
 }
 
+
+
 bool MVP_ObjectFactory::QVariantToQString(const QVariant &v, QString &s)
 {
 
@@ -142,6 +144,10 @@ bool MVP_ObjectFactory::QVariantToQString(const QVariant &v, QString &s)
         }
     }
 
+    if(v.type()==QVariant::Hash){
+        s=QVariantHashToQString(v.toHash());
+        return true;
+    } else
     if(v.type()==QVariant::PointF){
         s=QString("%1,%2").arg(v.toPointF().x()).arg(v.toPointF().y());
         return true;
@@ -182,7 +188,10 @@ bool MVP_ObjectFactory::QVariantFromQString(QVariant &v,const QString &s)
         }
 
     }
-
+    if(v.type()==QVariant::Hash){
+        v=QStringToQVariantHash(s);
+        return true;
+    } else
     if(v.type()==QVariant::PointF){
         QPointF p=QPointF(s.section(',',0,0).toDouble(),s.section(',',1,1).toDouble());
         v=p;

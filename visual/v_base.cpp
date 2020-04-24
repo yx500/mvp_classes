@@ -42,7 +42,7 @@ v_Base::v_Base(QObject *parent) :
     FSELECTRECT(),
     FFLAGRECT(),
     FLEVELDETAIL(2),
-    mCOMMON_PROPERTYESG2S(),
+    FCOMMON_PROPERTYESH(),
     Fxy(0,0),
     _boundingRect(0,0,5,5),
     _shape()
@@ -74,6 +74,7 @@ void v_Base::updateAfterLoad()
         v_Base *childI=qobject_cast<v_Base *>(b);
         if (childI) childI->proxyGraphicsItem->setParentItem(this->proxyGraphicsItem);
     }
+    //FCOMMON_PROPERTYESH=QStringToQVariantHash(COMMON_PROPERTYES());
 }
 
 
@@ -85,33 +86,33 @@ void v_Base::updateAfterLoad()
 
 
 
-QString v_Base::COMMON_PROPERTYES() const
-{
-    QStringList sl;
-    foreach (const QString &groupName,mCOMMON_PROPERTYESG2S.keys()){
-        sl.push_back(QString("%1=%2").arg(mCOMMON_PROPERTYESG2S[groupName]).arg(groupName));
-    }
-    return sl.join(";");
-}
+//QString v_Base::COMMON_PROPERTYES() const
+//{
+//    QStringList sl;
+//    foreach (const QString &groupName,mCOMMON_PROPERTYESG2S.keys()){
+//        sl.push_back(QString("%1=%2").arg(mCOMMON_PROPERTYESG2S[groupName]).arg(groupName));
+//    }
+//    return sl.join(";");
+//}
 
-void v_Base::setCOMMON_PROPERTYES(QString &p)
-{
-    if (COMMON_PROPERTYES()!=p)    {
-        mCOMMON_PROPERTYESG2S.clear();
-        QStringList sl=p.split(";");
-        foreach (QString kv, sl) {
-            QString propNameSelf=kv.section('=',0,0);
-            QString propNameGroup=kv.section('=',1);
-            if (propNameSelf.isEmpty()) continue;
-            if (propNameGroup.isEmpty()) continue;
-            mCOMMON_PROPERTYESG2S[propNameGroup]=propNameSelf;
-            if ((screen())&&(screen()->visualGroupPropertyes())) {
-                screen()->visualGroupPropertyes()->add(propNameSelf,propNameGroup,this);
-            }
+//void v_Base::setCOMMON_PROPERTYES(QString &p)
+//{
+//    if (COMMON_PROPERTYES()!=p)    {
+//        mCOMMON_PROPERTYESG2S.clear();
+//        QStringList sl=p.split(";");
+//        foreach (QString kv, sl) {
+//            QString propNameSelf=kv.section('=',0,0);
+//            QString propNameGroup=kv.section('=',1);
+//            if (propNameSelf.isEmpty()) continue;
+//            if (propNameGroup.isEmpty()) continue;
+//            mCOMMON_PROPERTYESG2S[propNameGroup]=propNameSelf;
+//            if ((screen())&&(screen()->visualGroupPropertyes())) {
+//                screen()->visualGroupPropertyes()->add(propNameSelf,propNameGroup,this);
+//            }
 
-        }
-    }
-}
+//        }
+//    }
+//}
 
 
 void v_Base::setxy(QPointF p)

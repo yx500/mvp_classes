@@ -188,3 +188,28 @@ QObjectList BaseObject::tagObjects() const
     }
     return l;
 }
+
+
+
+QString QVariantHashToQString(const QVariantHash &h)
+{
+    QString s;
+    foreach (QString k, h.keys()) {
+        if (!s.isEmpty()) s=s+";";
+        s=s+QString("%1=%2").arg(k).arg(h[k].toString());
+    }
+    return s;
+}
+
+QVariantHash QStringToQVariantHash(const QString &s)
+{
+    QVariantHash h;
+    QStringList sl=s.split(";");
+    foreach (QString s1, sl) {
+        QStringList sl1=s1.split("=");
+        if (sl1.size()==2){
+            h[sl1[0]]=sl1[1];
+        }
+    }
+    return h;
+}

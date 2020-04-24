@@ -39,7 +39,7 @@ void v_Lamp1x::setTEXT_(int i, QString &p)
     }
 }
 
-v_Lamp1x::v_Lamp1x(v_Base *parent) : v_Base(parent)
+v_Lamp1x::v_Lamp1x(v_Base *parent) : v_StaticText(parent)
 {
     FFONT=QFont("Times", 12-1);
 
@@ -57,8 +57,7 @@ v_Lamp1x::v_Lamp1x(v_Base *parent) : v_Base(parent)
     FSIGNAL_1.clear();
     FSTATE_SIGNAL=0;
     FSIZEALLIGNRECT=QSizeF(4,2);
-    FFLAGS=MVP_Enums::TTextFlag::AlignCenter;
-    addCOMMON_PROPERTY("SH","TEXTH");
+
     calculateGeometry();
     resetStates();
 
@@ -68,6 +67,8 @@ v_Lamp1x::v_Lamp1x(v_Base *parent) : v_Base(parent)
 
 void v_Lamp1x::setSTATE_SIGNAL(int p)
 {
+    if (p<0) p=0;
+    if (p>=16) p=15;
     if (p!=FSTATE_SIGNAL) {
         FSTATE_SIGNAL=p;
         update();
@@ -75,44 +76,7 @@ void v_Lamp1x::setSTATE_SIGNAL(int p)
 }
 
 
-void v_Lamp1x::d_paint(QPainter *painter, const QStyleOptionGraphicsItem *)
-{
-    QPen P;
-    QBrush B;
-    QString text=objectName();
 
-
-    if (ISEDITORMODE){
-        P=QPen(Qt::black);
-        B=QBrush(Qt::white);
-        if (FSIGNAL_1.isEmpty()){
-            B=QBrush(Qt::gray);
-        }
-    } else{
-        QColor penColor;
-        QColor brushColor;
-        if ((FSTATE_SIGNAL<0)||(FSTATE_SIGNAL>=16)){
-            penColor=Qt::black;
-            brushColor=getColor(Color_state_33);
-        } else {
-            penColor=getColor(FSCOLOR_P[FSTATE_SIGNAL]);
-            brushColor=getColor(FSCOLOR_B[FSTATE_SIGNAL]);
-            if (!FSTEXT[FSTATE_SIGNAL].isEmpty()) text=FSTEXT[FSTATE_SIGNAL];
-        }
-        P=QPen(penColor);
-        B=QBrush(brushColor);
-    }
-
-    painter->setBrush(B);
-    painter->setPen(P);
-    if (P.color().isValid()) {
-        if (!FROUND_RECT) painter->drawRect(allign_rect); else
-                          painter->drawRoundedRect(allign_rect, allign_rect.height()/5, allign_rect.height()/5);
-    }
-    RTEXTH >0 ? FFONT.setPointSizeF(RTEXTH): FFONT.setPointSizeF(1);
-    painter->setFont(FFONT);
-    painter->drawText(allign_rect,FFLAGS,text);
-}
 
 void v_Lamp1x::updateStates()
 {
@@ -127,15 +91,30 @@ void v_Lamp1x::resetStates()
     FSTATE_SIGNAL=0;
 }
 
-void v_Lamp1x::calculateGeometry()
+
+
+QString v_Lamp1x::getText()
 {
-    allign_rect=QRectF(0,0,FSIZEALLIGNRECT.width()*gridDX(),FSIZEALLIGNRECT.height()*gridDY());
-    allign_rect.moveCenter(QPointF(0,0));
-    if (FSH!=0) RTEXTH=FSH; else RTEXTH=allign_rect.height()-2;
-    {
-        QRectF R=allign_rect;
-        _boundingRect=R.adjusted(-1,-1,+1,+1);
-    }
+    if (!FSTEXT[FSTATE_SIGNAL].isEmpty()) return FSTEXT[FSTATE_SIGNAL];
+    return objectName();
+
+}
+
+QColor v_Lamp1x::getTextColor()
+{
+    if (!FSCOLOR_P[FSTATE_SIGNAL].isEmpty()) return getColor(FSCOLOR_P[FSTATE_SIGNAL]);
+    return FCOLOR_TEXT;
+}
+
+QColor v_Lamp1x::getRectColor()
+{
+    return Qt::black;
+}
+
+QColor v_Lamp1x::getBrusColor()
+{
+    if (!FSCOLOR_B[FSTATE_SIGNAL].isEmpty()) return getColor(FSCOLOR_B[FSTATE_SIGNAL]);
+    return FCOLOR_BRUSH;
 }
 
 

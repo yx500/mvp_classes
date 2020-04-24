@@ -7,7 +7,7 @@
 
 #include <QMap>
 
-#include "BaseObject.h"
+#include "baseobject.h"
 #include "visualgroupproperty.h"
 
 class v_Base;

@@ -140,7 +140,8 @@ signals:
 
 
 };
-
+QString QVariantHashToQString(const QVariantHash &h);
+QVariantHash QStringToQVariantHash(const QString &s);
 
 
 

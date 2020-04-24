@@ -112,14 +112,14 @@ void VisualGroupPropertyes::setTarget(v_Base *p)
     if (!target) return;
     QList<v_Base*> lv=target->findChildrenVisual<v_Base*>();
     foreach (v_Base*vb, lv) {
-        foreach (const QString &groupPropertyName,vb->COMMON_PROPERTYESG2S().keys()){
+        foreach (const QString &groupPropertyName,vb->COMMON_PROPERTYESH().keys()){
             if (!mName2Prop.contains(groupPropertyName)){
-                const QString &objectPropertyName=vb->COMMON_PROPERTYESG2S().value(groupPropertyName);
+                const QString &objectPropertyName=vb->COMMON_PROPERTYESH().value(groupPropertyName).toString();
                 add(objectPropertyName,groupPropertyName,vb);
             } else {
                 VisualGroupProperty *vp=mName2Prop[groupPropertyName];
                 if (!vp->property("VAL").isValid()){
-                    const QString &objectPropertyName=vb->COMMON_PROPERTYESG2S().value(groupPropertyName);
+                    const QString &objectPropertyName=vb->COMMON_PROPERTYESH().value(groupPropertyName).toString();
                     QVariant V=vb->property(qPrintable(objectPropertyName));
                     bool b=vp->blockSignals(true);
                     vp->setProperty("VAL",V);
@@ -146,8 +146,8 @@ void VisualGroupPropertyes::updateGroupPropertyes()
         QString groupPropertyName=vp->idstr();
         QString groupPropertyVal=vp->STORED_VALUE();
         foreach (v_Base*vb, lv) {
-            if (vb->COMMON_PROPERTYESG2S().contains(groupPropertyName)){
-                const QString &objectPropertyName=vb->COMMON_PROPERTYESG2S().value(groupPropertyName);
+            if (vb->COMMON_PROPERTYESH().contains(groupPropertyName)){
+                const QString &objectPropertyName=vb->COMMON_PROPERTYESH().value(groupPropertyName).toString();
                 QVariant V;
                 V=vb->property(qPrintable(objectPropertyName));
                 if (V.isValid()){

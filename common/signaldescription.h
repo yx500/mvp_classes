@@ -21,6 +21,7 @@ public:
 
     SignalDescription();
     SignalDescription(const SignalDescription &other);
+    SignalDescription(const QString &s);
     SignalDescription(int type,const QString &name,int offset);
 
     IGtBufferInterface *GtBufferInterface() const;
@@ -73,7 +74,10 @@ public:
 
     void clear();
     QString toString() const;
-    void fromString(QString s);
+    bool fromString(const QString &s);
+    static SignalDescription _fromString(const QString &s);
+    static QString _toString(const SignalDescription &s);
+
 
     bool	operator == (const SignalDescription &other) const {
         return (FChanelName==other.chanelName() &&

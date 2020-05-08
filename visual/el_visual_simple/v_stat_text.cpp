@@ -26,11 +26,17 @@ v_StaticText::v_StaticText(v_Base *parent) :
     FSH_IN_RECT=false;
     FROUND_RECT=false;
     addCOMMON_PROPERTY("SH","TEXTH");
+    addCOMMON_PROPERTY("FONT","TEXTFONT");
     calculateGeometry();
 
 
 }
 
+void v_StaticText::updateAfterLoad()
+{
+    v_Model::updateAfterLoad();
+    //addCOMMON_PROPERTY("FONT","TEXTFONT");
+}
 
 
 

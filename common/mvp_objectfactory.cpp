@@ -9,10 +9,10 @@
 #include "qobject2xml.h"
 
 
-#include <QPointF>
-#include <QSizeF>
-#include <QRectF>
+
 #include <utility>
+
+
 
 QObject *ClassRegData::newQObject() const
 {
@@ -24,8 +24,8 @@ QObject *ClassRegData::newQObject() const
 
 MVP_ObjectFactory::MVP_ObjectFactory()
 {
-    qRegisterMetaType<ObjectLink>("ObjectLink");
-    qRegisterMetaType<SignalDescription>("SignalDescription");
+
+
     qRegisterMetaType<QObjectList>("QObjectList");
 
 
@@ -129,92 +129,8 @@ QVector<ClassRegData> MVP_ObjectFactory::getVectorOfElementsRegData()
 
 
 
-bool MVP_ObjectFactory::QVariantToQString(const QVariant &v, QString &s)
-{
 
-    if ((unsigned)v.userType()>=QVariant::UserType){
 
-        if (v.userType()==qMetaTypeId<ObjectLink>()){
-            s=v.value<ObjectLink>().toString();
-            return true;
-        }
-        if (v.userType()==qMetaTypeId<SignalDescription>()){
-            s=v.value<SignalDescription>().toString();
-            return true;
-        }
-    }
-
-    if(v.type()==QVariant::Hash){
-        s=QVariantHashToQString(v.toHash());
-        return true;
-    } else
-    if(v.type()==QVariant::PointF){
-        s=QString("%1,%2").arg(v.toPointF().x()).arg(v.toPointF().y());
-        return true;
-    } else
-    if(v.type()==QVariant::SizeF){
-        s=QString("%1,%2").arg(v.toSizeF().width()).arg(v.toSizeF().height());
-        return true;
-    }
-    if(v.type()==QVariant::RectF){
-
-        s=QString("%1,%2,%3,%4").arg(v.toRectF().left())
-                                .arg(v.toRectF().top())
-                                .arg(v.toRectF().width())
-                                .arg(v.toRectF().height());
-        return true;
-    }
-
-    if (!v.canConvert(QMetaType::QString)) return false;
-    s=v.toString();
-    return true;
-}
-
-bool MVP_ObjectFactory::QVariantFromQString(QVariant &v,const QString &s)
-{
-
-    if ((unsigned)v.userType()>=QVariant::UserType){
-        if (v.userType()==qMetaTypeId<ObjectLink>()){
-            ObjectLink l;
-            l.fromValue(s);
-            v.setValue(l);
-            return true;
-        }
-        if (v.userType()==qMetaTypeId<SignalDescription>()){
-            SignalDescription l;
-            l.fromString(s);
-            v.setValue(l);
-            return true;
-        }
-
-    }
-    if(v.type()==QVariant::Hash){
-        v=QStringToQVariantHash(s);
-        return true;
-    } else
-    if(v.type()==QVariant::PointF){
-        QPointF p=QPointF(s.section(',',0,0).toDouble(),s.section(',',1,1).toDouble());
-        v=p;
-        return true;
-    } else
-    if(v.type()==QVariant::SizeF){
-            QSizeF p=QSizeF(s.section(',',0,0).toDouble(),s.section(',',1,1).toDouble());
-            v=p;
-            return true;
-    }else
-    if(v.type()==QVariant::RectF){
-                QRectF p=QRectF(s.section(',',0,0).toDouble(),s.section(',',1,1).toDouble(),s.section(',',2,2).toDouble(),s.section(',',3,3).toDouble());
-                v=p;
-                return true;
-        }
-
-    QVariant vs;
-    vs=s;
-    if (!vs.canConvert(v.userType()))    return false;
-    v=vs;
-
-    return true;
-}
 
 
 

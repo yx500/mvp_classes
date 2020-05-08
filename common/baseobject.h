@@ -76,6 +76,7 @@ public:
     // допольнительный ID строковой
     virtual void setidstr(QString p){SETPROP(Fidstr);}
     virtual QString  idstr() const {return Fidstr;}
+    BaseObject * baseObjectById(const quint64 &id) const;
 
     virtual bool isCanAddObject(QObject *O) const {Q_UNUSED(O);return false;}
     virtual void addObject(QObject *O) {O->setParent(this);}
@@ -140,8 +141,7 @@ signals:
 
 
 };
-QString QVariantHashToQString(const QVariantHash &h);
-QVariantHash QStringToQVariantHash(const QString &s);
+
 
 
 

@@ -8,6 +8,7 @@
 // увязывает отцепы с моделью поля
 
 class m_ControllerARS;
+class ModelGroupGorka;
 class m_Otceps : public m_Base
 {
     Q_OBJECT
@@ -26,18 +27,18 @@ public:
     m_Otcep * otcepOnRc(m_RC* rc);
     m_Otcep *otcepADDR_SLOT(int ADDR_SLOT,int ADDR,int NTP);
     m_RC* find_RC(int chanelOffset);
-    void set_lrc(QList<m_RC*> &l);
 
     QList<m_Otcep *> l_otceps;
 
     m_Otcep *topOtcep() const;
-    QMap<int,int> mSP2MAR;
-    QMap<int,int> mMAR2SP;
+
 
     virtual void updateStates();
 
 
-
+    QMap<int,m_RC *> mOffset2Rc;
+    QMap<QString,m_RC *> mIDS2Rc;
+    ModelGroupGorka *modelGroupGorka=nullptr;
 
 public slots:
     void updateVagons();
@@ -47,8 +48,6 @@ protected:
     GtBuffer * chanelVag[MaxVagon];
 
     QList<m_RC *> l_rc;
-    QMap<int,m_RC *> mOffset2Rc;
-    QMap<QString,m_RC *> mIDS2Rc;
 
 
 

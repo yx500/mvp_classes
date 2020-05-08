@@ -61,7 +61,7 @@ public:
     MYSTATE(int,  STATE_OSY_CNT)
     MYSTATE(qreal,STATE_VES)     // Вес отцепа в тоннах
     MYSTATE(bool, STATE_BAZA)    // признак наличиия дб
-    MYSTATE(int,  STATE_LEN)     // длина в метрах
+    MYSTATE(qreal,  STATE_LEN)     // длина в метрах
     // CЛ
     MYSTATE(int,  STATE_SL_VAGON_CNT)
     MYSTATE(int,  STATE_SL_OSY_CNT)
@@ -83,6 +83,7 @@ public:
     };
     Q_ENUM(TOnParkState)
     MYSTATE(TOnParkState, STATE_KZP_OS)
+    MYSTATE(int,          STATE_KZP_D)
     // вычисляемые
     MYSTATE(qreal, STATE_LEN_BY_VAGON)
     MYSTATE(qreal, STATE_LEN_BY_RC_MIN)
@@ -103,6 +104,8 @@ public:
     MYSTATE(qreal, STATE_V_OUT_1)
     MYSTATE(qreal, STATE_V_OUT_2)
     MYSTATE(qreal, STATE_V_OUT_3)
+
+    MYSTATE(int, STATE_PUT_NADVIG)
 
     MYSTATE(int, STATE_CHANGE_COUNTER)
     MYSTATE(QString,IDS_RCS)
@@ -137,6 +140,7 @@ public:
 
     virtual bool is33();
     virtual void updateStates();
+    void update_descr();
 
     tos_OtcepData *tos=nullptr; // доп данные для work, внешняя либа.
 public slots:

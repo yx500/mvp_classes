@@ -5,6 +5,7 @@
 #include <QMetaProperty>
 
 #include "m_rc_gor_park.h"
+#include "m_rc_gor_zkr.h"
 #include "m_svet.h"
 #include "m_otceps.h"
 #include "m_rtds.h"
@@ -21,11 +22,11 @@ REGISTERELEMENT(ModelGroupGorka,"Модель горки","MODEL ГОРКА")
 ModelGroupGorka::ModelGroupGorka(BaseObject *parent) :
     ModelRootGroup(parent)
 {
-     setObjectName("Модель горки");
-     FSIGNAL_ROSPUSK.clear();
-     FSIGNAL_PAUSA.clear();
-     FSIGNAL_STOP.clear();
-     resetStates();
+    setObjectName("Модель горки");
+    FSIGNAL_ROSPUSK.clear();
+    FSIGNAL_PAUSA.clear();
+    FSIGNAL_STOP.clear();
+    resetStates();
 
 }
 
@@ -88,8 +89,8 @@ void ModelGroupGorka::validation(ListObjStr *l) const
         foreach (m_ControllerARS*m2, lars) {
             if (m1==m2) continue;
             if ((m1->ADDR()==m2->ADDR())&&
-                (m1->ADDR_SLOT()==m2->ADDR_SLOT()))
-                    l->error(m1,QString("Одинаковый ADDR-SLOT"));
+                    (m1->ADDR_SLOT()==m2->ADDR_SLOT()))
+                l->error(m1,QString("Одинаковый ADDR-SLOT"));
         }
     }
 
@@ -98,7 +99,7 @@ void ModelGroupGorka::validation(ListObjStr *l) const
         foreach (m_RIS*m2, lris) {
             if (m1==m2) continue;
             if ((m1->controllerARS()==m2->controllerARS()))
-                    l->error(m1,QString("Одинаковый контроллер"));
+                l->error(m1,QString("Одинаковый контроллер"));
         }
     }
 
@@ -111,8 +112,28 @@ void ModelGroupGorka::validation(ListObjStr *l) const
 void ModelGroupGorka::updateAfterLoad()
 {
     ModelRootGroup::updateAfterLoad();
-    //FId=QDateTime::currentDateTime().msecsTo(QDateTime(QDate(2015,01,01),QTime(0,0)));
+    // расставим значения
+    QList<m_RC_Gor_Park*> l_rcp=parent()->findChildren<m_RC_Gor_Park*>();
+    foreach (m_RC_Gor_Park*rcp, l_rcp) {
+        mSP2MAR[rcp->PARK_WAY()]=rcp->MINWAY();
+        mMAR2SP[rcp->MINWAY()]=rcp->PARK_WAY();
 
+    }
+    lzkr=findChildren<m_RC_Gor_ZKR*>();
+    foreach (auto rczkr, lzkr) {
+
+        for (int m=rczkr->MINWAY();m<=rczkr->MAXWAY();m++){
+            QList<m_RC_Gor*> lm=marshrut(rczkr->PUTNADVIG(),m);
+            int n=0;
+            qreal absx=0;
+            foreach (auto rc, lm) {
+                rc->m_PN_M2N[rczkr->PUTNADVIG()][m]=n;
+                rc->m_PN_M2X[rczkr->PUTNADVIG()][m]=absx;
+                n++;
+                absx+=rc->LEN();
+            }
+        }
+    }
 }
 
 void ModelGroupGorka::updateStates()
@@ -120,6 +141,8 @@ void ModelGroupGorka::updateStates()
     updateRegim();
     ModelRootGroup::updateStates();
 }
+
+
 
 void ModelGroupGorka::updateRegim()
 {
@@ -136,7 +159,45 @@ void ModelGroupGorka::updateRegim()
         setSTATE_REGIM(r);
     }
 }
+bool inway(int way,int minway,int maxway)
+{
+    if ((way>0)&&(way>=minway)&&(way<=maxway)) return true;
+    return false;
+}
+QList<m_RC_Gor *> ModelGroupGorka::marshrut(int put_nadvig,int m)
+{
+    QList<m_RC_Gor *> l;
+    QList<m_RC_Gor_ZKR*> lzkr=findChildren<m_RC_Gor_ZKR*>();
+    m_RC_Gor*rcs=nullptr;
+    foreach (auto rczkr, lzkr) {
+        if (rczkr->PUTNADVIG()==put_nadvig) rcs=rczkr;
 
+
+    }
+    l.push_back(rcs);
+    while (rcs){
+        auto rcplus=qobject_cast<m_RC_Gor*>(rcs->getNextRC(0,0));
+        if ((rcplus!=nullptr)&&(inway(m,rcplus->MINWAY(),rcplus->MAXWAY()))) {
+            rcs=rcplus;  l.push_back(rcs);
+        } else {
+            auto rcmnus=qobject_cast<m_RC_Gor*>(rcs->getNextRC(0,1));
+            if ((rcmnus!=nullptr)&&(inway(m,rcmnus->MINWAY(),rcmnus->MAXWAY()))) {
+                rcs=rcmnus;  l.push_back(rcs);
+            } else {
+                break;
+            }
+        }
+    }
+    return l;
+}
+
+int ModelGroupGorka::PUT_NADVIG() const
+{
+    foreach (auto zkr, lzkr) {
+        if (zkr->STATE_ROSPUSK()==1) return zkr->PUTNADVIG();
+    }
+    return 0;
+}
 
 
 

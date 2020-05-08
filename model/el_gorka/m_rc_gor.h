@@ -29,6 +29,10 @@ public:
 
     virtual MVP_Enums::TStrelPol STATE_POL() const {return MVP_Enums::TStrelPol::pol_plus;}
     virtual void updateStates();
+
+    QMap<int,QMap<int,int>> m_PN_M2N; // номер по порядку от зкр, Путь надвига,маршрут-> N
+    QMap<int,QMap<int,int>> m_PN_M2X; // смещение по порядку от зкр, Путь надвига,маршрут-> Х
+
 protected:
     
 };

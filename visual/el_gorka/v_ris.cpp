@@ -81,7 +81,7 @@ void v_RIS::d_paint(QPainter *painter, const QStyleOptionGraphicsItem *option)
 
         if (FSTATE_V>0){
             QString S;
-            S.sprintf("%2.1f",FSTATE_V);
+            S.asprintf("%2.1f",FSTATE_V);
             (R.height()*0.6>0) ? font.setPointSizeF(R.height()*0.6):font.setPointSizeF(1);
             painter->drawText(R,flags,S);
         }

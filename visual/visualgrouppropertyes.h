@@ -24,16 +24,15 @@ public:
     VisualGroupProperty *add(QString objectPropName,QString groupPropName,QObject *O);
 
     virtual void updateAfterLoad();
-    void setTarget(v_Base *p);
+    void collectGroupPropertyes(v_Base *p);
 
 signals:
-    void visualGroupPropertyesChanged(QObject *O);
 public slots:
     void slot_propertyChanged(QObject *O);
 protected:
     QMap<QString,VisualGroupProperty *> mName2Prop;
     v_Base *target;
-    void updateGroupPropertyes();
+    void updateObjectsPropertyes();
 
 };
 

@@ -2,6 +2,7 @@
 #include "mvp_system.h"
 #include "m_controllerars.h"
 #include "m_rc_gor_park.h"
+#include "modelgroupgorka.h"
 
 #include "mvp_objectfactory.h"
 REGISTERELEMENT(m_Otceps,"ОТЦЕПЫ","MODEL ГОРКА")
@@ -53,6 +54,7 @@ void m_Otceps::validation(ListObjStr *l) const
 void m_Otceps::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
+    modelGroupGorka=qobject_cast<ModelGroupGorka*>(parent());
     foreach (m_Otcep*otcep, l_otceps) {
         if (FTYPE_DESCR==0){
             QString packetName=QString("descr%1").arg(otcep->NUM());
@@ -71,19 +73,15 @@ void m_Otceps::updateAfterLoad()
             connect(chanelVag[i],&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
         }
     }
-    if (parent()){
+    if (modelGroupGorka){
         l_rc=parent()->findChildren<m_RC*>();
         foreach (m_RC *rc, l_rc) {
-            if ((!rc->SIGNAL_BUSY().isNotUse()) &&(rc->SIGNAL_BUSY().chanelOffset()!=0))
+            if ((!rc->SIGNAL_BUSY().isNotUse()) &&(rc->SIGNAL_BUSY().chanelOffset()!=0)){
                 mOffset2Rc[rc->SIGNAL_BUSY().chanelOffset()]=rc;
                 mIDS2Rc[rc->idstr()]=rc;
+            }
         }
-        QList<m_RC_Gor_Park*> l_rcp=parent()->findChildren<m_RC_Gor_Park*>();
-        foreach (m_RC_Gor_Park*rcp, l_rcp) {
-            mSP2MAR[rcp->PARK_WAY()]=rcp->MINWAY();
-            mMAR2SP[rcp->MINWAY()]=rcp->PARK_WAY();
 
-        }
     }
 }
 
@@ -114,10 +112,6 @@ m_RC *m_Otceps::find_RC(int chanelOffset)
     return mOffset2Rc[chanelOffset];
 }
 
-void m_Otceps::set_lrc(QList<m_RC *> &l)
-{
-    l_rc=l;
-}
 
 
 

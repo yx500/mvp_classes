@@ -64,8 +64,7 @@ public:
     };
 
 
-    virtual bool QVariantToQString(const QVariant &v,QString &s);
-    virtual bool QVariantFromQString(QVariant &v,const QString &s);
+
 
 
     void addClassRegData(const QString& classname,QString rusname,QString group,const QMetaObject*o);

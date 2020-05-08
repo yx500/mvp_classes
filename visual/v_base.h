@@ -71,7 +71,7 @@ class LIBSHARED_EXPORT v_Base : public BaseObject
     public:
         DECLARECOLOR(FON)
 
-    void addCOMMON_PROPERTY(QString selfProperty,QString groupProperty){FCOMMON_PROPERTYESH[groupProperty]=selfProperty;}
+    void addCOMMON_PROPERTY(QString selfProperty,QString groupProperty){FCOMMON_PROPERTYESH[selfProperty]=groupProperty;}
 
 
     void setxy(QPointF p); // в kоординатах сетки

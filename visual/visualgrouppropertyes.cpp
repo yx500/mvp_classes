@@ -20,79 +20,20 @@ VisualGroupProperty *VisualGroupPropertyes::visualGroupProperty(QString property
 }
 
 
-
-//qreal VisualGroupPropertyes::viewProperty_qreal(const VisualGroupProperty_qreal &prop, qreal elementValue)
-//{
-//    VisualGroupProperty * p=0;
-//    if (mName2Prop.contains(prop.name)){
-//        p=mName2Prop[prop.name];
-//    }
-
-//    if (p==0) {
-//        p=new VisualGroupProperty(this);
-//        p->setParent(this);
-//        p->setVALUE(prop.elementValueD);
-//        p->setVALUE_DEF(prop.elementValueR);
-//        p->setObjectName(prop.text);
-//        p->setidstr(prop.name);
-//        connect(p,SIGNAL(propertyChanged(QObject*)),this,SLOT(slot_propertyChanged(QObject*)));
-//        mName2Prop[prop.name]=p;
-//    }
-//    if (p->VALUE_DEF()==elementValue) return p->VALUE();
-//    return elementValue;
-//}
-
-//int VisualGroupPropertyes::viewProperty_int(const VisualGroupProperty_int &prop, int elementValue)
-//{
-//    VisualGroupProperty * p=0;
-//    if (mName2Prop.contains(prop.name)){
-//        p=mName2Prop[prop.name];
-//    }
-
-//    if (p==0) {
-//        p=new VisualGroupProperty(this);
-//        p->setParent(this);
-//        p->setVALUE(prop.elementValueD);
-//        p->setVALUE_DEF(prop.elementValueR);
-//        p->setObjectName(prop.text);
-//        p->setidstr(prop.name);
-//        connect(p,SIGNAL(propertyChanged(QObject*)),this,SLOT(slot_propertyChanged(QObject*)));
-//        mName2Prop[prop.name]=p;
-//    }
-//    if (p->VALUE_DEF()==elementValue) return p->VALUE();
-//    return elementValue;
-//}
-
 VisualGroupProperty *VisualGroupPropertyes::add(QString objectPropName, QString groupPropName, QObject *O)
 {
-    VisualGroupProperty * p=0;
-    if (mName2Prop.contains(groupPropName)){
-        p=mName2Prop[groupPropName];
-        if (!p->property("VAL").isValid()){
-            QVariant V=O->property(qPrintable(objectPropName));
-            p->setProperty("VAL",V);
-        }
-    }
+    if (mName2Prop.contains(groupPropName))  return mName2Prop[groupPropName];
 
-    if (p==0) {
-        if (O->metaObject()->indexOfProperty(qPrintable(objectPropName))<0) return 0;
-        p=new VisualGroupProperty(this);
+        if (O->metaObject()->indexOfProperty(qPrintable(objectPropName))<0) return nullptr;
+        VisualGroupProperty *p=new VisualGroupProperty(this);
         p->setParent(this);
-
-        //        p->setVALUE(0);
-        //        p->setVALUE_DEF(0);
+        p->blockSignals(true);
         p->setObjectName(MVP_ObjectFactory::instance()->property_rusname(O->metaObject(),qPrintable(objectPropName)));
         p->setidstr(groupPropName);
-        QVariant V=O->property(qPrintable(objectPropName));
-        p->blockSignals(true);
-        p->setProperty("VAL",V);
+        p->setV(O->property(qPrintable(objectPropName)));
         blockSignals(false);
-        QString S;
-        MVP_ObjectFactory::instance()->QVariantToQString( O->property(qPrintable(objectPropName)),S);
-        p->setSTORED_VALUE(S);
         connect(p,SIGNAL(propertyChanged(QObject*)),this,SLOT(slot_propertyChanged(QObject*)));
         mName2Prop[groupPropName]=p;
-    }
     return p;
 }
 
@@ -106,53 +47,43 @@ void VisualGroupPropertyes::updateAfterLoad()
     }
 }
 
-void VisualGroupPropertyes::setTarget(v_Base *p)
+void VisualGroupPropertyes::collectGroupPropertyes(v_Base *p)
 {
     target=p;
     if (!target) return;
     QList<v_Base*> lv=target->findChildrenVisual<v_Base*>();
     foreach (v_Base*vb, lv) {
-        foreach (const QString &groupPropertyName,vb->COMMON_PROPERTYESH().keys()){
+        foreach (const QString &objectPropertyName,vb->COMMON_PROPERTYESH().keys()){
+            QString groupPropertyName=vb->COMMON_PROPERTYESH().value(objectPropertyName).toString();
             if (!mName2Prop.contains(groupPropertyName)){
-                const QString &objectPropertyName=vb->COMMON_PROPERTYESH().value(groupPropertyName).toString();
                 add(objectPropertyName,groupPropertyName,vb);
-            } else {
-                VisualGroupProperty *vp=mName2Prop[groupPropertyName];
-                if (!vp->property("VAL").isValid()){
-                    const QString &objectPropertyName=vb->COMMON_PROPERTYESH().value(groupPropertyName).toString();
-                    QVariant V=vb->property(qPrintable(objectPropertyName));
-                    bool b=vp->blockSignals(true);
-                    vp->setProperty("VAL",V);
-                    vp->blockSignals(b);
-                }
             }
         }
     }
-    updateGroupPropertyes();
+    updateObjectsPropertyes();
 }
 
 void VisualGroupPropertyes::slot_propertyChanged(QObject *O)
 {
-    updateGroupPropertyes();
-    emit visualGroupPropertyesChanged(O);
+    updateObjectsPropertyes();
 }
 
-void VisualGroupPropertyes::updateGroupPropertyes()
+void VisualGroupPropertyes::updateObjectsPropertyes()
 {
     if (!target) return;
     QList<v_Base*> lv=target->findChildrenVisual<v_Base*>();
     QList<VisualGroupProperty *> lp=findChildren<VisualGroupProperty *>();
     foreach (VisualGroupProperty *vp, lp) {
         QString groupPropertyName=vp->idstr();
-        QString groupPropertyVal=vp->STORED_VALUE();
+        QVariant groupPropertyVal=vp->V();
         foreach (v_Base*vb, lv) {
-            if (vb->COMMON_PROPERTYESH().contains(groupPropertyName)){
-                const QString &objectPropertyName=vb->COMMON_PROPERTYESH().value(groupPropertyName).toString();
-                QVariant V;
-                V=vb->property(qPrintable(objectPropertyName));
-                if (V.isValid()){
-                    if (MVP_ObjectFactory::instance()->QVariantFromQString(V,groupPropertyVal)){
-                        vb->setProperty(qPrintable(objectPropertyName),V);
+            foreach (const QString &objectPropertyName,vb->COMMON_PROPERTYESH().keys()){
+                QString groupPropertyName2=vb->COMMON_PROPERTYESH().value(objectPropertyName).toString();
+                if (groupPropertyName==groupPropertyName2){
+                    QVariant V;
+                    V=vb->property(qPrintable(objectPropertyName));
+                    if (V.isValid()){
+                            vb->setProperty(qPrintable(objectPropertyName),groupPropertyVal);
                     }
                 }
             }

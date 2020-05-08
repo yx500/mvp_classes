@@ -1,11 +1,11 @@
 #include "baseobject.h"
 #include <QMetaObject>
 #include <QMetaProperty>
+#include <QPointF>
 #include <utility>
 #include "signaldescription.h"
-#include "mvp_objectfactory.h"
+#include "mvp_system.h"
 #include "objectlink.h"
-
 
 QString objectId2Str(const quint64 &id){
     return QString("%1").arg(id);
@@ -22,6 +22,19 @@ BaseObject::BaseObject(QObject *parent) :
     FId=0;
     Fidstr.clear();
     xmlFile.clear();
+}
+
+BaseObject *BaseObject::baseObjectById(const quint64 &id) const
+{
+    if (FId==id) return (BaseObject *)this;
+    foreach (QObject *o, children()) {
+        BaseObject *b=qobject_cast<BaseObject*>(o);
+        if (b!=nullptr) {
+            BaseObject *fb=b->baseObjectById(id);
+            if (fb!=nullptr) return fb;
+        }
+    }
+    return nullptr;
 }
 
 
@@ -191,25 +204,3 @@ QObjectList BaseObject::tagObjects() const
 
 
 
-QString QVariantHashToQString(const QVariantHash &h)
-{
-    QString s;
-    foreach (QString k, h.keys()) {
-        if (!s.isEmpty()) s=s+";";
-        s=s+QString("%1=%2").arg(k).arg(h[k].toString());
-    }
-    return s;
-}
-
-QVariantHash QStringToQVariantHash(const QString &s)
-{
-    QVariantHash h;
-    QStringList sl=s.split(";");
-    foreach (QString s1, sl) {
-        QStringList sl1=s1.split("=");
-        if (sl1.size()==2){
-            h[sl1[0]]=sl1[1];
-        }
-    }
-    return h;
-}

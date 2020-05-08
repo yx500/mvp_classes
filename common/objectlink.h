@@ -19,17 +19,28 @@ class ObjectLink
         FisNotUsed=false;
         linkObj(o);
     }
-    ~ObjectLink(){}
+    ObjectLink(const QString &s){
+        fromString(s);
+    }
 
-    QString toString(){
+    QString toString() const{
         if (FisNotUsed) return "";
         return QString("%1").arg(storedFid);
     }
-    void fromValue(QString s){
+    void fromString(QString s){
         storedFid=0;
         if (s.isEmpty()){FisNotUsed=true;} else {FisNotUsed=false;storedFid=str2objectId(s);}
         O=nullptr;
     }
+
+    static ObjectLink _fromString(const QString &s)    {
+        return ObjectLink(s);
+    }
+
+    static QString _toString(const ObjectLink &l)    {
+        return l.toString();
+    }
+
     QObject * obj()const {return O;}
 
     BaseObject * baseObject()const {
@@ -90,6 +101,8 @@ protected:
     bool FisNotUsed;
 
 };
+
+
 Q_DECLARE_METATYPE(ObjectLink)
 
 #endif // OBJECTLINK_H

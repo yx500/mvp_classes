@@ -11,7 +11,6 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "BaseObject.h"
 #include "mvp_system.h"
 
 
@@ -102,12 +101,18 @@ void QObject2XML::_write(QObject *O, QXmlStreamWriter *xml)
                     int n=value.toInt();
                     s=QString("%1").arg(n);
                 } else
-                    if (!OF->QVariantToQString(value,s)){
-                        err(QString("QObject2XML::_write не могу сконвертировать тип %1").arg(value.typeName()));
-                        s="";
-                    } else {
+                    if (prop.userType()==QMetaType::QVariant){
+                        if (!MVP_System::QVariantToQString(value.type(),value,s)){
+                            err(QString("QObject2XML::_write не могу сконвертировать тип %1").arg(value.typeName()));
+                            s="";
+                        }
+                    }else
+                        if (!MVP_System::QVariantToQString(value,s)){
+                            err(QString("QObject2XML::_write не могу сконвертировать тип %1").arg(value.typeName()));
+                            s="";
+                        } else {
 
-                    }
+                        }
                 xml->writeAttribute( propName,s);
             }
         }
@@ -217,25 +222,31 @@ QObject *QObject2XML::_read(QXmlStreamReader *xml)
                     if (prop.isEnumType()){
                         newvalue=value.toInt();
                         prop.write(O, newvalue);
-                    } else {
-                        newvalue.clear();
-                        newvalue = O->property(qPrintable(propName));
-                        propValue=value.toString();
-                        if (!OF->QVariantFromQString(newvalue,propValue)){
+                        continue;
+                    }
+                    newvalue.clear();
+                    newvalue = O->property(qPrintable(propName));
+                    propValue=value.toString();
+                    if (prop.userType()==QMetaType::QVariant){
+                        int userType;
+                        if (!MVP_System::QVariantFromQString(userType,newvalue,propValue)){
                             err(QString("_read не могу сконвертировать тип  %1 из %2 для %3").arg(newvalue.typeName()).arg(propValue).arg(propName));
                             qCritical() <<"QObject2XML::_read не могу сконвертировать тип " << qPrintable(newvalue.typeName()) << " из " <<propValue << "для " << propName;
-                        } else {
-                            QVariant vv=O->property(qPrintable(propName));
-                            //if (!O->setProperty(qPrintable(propName),newvalue)){
-                            if ((prop.isWritable())&&(!prop.write(O,newvalue))){
-                                err(QString("_read не могу записать свойство  %1 из %2 для %3").arg(newvalue.typeName()).arg(propValue).arg(propName));
-                                qCritical() <<"QObject2XML::_read не могу записать свойство " << qPrintable(newvalue.typeName()) << " из " <<propValue << "для " << propName;
-                            }
-                            vv = O->property(qPrintable(propName));
-                            O->setProperty(qPrintable(propName),newvalue);
-                            vv = O->property(qPrintable(propName));
+                            continue;
+                        }
+                    } else {
+                        if (!MVP_System::QVariantFromQString(newvalue,propValue)){
+                            err(QString("_read не могу сконвертировать тип  %1 из %2 для %3").arg(newvalue.typeName()).arg(propValue).arg(propName));
+                            qCritical() <<"QObject2XML::_read не могу сконвертировать тип " << qPrintable(newvalue.typeName()) << " из " <<propValue << "для " << propName;
+                            continue;
                         }
                     }
+                    if ((prop.isWritable())&&(!prop.write(O,newvalue))){
+                        err(QString("_read не могу записать свойство  %1 из %2 для %3").arg(newvalue.typeName()).arg(propValue).arg(propName));
+                        qCritical() <<"QObject2XML::_read не могу записать свойство " << qPrintable(newvalue.typeName()) << " из " <<propValue << "для " << propName;
+                        continue;
+                    }
+                    //O->setProperty(qPrintable(propName),newvalue);
                 }
             }
 
@@ -265,8 +276,8 @@ QObject *QObject2XML::_read(QXmlStreamReader *xml)
 bool QObject2XML::_go2class(QXmlStreamReader *xml, QString className)
 {
     QString tagName=xml->name().toString();
-        if (tagName==className){
-            return true;
+    if (tagName==className){
+        return true;
     }
     // дети
     while (xml->readNextStartElement()) {
@@ -367,17 +378,8 @@ bool QObject2XML::isChanged(BaseObject *O,QString fullfn)
     QByteArray array2;
     fileName=fullfn;
     writeQByteArray(O,&array2);
-    if (array1.size()!=array2.size()) return true;
-    long r=memcmp(array1.constData() ,array2.constData(),array1.size());
-    if (r!=0) {
-//        for (long i=0;i<array1.size();i++){
-//            if (array1.at(i)!=array2.at(i)){
-//                r=i;
-//                break;
-//            }
-//        }
-        return true;
-    }
+    if (array1!=array2) return true;
+
     return false;
 }
 

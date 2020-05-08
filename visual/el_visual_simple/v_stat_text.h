@@ -29,6 +29,8 @@ public:
     Q_INVOKABLE v_StaticText(v_Base *parent = nullptr);
     virtual ~v_StaticText(){}
 
+    virtual void updateAfterLoad();
+
     virtual QString getText(){return objectName();}
     virtual QColor getTextColor(){return FCOLOR_TEXT;}
     virtual QColor getRectColor(){return FCOLOR_RECT;}

@@ -30,6 +30,11 @@ SignalDescription::SignalDescription(const SignalDescription &other)
     gtBuffer=other.gtBuffer;
 }
 
+SignalDescription::SignalDescription(const QString &s)
+{
+    fromString(s);
+}
+
 SignalDescription::SignalDescription(int type,const QString &name,int offset)
     :FChanelType(0),FChanelName(),FChanelOffset(0),
     FisInvers(false),FisNotUse(false),FStoredSignalName()
@@ -214,7 +219,6 @@ void SignalDescription::setValue_data(const void *v, int sz) const
 void SignalDescription::setBufferData(const void *v, int sz) const
 {
     if (gtBuffer==nullptr) return;
-    int chanelOffset=FChanelOffset*sz;
     if (sz!=gtBuffer->A.size()) gtBuffer->A.resize(sz);
     memcpy(gtBuffer->A.data(),v,sz);
 }
@@ -242,7 +246,7 @@ void SignalDescription::clear()
     gtBuffer=nullptr;
 }
 
-void SignalDescription::fromString(QString s)
+bool SignalDescription::fromString(const QString &s)
 {
     clear();
     if (s.isEmpty()) {
@@ -257,7 +261,19 @@ void SignalDescription::fromString(QString s)
         FisNotUse=false;
         acceptGtBuffer();
     }
+    return true;
 }
+
+SignalDescription SignalDescription::_fromString(const QString &s)
+{
+    return SignalDescription(s);
+}
+
+QString SignalDescription::_toString(const SignalDescription &s)
+{
+    return s.toString();
+}
+
 
 //QString valueType2String(SignalDescription::MVP_Enums::TSignalValue valueType)
 //{

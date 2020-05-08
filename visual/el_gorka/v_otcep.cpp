@@ -127,7 +127,7 @@ void v_Otcep::updateStatesFromModel()
     number=0;
     if (mOtcep) {
         number=mOtcep->NUM();
-        if (mOtcep->STATE_LOCATION()==m_Otcep::locationUnknow){
+        if ((!mOtcep->STATE_ENABLED())|| (mOtcep->STATE_LOCATION()==m_Otcep::locationUnknow)){
             setVisible(false);
             return;
         }

@@ -8,21 +8,22 @@
 class VisualGroupProperty : public BaseObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString STORED_VALUE READ STORED_VALUE WRITE setSTORED_VALUE DESIGNABLE true)
+//    Q_PROPERTY(QString STORED_VALUE READ STORED_VALUE WRITE setSTORED_VALUE DESIGNABLE true)
+    MYPROP(QVariant,V)
 public:
     Q_INVOKABLE VisualGroupProperty(QObject *parent = nullptr);
     virtual ~ VisualGroupProperty(){}
 
-    QString STORED_VALUE() const {return V;}
-    void setSTORED_VALUE(QString p);
-    bool event(QEvent* ev);
+//    QString STORED_VALUE() const {return V;}
+//    void setSTORED_VALUE(QString p);
+//    bool event(QEvent* ev);
 
 
 signals:
 
 public slots:
 protected:
-    QString V;
+//    QString V;
 };
 
 #endif // VISUALGROUPPROPERTY_H

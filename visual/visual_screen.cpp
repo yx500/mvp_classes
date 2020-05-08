@@ -52,8 +52,7 @@ void Visual_Screen::updateAfterLoad()
     v_Base::updateAfterLoad();
     FVisualGroupPropertyes=findChildren<VisualGroupPropertyes*>(QString(),Qt::FindDirectChildrenOnly).first();
     if (FVisualGroupPropertyes){
-        connect(FVisualGroupPropertyes,SIGNAL(visualGroupPropertyesChanged(QObject*)),this,SLOT(slotVisualGroupPropertyesChanged(QObject*)));
-        FVisualGroupPropertyes->setTarget(this);
+        FVisualGroupPropertyes->collectGroupPropertyes(this);
     }
 
 }
@@ -67,7 +66,7 @@ void Visual_Screen::activate()
         v->setScreen(this);
     }
     if (FVisualGroupPropertyes)
-        FVisualGroupPropertyes->setTarget(this);
+        FVisualGroupPropertyes->collectGroupPropertyes(this);
 
 
     // активируем подэкраны
@@ -90,10 +89,7 @@ void Visual_Screen::reCalculateGeometry()
 
 
 
-void Visual_Screen::slotVisualGroupPropertyesChanged(QObject *)
-{
-    reCalculateGeometry();
-}
+
 
 void Visual_Screen::updateStates()
 {

@@ -43,7 +43,6 @@ public:
 signals:
 
 public slots:
-    void slotVisualGroupPropertyesChanged(QObject *O);
     void updateStates(); // основной жизненный цикл
 protected:
     int FGRIDDX;

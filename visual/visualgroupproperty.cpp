@@ -8,27 +8,28 @@ REGISTERELEMENT(VisualGroupProperty,"Общее свойство","VISUAL БАЗ
 
 VisualGroupProperty::VisualGroupProperty(QObject *parent) : BaseObject(parent)
 {
-    V=QString();
+//    V=QString();
+    FV=QVariant();
 }
 
 
-void VisualGroupProperty::setSTORED_VALUE(QString p)
-{
-    if (V!=p){
-        V=p;
-        emit propertyChanged(this);
-    }
-}
+//void VisualGroupProperty::setSTORED_VALUE(QString p)
+//{
+//    if (V!=p){
+//        V=p;
+//        emit propertyChanged(this);
+//    }
+//}
 
-bool VisualGroupProperty::event(QEvent *ev)
-{
-    if (ev->type() == QEvent:: DynamicPropertyChange) {
-        QString S;
-        MVP_ObjectFactory::instance()->QVariantToQString(property(qPrintable("VAL")),S);
-        setSTORED_VALUE(S);
-        return true;
-    }
+//bool VisualGroupProperty::event(QEvent *ev)
+//{
+//    if (ev->type() == QEvent:: DynamicPropertyChange) {
+//        QString S;
+//        MVP_ObjectFactory::instance()->QVariantToQString(property(qPrintable("VAL")),S);
+//        setSTORED_VALUE(S);
+//        return true;
+//    }
 
-    return QObject::event(ev);
-}
+//    return QObject::event(ev);
+//}
 

@@ -49,7 +49,7 @@ public:
     MYSTATE(int, STATE_DIRECTION)
     MYSTATE(bool,STATE_NAGON)
     MYSTATE(int, STATE_ERROR)
-    MYSTATE(int, STATE_ID_ROSP)
+    MYSTATE(quint32, STATE_ID_ROSP)
     MYSTATE(int, STATE_UR)
     MYSTATE(int, STATE_KZP)
 
@@ -151,7 +151,9 @@ protected:
     m_Otceps*otceps;
     void updateStates_0();
     void updateStates_1();
+    QString _storedS;
 
 };
+
 
 #endif // M_OTCEP_H

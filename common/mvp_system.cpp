@@ -146,6 +146,16 @@ QString MVP_System::QVariantHashToQString(const QVariantHash &h)
     }
     return s;
 }
+QString MVP_System::QVariantHashToQString_str(const QVariantHash &h)
+{
+    QString s;
+    foreach (QString k, h.keys()) {
+        if (!s.isEmpty()) s=s+";";
+        QVariant v=h[k];
+            s=s+QString("%1=%2").arg(k).arg(v.toString());
+    }
+    return s;
+}
 
 QVariantHash MVP_System::QStringToQVariantHash(const QString &s)
 {
@@ -154,12 +164,13 @@ QVariantHash MVP_System::QStringToQVariantHash(const QString &s)
     foreach (QString s1, sl) {
         QStringList sl1=s1.split("=");
         if (sl1.size()==2){
-            if(s.indexOf("_qtype:")>1){
+            if(sl1[1].indexOf("_qtype:")>0){
                 QVariant v;
                 int metaTypeId;
-                if (QVariantFromQString(metaTypeId,v,s)){
+                if (QVariantFromQString(metaTypeId,v,sl1[1])){
                     h[sl1[0]]=v;
-                } else h[sl1[0]]=sl1[1];
+                    continue;
+                }
             }
             h[sl1[0]]=sl1[1];
         }

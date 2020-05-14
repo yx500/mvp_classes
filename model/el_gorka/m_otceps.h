@@ -30,6 +30,8 @@ public:
 
     QList<m_Otcep *> l_otceps;
 
+    QList<m_Otcep *> enabledOtceps() const;
+
     m_Otcep *topOtcep() const;
 
 
@@ -39,19 +41,23 @@ public:
     QMap<int,m_RC *> mOffset2Rc;
     QMap<QString,m_RC *> mIDS2Rc;
     ModelGroupGorka *modelGroupGorka=nullptr;
+    GtBuffer * chanelVag[MaxVagon];
+    tSlVagon vagons[MaxVagon];
 
 public slots:
     void updateVagons();
 
 
 protected:
-    GtBuffer * chanelVag[MaxVagon];
 
+    QByteArray _storedVagonsA[MaxVagon];
     QList<m_RC *> l_rc;
 
 
 
 
 };
+QVariantHash tSlVagon2Map(const tSlVagon &v);
+tSlVagon Map2tSlVagon(const QVariantHash &m);
 
 #endif // M_OTCEPS_H

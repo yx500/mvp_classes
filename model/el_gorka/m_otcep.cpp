@@ -294,6 +294,8 @@ void m_Otcep::updateStates_1()
 {
     if (FSIGNAL_DATA.getBuffer()==nullptr) return;
     QString S=QString::fromUtf8(FSIGNAL_DATA.getBuffer()->A);
+    if (S==_storedS) return;
+    _storedS=S;
     QStringList ls=S.split(";");
     foreach (auto &s, ls) {
         QStringList ls1=s.split("=");
@@ -307,4 +309,5 @@ void m_Otcep::updateStates_1()
     }
 
 }
+
 

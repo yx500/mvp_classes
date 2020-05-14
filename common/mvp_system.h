@@ -21,6 +21,7 @@ public:
     static bool QVariantToQString(int metaTypeId,const QVariant &v,QString &s);
     static bool QVariantFromQString(int &metaTypeId,QVariant &v,const QString &s);
     static QString QVariantHashToQString(const QVariantHash &h);
+    static QString QVariantHashToQString_str(const QVariantHash &h);
     static QVariantHash QStringToQVariantHash(const QString &s);
 
     QObject *loadObject(QString fileName, QStringList *errorLog=nullptr);

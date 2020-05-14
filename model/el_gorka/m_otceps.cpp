@@ -14,6 +14,7 @@ m_Otceps::m_Otceps(QObject *parent) : m_Base(parent)
     for (int i=0;i<MAXCOUNT_OTCEPS;i++){
         l_otceps.push_back(new m_Otcep(this,i+1));
     }
+    memset(&vagons,0,sizeof (vagons));
 }
 
 m_Otceps::~m_Otceps()
@@ -25,6 +26,7 @@ m_Otceps::~m_Otceps()
 void m_Otceps::resetStates()
 {
     m_Base::resetStates();
+    memset(&vagons,0,sizeof (vagons));
 }
 
 void m_Otceps::validation(ListObjStr *l) const
@@ -49,6 +51,7 @@ void m_Otceps::validation(ListObjStr *l) const
         if ((rcp) && (rcp->MAXWAY()<=0)) l->error(this,"РЦ без номера маршрута",QString("%1").arg(rc1->objectName()));
         if ((rcp) && (rcp->MINWAY()!=rcp->MAXWAY())) l->error(this,"РЦ c разным номера маршрута",QString("%1").arg(rc1->objectName()));
     }
+
 }
 
 void m_Otceps::updateAfterLoad()
@@ -67,11 +70,9 @@ void m_Otceps::updateAfterLoad()
         otcep->updateAfterLoad();
 
     }
-    if (FTYPE_DESCR==0){
-        for (int i=0;i<MaxVagon;i++){
-            chanelVag[i]=SignalDescription::getBuffer(15,QString("vag%1").arg(i+1));
-            connect(chanelVag[i],&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
-        }
+    for (int i=0;i<MaxVagon;i++){
+        chanelVag[i]=SignalDescription::getBuffer(15,QString("vag%1").arg(i+1));
+        connect(chanelVag[i],&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
     }
     if (modelGroupGorka){
         l_rc=parent()->findChildren<m_RC*>();
@@ -112,35 +113,101 @@ m_RC *m_Otceps::find_RC(int chanelOffset)
     return mOffset2Rc[chanelOffset];
 }
 
+QList<m_Otcep *> m_Otceps::enabledOtceps() const
+{
+    QList<m_Otcep *> l;
+    foreach (m_Otcep*otcep, l_otceps)
+        if (otcep->STATE_ENABLED()) l.push_back(otcep);
+    return  l;
+}
+QVariantHash tSlVagon2Map(const tSlVagon &v)
+{
+    QVariantHash m;
+    m["Id"]=v.Id;
+    m["NO"]=v.NO;
+    m["IV"]=v.IV;
+    m["NumV"]=v.NumV;
+    m["MassG"]=v.MassG;
+    m["MassV"]=v.MassV;
+    m["Ln"]=v.Ln;
+    m["Rod"]=v.Rod;
+    m["aDb"]=v.aDb;
+    m["aNg"]=v.aNg;
+    m["ktp"]=v.ktp;
+    m["OSO"]=v.OSO;
+    m["Ur"]=v.Ur;
+    m["Vnadv"]=v.Vnadv;
+    return m;
 
+}
 
+tSlVagon Map2tSlVagon(const QVariantHash &m)
+{
+    tSlVagon v;
+    memset(&v,0,sizeof(v));
+    v.Id=m["Id"].toInt();
+    v.NO=m["NO"].toInt();
+    v.IV=m["IV"].toInt();
+    v.NumV=m["NumV"].toInt();
+    v.MassG=m["MassG"].toInt();
+    v.MassV=m["MassV"].toInt();
+    v.Ln=m["Ln"].toInt();
+    v.Rod=m["Rod"].toInt();
+    v.aDb=m["aDb"].toInt();
+    v.aNg=m["aNg"].toInt();
+    v.ktp=m["ktp"].toInt();
+    v.OSO=m["OSO"].toInt();
+    v.Ur=m["Ur"].toInt();
+    v.Vnadv=m["Vnadv"].toInt();
+    return v;
+}
 
 void m_Otceps::updateVagons()
 {
     if (disableUpdateStates) return;
-    tSlVagon * SlVagon0=(tSlVagon *)chanelVag[0]->A.data();
-    int idrosp=SlVagon0->Id;
+    bool changed=false;
+    for (int j=0;j<MaxVagon;j++){
+        if (FTYPE_DESCR==0){
+            tSlVagon * SlVagon=(tSlVagon *)chanelVag[j]->A.data();
+            if (memcmp(&vagons[j],SlVagon,sizeof(tSlVagon))!=0){
+                vagons[j]=*SlVagon;
+                changed=true;
+            }
+        }
+        if (FTYPE_DESCR==1){
+            if (_storedVagonsA[j]!=chanelVag[j]->A){
+                _storedVagonsA[j]=chanelVag[j]->A;
+                changed=true;
+                QString S=QString::fromUtf8(chanelVag[j]->A);
+                QVariantHash m=MVP_System::QStringToQVariantHash(S);
+                tSlVagon SlVagon=Map2tSlVagon(m);
+                //            if ((v.IV>0) &&(v.IV<MaxVagon)
+                vagons[j]=SlVagon;
+            }
+        }
+    }
+    if (!changed) return;
+    tSlVagon & SlVagon0=vagons[0];
+    auto idrosp=SlVagon0.Id;
     foreach (m_Otcep*otcep, l_otceps) {
-        int idr=0;
+        quint32 idr=0;
         int sp=0;
         if (otcep->disableUpdateStates) continue;
         otcep->vVag.clear();
         int lenvag=0;
         for (int j=0;j<MaxVagon;j++){
-            tSlVagon * SlVagon=(tSlVagon *)chanelVag[j]->A.data();
-            if (SlVagon){
-                if (SlVagon->NO==0) break;
-                if (SlVagon->Id!=idrosp)break;
-                if (SlVagon->NO<0) continue;
-                if (otcep->NUM()==SlVagon->NO){
-                    idr=SlVagon->Id;
-                    sp=SlVagon->SP;
-                    otcep->vVag.push_back(*SlVagon);
-                    int Ln=0;
-                    if (SlVagon->Ln==0) Ln=15;
-                    if (SlVagon->Ln>1000) Ln=SlVagon->Ln/1000;
-                    lenvag+=Ln;
-                }
+            tSlVagon & SlVagon=vagons[j];
+            if (SlVagon.NO==0) break;
+            if (SlVagon.Id!=idrosp)break;
+            if (SlVagon.NO<0) continue;
+            if (otcep->NUM()==SlVagon.NO){
+                idr=SlVagon.Id;
+                sp=SlVagon.SP;
+                otcep->vVag.push_back(SlVagon);
+                int Ln=0;
+                if (SlVagon.Ln==0) Ln=15;
+                if (SlVagon.Ln>1000) Ln=SlVagon.Ln/1000;
+                lenvag+=Ln;
             }
         }
         otcep->setSTATE_ID_ROSP_VAG(idr);

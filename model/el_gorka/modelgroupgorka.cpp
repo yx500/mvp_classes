@@ -113,7 +113,7 @@ void ModelGroupGorka::updateAfterLoad()
 {
     ModelRootGroup::updateAfterLoad();
     // расставим значения
-    QList<m_RC_Gor_Park*> l_rcp=parent()->findChildren<m_RC_Gor_Park*>();
+    QList<m_RC_Gor_Park*> l_rcp=findChildren<m_RC_Gor_Park*>();
     foreach (m_RC_Gor_Park*rcp, l_rcp) {
         mSP2MAR[rcp->PARK_WAY()]=rcp->MINWAY();
         mMAR2SP[rcp->MINWAY()]=rcp->PARK_WAY();

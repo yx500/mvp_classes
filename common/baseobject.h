@@ -8,38 +8,10 @@
 #include <QVector>
 #include <QPointer>
 
+#include "mvp_define.h"
 #include "mvp_enums.h"
 #include "libshared_global.h"
 #include "listobjstr.h"
-
-#define SETPROP(n) if(n!=p){n=p;emit propertyChanged(this);}
-#define SETGETPROP(type,n) void set##n(type p){if(F##n!=p){F##n=p;emit propertyChanged(this);}} \
-                           type n(){return F##n;}
-#define MYPROP(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true ) \
-                       protected: \
-                       type F##n; \
-                       public: \
-                       void set##n(const type &p){ \
-                            if(F##n!=p){ \
-                                F##n=p; \
-                                doPropertyChanged();}} \
-                       const type &n()const  {return F##n;}
-
-#define MYSTATE(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true STORED false) \
-                       protected: \
-                       type F##n; \
-                       public: \
-                       void set##n(const type &p){ \
-                            if(F##n!=p){ \
-                                F##n=p; \
-                                doStateChanged();}} \
-                       const type &n()const {return F##n;}
-#define MYSTATES(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true STORED false) \
-                       protected: \
-                       type F##n; \
-                       public: \
-                       void set##n(const type &p); \
-                       const type &n()const {return F##n;}
 
 
 

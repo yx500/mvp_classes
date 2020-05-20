@@ -208,15 +208,12 @@ protected:
     virtual void doPropertyChanged(){
         prepareGeometryChange();
         calculateGeometry();
-        emit propertyChanged(this);
         emit geometryChange(this);
+        BaseObject::doPropertyChanged();
     }
     virtual void doStateChanged(){
-        prepareGeometryChange();
-        calculateGeometry();
         update();
-        emit stateChanged(this);
-        emit geometryChange(this);
+        BaseObject::doStateChanged();
     }
 
     QRectF flagRect() const;

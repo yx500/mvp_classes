@@ -123,12 +123,12 @@ void ModelGroupGorka::updateAfterLoad()
     foreach (auto rczkr, lzkr) {
 
         for (int m=rczkr->MINWAY();m<=rczkr->MAXWAY();m++){
-            QList<m_RC_Gor*> lm=marshrut(rczkr->PUTNADVIG(),m);
+            QList<m_RC_Gor*> lm=marshrut(rczkr->PUT_NADVIG(),m);
             int n=0;
             qreal absx=0;
             foreach (auto rc, lm) {
-                rc->m_PN_M2N[rczkr->PUTNADVIG()][m]=n;
-                rc->m_PN_M2X[rczkr->PUTNADVIG()][m]=absx;
+                rc->m_PN_M2N[rczkr->PUT_NADVIG()][m]=n;
+                rc->m_PN_M2X[rczkr->PUT_NADVIG()][m]=absx;
                 n++;
                 absx+=rc->LEN();
             }
@@ -170,7 +170,7 @@ QList<m_RC_Gor *> ModelGroupGorka::marshrut(int put_nadvig,int m)
     QList<m_RC_Gor_ZKR*> lzkr=findChildren<m_RC_Gor_ZKR*>();
     m_RC_Gor*rcs=nullptr;
     foreach (auto rczkr, lzkr) {
-        if (rczkr->PUTNADVIG()==put_nadvig) rcs=rczkr;
+        if (rczkr->PUT_NADVIG()==put_nadvig) rcs=rczkr;
 
 
     }
@@ -194,7 +194,7 @@ QList<m_RC_Gor *> ModelGroupGorka::marshrut(int put_nadvig,int m)
 int ModelGroupGorka::PUT_NADVIG() const
 {
     foreach (auto zkr, lzkr) {
-        if (zkr->STATE_ROSPUSK()==1) return zkr->PUTNADVIG();
+        if (zkr->STATE_ROSPUSK()==1) return zkr->PUT_NADVIG();
     }
     return 0;
 }

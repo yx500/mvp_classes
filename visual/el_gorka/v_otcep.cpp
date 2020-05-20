@@ -149,9 +149,9 @@ void v_Otcep::updateStatesFromModel()
                 if ((mrc==mOtcep->RCS) && (mOtcep->RCS==mOtcep->RCF)) {
                     qreal p1=1;
                     qreal p2=1;
-                    if ((mrc->LEN()>0)&&(mOtcep->STATE_RCS_XOFFSET()>0)&&(mOtcep->STATE_RCF_XOFFSET()>0)) {
-                        p1=1.*mOtcep->STATE_RCS_XOFFSET()/mrc->LEN();
-                        p2=1.*mOtcep->STATE_RCF_XOFFSET()/mrc->LEN();
+                    if ((mrc->LEN()>0)&&(mOtcep->STATE_D_RCS_XOFFSET()>0)&&(mOtcep->STATE_D_RCF_XOFFSET()>0)) {
+                        p1=1.*mOtcep->STATE_D_RCS_XOFFSET()/mrc->LEN();
+                        p2=1.*mOtcep->STATE_D_RCF_XOFFSET()/mrc->LEN();
                     }
                     if (p1>1) p1=1;
                     if (p2>1) p2=1;
@@ -162,7 +162,7 @@ void v_Otcep::updateStatesFromModel()
                 } else
                     if (mrc==mOtcep->RCS){
                         qreal p=1;
-                        if ((mrc->LEN()>0)&&(mOtcep->STATE_RCS_XOFFSET()>0)) p=1.*mOtcep->STATE_RCS_XOFFSET()/mrc->LEN();
+                        if ((mrc->LEN()>0)&&(mOtcep->STATE_D_RCS_XOFFSET()>0)) p=1.*mOtcep->STATE_D_RCS_XOFFSET()/mrc->LEN();
                         if (p>1) p=1;
                         if (vrc->DIRECT_D0()==MVP_Enums::left2right)
                             vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, 0, p); else
@@ -170,7 +170,7 @@ void v_Otcep::updateStatesFromModel()
                     } else
                         if (mrc==mOtcep->RCF){
                             qreal p=1;
-                            if ((mrc->LEN()>0) &&(mOtcep->STATE_RCF_XOFFSET()>0))p=1.*mOtcep->STATE_RCF_XOFFSET()/mrc->LEN();
+                            if ((mrc->LEN()>0) &&(mOtcep->STATE_D_RCF_XOFFSET()>0))p=1.*mOtcep->STATE_D_RCF_XOFFSET()/mrc->LEN();
                             if (p>1) p=1;
                             if (vrc->DIRECT_D0()==MVP_Enums::left2right)
                                 vrc_centreLine=QPFunction::cutPolyline(vrc_centreLine, p, 1); else

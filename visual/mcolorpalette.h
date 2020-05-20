@@ -5,8 +5,8 @@
  * */
 #include "mcolor.h"
 #include <QMap>
-#include "BaseObject.h"
-
+#include "baseobject.h"
+#include <QElapsedTimer>
 
 class MColorPalette : public BaseObject
 {
@@ -49,7 +49,7 @@ protected:
     QMap<int , MColor*> m_UID2MColor;
     QMap<QString , MColor*> m_IDSTR2MColor;
     QTimer *timer;
-    QTime timerStart;
+    QElapsedTimer timerStart;
     qlonglong timer_ms_elapsed;
     bool FexistsUnLoadedColors;
 

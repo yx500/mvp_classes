@@ -19,8 +19,8 @@ public:
     MYPROP(SignalDescription, SIGNAL_UVK_PRM)
     MYPROP(SignalDescription, SIGNAL_UVK_AV)
 
-    MYPROP(int, TU_PRP)
-    MYPROP(int, TU_PRM)
+    MYPROP(SignalDescription, TU_PRP)
+    MYPROP(SignalDescription, TU_PRM)
     MYPROP(int, NEGAB_RC_CNT_P)
     MYPROP(int, NEGAB_RC_CNT_M)
 

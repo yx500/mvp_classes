@@ -2,6 +2,7 @@
 #define V_RC_GOR_PARK_H
 
 #include "v_rc.h"
+#include <QElapsedTimer>
 
 class v_RC_Gor_Park : public v_RC
 {
@@ -38,7 +39,7 @@ protected:
     int width_abs,width_mashtab;
     QString valueString() const;
     bool isUSL_VAGON;
-    QTime animateT;
+    QElapsedTimer animateT;
     qreal animateK;
     QFont font;
 

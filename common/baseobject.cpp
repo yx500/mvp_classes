@@ -74,10 +74,9 @@ QVariant BaseObject::getTag(int key) const
 
 void BaseObject::updateStates()
 {
-    if (disableUpdateStates) return;
     foreach (QObject *O, children()) {
         auto B=qobject_cast<BaseObject*>(O);
-        if ((B!=nullptr) && (!B->disableUpdateStates))
+        if ((B!=nullptr))
         {
             B->_prepare_updateStates();
             B->updateStates();

@@ -27,10 +27,10 @@ public:
     DECLARECOLOR(tpind_out)
     DECLARECOLOR(tpind_podl)
 
-    MYSTATES(qreal,STATE_VF)
-    MYSTATES(qreal,STATE_VZ)
-    MYSTATES(qreal,STATE_VO)
-    MYSTATES(int,STATE_ST)
+    MYSTATE_S(qreal,STATE_VF)
+    MYSTATE_S(qreal,STATE_VZ)
+    MYSTATE_S(qreal,STATE_VO)
+    MYSTATE_S(int,STATE_ST)
     MYSTATE(int,STATE_INOUT)
 
     ObjectLink ZAM1() const {return FZAM1;}

@@ -53,7 +53,7 @@ public:
     MVP_Enums() = delete; ///< std=c++11, обеспечивает запрет на создание любого экземпляра Enums
 };
 
-const qreal _undefV_=-9999;
+const qreal _undefV_=65535;
 
 
 #endif // MVP_ENUMS_H

@@ -2,6 +2,7 @@
 #define V_DSO_H
 
 #include "v_model.h"
+#include <QElapsedTimer>
 class m_DSO;
 
 class v_DSO : public v_Model
@@ -50,7 +51,7 @@ private:
 protected:
     int lastOsyCount;
     void showText(QPainter *painter);
-    QTime dtStartShowText;
+    QElapsedTimer dtStartShowText;
 
     virtual void d_paint(QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void updateStatesFromModel();

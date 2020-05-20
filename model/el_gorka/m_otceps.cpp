@@ -56,7 +56,7 @@ void m_Otceps::validation(ListObjStr *l) const
 
 void m_Otceps::updateAfterLoad()
 {
-    m_Base::updateAfterLoad();
+
     modelGroupGorka=qobject_cast<ModelGroupGorka*>(parent());
     foreach (m_Otcep*otcep, l_otceps) {
         if (FTYPE_DESCR==0){
@@ -84,6 +84,7 @@ void m_Otceps::updateAfterLoad()
         }
 
     }
+    m_Base::updateAfterLoad();
 }
 
 QList<m_Otcep *> m_Otceps::otceps() const
@@ -212,7 +213,6 @@ void m_Otceps::updateVagons()
         }
         otcep->setSTATE_ID_ROSP_VAG(idr);
         otcep->setSTATE_SP_VAG(sp);
-        otcep->setSTATE_LEN_BY_VAGON(lenvag);
     }
 }
 

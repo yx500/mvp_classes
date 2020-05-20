@@ -13,7 +13,7 @@ m_RC_Gor_ZKR::m_RC_Gor_ZKR(QObject *parent) : m_RC_Gor(parent)
 {
     controllerARSNadvig=nullptr;
     svetZKR=nullptr;
-    FPUTNADVIG=0;
+    FPUT_NADVIG=0;
     FSIGNAL_ROSPUSK.clear();
     FSIGNAL_STATE_ERROR_RTDS.clear();
     FSIGNAL_STATE_ERROR_NERASCEP.clear();
@@ -38,7 +38,7 @@ void m_RC_Gor_ZKR::resetStates()
 void m_RC_Gor_ZKR::validation(ListObjStr *l) const
 {
     m_RC_Gor::validation(l);
-    if ((FPUTNADVIG!=1) && (FPUTNADVIG!=2))
+    if ((FPUT_NADVIG!=1) && (FPUT_NADVIG!=2))
         l->warning(this,"Не задан путь роспуска");
 
 }

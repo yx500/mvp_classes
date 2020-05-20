@@ -3,6 +3,7 @@
 
 #include "v_strelka.h"
 #include "mvp_enums.h"
+#include <QElapsedTimer>
 
 class v_Strelka_GAC : public v_Strelka
 {
@@ -28,7 +29,7 @@ public slots:
 protected:
     QPolygonF PRPPL; // указатель ПРП
     QPolygonF PRMPL;
-    QTime dtPrOff[2];
+    QElapsedTimer dtPrOff[2];
     void showPRPPRM(QPainter * painter);
     virtual void d_paint(QPainter *painter, const QStyleOptionGraphicsItem *option);
 

@@ -12,7 +12,7 @@ m_Strel_Gor_Y::m_Strel_Gor_Y(QObject *parent) : m_Strel_Gor(parent)
 {
     FSIGNAL_PRP.clear();FSIGNAL_PRM.clear();FSIGNAL_A.clear();
     FSIGNAL_UVK_PRP.clear();FSIGNAL_UVK_PRM.clear();FSIGNAL_UVK_AV.clear();
-    FTU_PRP=0;FTU_PRM=0;FNEGAB_RC_CNT_P=0;FNEGAB_RC_CNT_M=0;
+    FTU_PRP.clear();FTU_PRM.clear();FNEGAB_RC_CNT_P=0;FNEGAB_RC_CNT_M=0;
     FIPD.clear();
     FRTDS.clear();
 
@@ -30,11 +30,11 @@ void m_Strel_Gor_Y::validation(ListObjStr *l) const
         l->warning(this,"Не задан сигнал ПРМ");
     if ((!FSIGNAL_A.isNotUse()) &&(FSIGNAL_A.isEmpty()))
         l->warning(this,"Не задан сигнал А");
-    if (FTU_PRP==0)
+    if ((!FTU_PRP.isNotUse()) &&(FTU_PRP.isEmpty()))
         l->warning(this,"Не задан код ТУ ПРП");
-    if (FTU_PRM==0)
+    if ((!FTU_PRM.isNotUse()) &&(FTU_PRM.isEmpty()))
         l->warning(this,"Не задан код ТУ ПРМ");
-    if ((FTU_PRM!=0)&&(FTU_PRP==FTU_PRM))
+     if ((!FTU_PRP.isNotUse()) &&(FTU_PRM==FTU_PRM))
         l->error(this,"Одинаковый код ТУ ПРМ");
     if ((!FIPD.isNotUse())&&(FIPD.isNull()))
         l->error(this,"Не задан ИПД");
@@ -57,6 +57,9 @@ void m_Strel_Gor_Y::updateAfterLoad()
             qCritical() << objectName() << "Ошибочная ссылка RTDS" <<endl ; else
             addDevice(rtds);
     }
+
+
+
 }
 
 void m_Strel_Gor_Y::resetStates()

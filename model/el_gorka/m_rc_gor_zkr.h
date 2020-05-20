@@ -27,7 +27,7 @@ public:
     MYPROP(ObjectLink, DSO21)
     MYPROP(ObjectLink, DSO22)
 
-    MYPROP(int,PUTNADVIG)
+    MYPROP(int,PUT_NADVIG)
     MYPROP(SignalDescription,SIGNAL_ROSPUSK)
 
     MYPROP(SignalDescription,SIGNAL_STATE_ERROR_RTDS)

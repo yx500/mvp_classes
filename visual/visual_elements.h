@@ -4,7 +4,7 @@
  * список элементов отображения
  * */
 
-#include "BaseObject.h"
+#include "baseobject.h"
 #include "v_base.h"
 
 class v_Model;

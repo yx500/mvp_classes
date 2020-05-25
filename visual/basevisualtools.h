@@ -3,7 +3,7 @@
 
 #include "m_base.h"
 #include "v_model.h"
-#include "BaseObject.h"
+#include "baseobject.h"
 #include "qobject2xml.h"
 
 class Station;

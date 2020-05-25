@@ -5,7 +5,7 @@
  * объект - заглушка
  * */
 
-#include "BaseObject.h"
+#include "baseobject.h"
 
 class UnknowObject : public BaseObject
 {

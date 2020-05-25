@@ -1,7 +1,7 @@
 #ifndef STATION_H
 #define STATION_H
 
-#include "BaseObject.h"
+#include "baseobject.h"
 
 class QTimer;
 

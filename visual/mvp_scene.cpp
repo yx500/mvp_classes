@@ -11,7 +11,7 @@
 #include "v_model.h"
 #include <qmath.h>
 
-#include "BaseObject.h"
+#include "baseobject.h"
 #include "baseobjecttools.h"
 #include "mcolorpalette.h"
 

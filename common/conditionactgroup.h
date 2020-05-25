@@ -6,7 +6,7 @@
  *
 */
 
-#include "BaseObject.h"
+#include "baseobject.h"
 #include "conditionactitem.h"
 #include "objectlink.h"
 

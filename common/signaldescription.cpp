@@ -27,7 +27,8 @@ SignalDescription::SignalDescription(const SignalDescription &other)
     FisInvers=other.isInvers();
     FisNotUse=other.isNotUse();
     FisInnerUse=other.isInnerUse();
-    gtBuffer=other.gtBuffer;
+    //gtBuffer=other.gtBuffer;
+    acceptGtBuffer();
 }
 
 SignalDescription::SignalDescription(const QString &s)

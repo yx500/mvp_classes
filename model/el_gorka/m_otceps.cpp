@@ -66,7 +66,11 @@ void m_Otceps::updateAfterLoad()
         if (FTYPE_DESCR==1){
             QString packetName=QString("descr%1").arg(otcep->NUM());
             otcep->setSIGNAL_DATA(SignalDescription(109,packetName,0));
+
+
         }
+        //connect(otcep->SIGNAL_DATA().getBuffer(),&GtBuffer::bufferChanged,otcep,&m_Otcep::updateStates);
+
         otcep->updateAfterLoad();
 
     }
@@ -242,6 +246,6 @@ m_Otcep *m_Otceps::topOtcep() const
 void m_Otceps::updateStates()
 {
     if (disableUpdateStates) return;
-    //    m_Base::updateStates();
+    m_Base::updateStates();
     //    updateVagons();
 }

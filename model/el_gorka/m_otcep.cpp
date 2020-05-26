@@ -6,7 +6,7 @@
 
 
 
-void m_Otcep::setSTATE_LOCATION(const TOtcepLocation &p)
+void m_Otcep::setSTATE_LOCATION(const int &p)
 {
     if (FSTATE_LOCATION!=p){
         //if (p==locationUnknow) resetStates();
@@ -27,6 +27,19 @@ void m_Otcep::setSTATE_SP(int p)
 {
     if (otceps->modelGroupGorka->mSP2MAR.contains(p)) setSTATE_MAR(otceps->modelGroupGorka->mSP2MAR[p]);else
         setSTATE_MAR(0);
+}
+int m_Otcep::STATE_SP_F() const
+{
+    if (FSTATE_MAR_F==0) return 0;
+    if ((otceps) && (otceps->modelGroupGorka))
+     if (otceps->modelGroupGorka->mMAR2SP.contains(FSTATE_MAR_F)) return otceps->modelGroupGorka->mMAR2SP[FSTATE_MAR_F];
+    return 0;
+}
+
+void m_Otcep::setSTATE_SP_F(int p)
+{
+    if (otceps->modelGroupGorka->mSP2MAR.contains(p)) setSTATE_MAR_F(otceps->modelGroupGorka->mSP2MAR[p]);else
+        setSTATE_MAR_F(0);
 }
 void m_Otcep::setSTATE_V_IN_1(const qreal &p){setSTATE_V_INOUT(0,0,p);}
 void m_Otcep::setSTATE_V_IN_2(const qreal &p){setSTATE_V_INOUT(0,1,p);}
@@ -145,6 +158,8 @@ void m_Otcep::resetStates()
     FSTATE_ZKR_VAGON_CNT=0;
     FSTATE_ZKR_OSY_CNT=0;
     FSTATE_ZKR_BAZA=0;
+    FSTATE_ZKR_VES=0;
+    FSTATE_PUT_NADVIG=0;
 
 
     FSTATE_KZP_OS=kzpUnknow;
@@ -165,7 +180,6 @@ void m_Otcep::resetStates()
     memset(FSTATE_V_ZAD,0,sizeof(FSTATE_V_ZAD));
 
 
-    FSTATE_PUT_NADVIG=0;
 
     FSTATE_CHANGE_COUNTER=0;
     FIDS_RCS.clear();

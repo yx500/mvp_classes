@@ -28,12 +28,15 @@ class m_Otcep : public m_Base
     Q_PROPERTY(int NUM READ NUM DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_NUM READ NUM DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_SP READ STATE_SP WRITE setSTATE_SP DESIGNABLE true STORED false )
+    Q_PROPERTY(int STATE_SP_F READ STATE_SP_F WRITE setSTATE_SP_F DESIGNABLE true STORED false )
     MYPROP(SignalDescription,SIGNAL_DATA)
 public:
     MYSTATE(bool, STATE_ENABLED)  // участвует в роспуске
     int NUM() const {return FNUM;}
     int STATE_SP() const;
     void setSTATE_SP(int p);
+    int STATE_SP_F() const;
+    void setSTATE_SP_F(int p);
 
     enum TOtcepLocation{
         locationUnknow=0, //
@@ -42,7 +45,7 @@ public:
         locationOnPark  // полностью в парке
     };
     Q_ENUM(TOtcepLocation)
-    MYSTATE_S(TOtcepLocation, STATE_LOCATION)
+    MYSTATE_S(int, STATE_LOCATION)
 
     MYSTATE(quint32, STATE_ID_ROSP)
     MYSTATE(int, STATE_MAR)
@@ -78,7 +81,7 @@ public:
     MYSTATE(int,  STATE_ZKR_OSY_CNT)
     MYSTATE(qreal,STATE_ZKR_VES)
     MYSTATE(bool, STATE_ZKR_BAZA)
-    MYSTATE(bool, STATE_ZKR_KAT)
+    //MYSTATE(int, STATE_ZKR_KAT)
     MYSTATE(int, STATE_PUT_NADVIG)
     // KZP
     enum TOnParkState{
@@ -88,7 +91,7 @@ public:
         kzpClosed
     };
     Q_ENUM(TOnParkState)
-    MYSTATE(TOnParkState, STATE_KZP_OS)
+    MYSTATE(int, STATE_KZP_OS)
     MYSTATE(int,          STATE_KZP_D)
 
     //динамика

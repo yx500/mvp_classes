@@ -40,9 +40,9 @@ public:
 
 signals:
 protected:
-    QString FCOLOR_RECT_16[16];
-    QString FCOLOR_BRUSH_16[16];
-    QString FCOLOR_TEXT_16[16];
+  std::array<QString, 16> FCOLOR_RECT_16;
+  std::array<QString, 16> FCOLOR_BRUSH_16;
+  std::array<QString, 16> FCOLOR_TEXT_16;
     QVariantHash FCOLOR_TEXT_H;
     QVariantHash FCOLOR_RECT_H;
     QVariantHash FCOLOR_BRUSH_H;

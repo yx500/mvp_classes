@@ -5,7 +5,6 @@
 #include "mvp_objectfactory.h"
 REGISTERELEMENT(v_Lamp4s,"Лампочка4зн_сост","VISUAL Простые элементы")
 
-
 void v_Lamp4s::setCOLOR_TEXT_16(QVariantHash &p)
 {
     if (FCOLOR_TEXT_H!=p){
@@ -47,6 +46,7 @@ void v_Lamp4s::setCOLOR_BRUSH_16(QVariantHash &p)
 
 v_Lamp4s::v_Lamp4s(v_Base *parent) : v_StaticText(parent)
 {
+
     for (int i =0;i<15;i++){
         FCOLOR_TEXT_16[i]="";
         FCOLOR_RECT_16[i]="";
@@ -58,6 +58,7 @@ v_Lamp4s::v_Lamp4s(v_Base *parent) : v_StaticText(parent)
         FCOLOR_BRUSH_H[k]="";
     }
     for (int i=0;i<4;i++) B[i]=nullptr;
+    FSTATE_SIGNAL = 0;
 }
 
 void v_Lamp4s::updateAfterLoad()
@@ -96,6 +97,7 @@ void v_Lamp4s::updateStatesFromModel()
         }
     }
     FSTATE_SIGNAL=s[3]*8+s[2]*4+s[1]*2+s[0];
+    FSTATE_SIGNAL = std::min(size_t(FSTATE_SIGNAL), FCOLOR_TEXT_16.size()-1);
 }
 
 QColor v_Lamp4s::getTextColor()

@@ -15,7 +15,7 @@ public:
     int getWorkLevel() const {return workLevel;}
 
     virtual void work(const QDateTime &T){Q_UNUSED(T)}
-    virtual void disableBuffers(){}
+    virtual QList<SignalDescription> acceptOutputSignals();
     virtual void state2buffer(){}
 signals:
 

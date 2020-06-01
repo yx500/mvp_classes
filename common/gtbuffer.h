@@ -51,12 +51,12 @@ public:
     virtual ~GtBuffer(){}
     int type;
     QString name;
-    int sost;
-    quint64 tick;
+    int sost=_unknow;
+    quint64 tick=0;
     QDateTime timeDataRecived;
     QDateTime timeDataChanged;
     QByteArray A;
-    int msecPeriodLive;
+    int msecPeriodLive=0;
     bool static_mode=false; // признак что буффер не для обмена
     void assign(const GtBuffer *B){
         type=B->type;

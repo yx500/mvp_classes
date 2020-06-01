@@ -3,9 +3,9 @@
 #include <QMetaProperty>
 #include <QPointF>
 #include <utility>
-#include "signaldescription.h"
 #include "mvp_system.h"
 #include "objectlink.h"
+
 
 QString objectId2Str(const quint64 &id){
     return QString("%1").arg(id);
@@ -100,9 +100,8 @@ void BaseObject::doPropertyChanged(){
 }
 void BaseObject::doStateChanged(){
     _stateChangedCount++;
-    if (onlyOneEmitEnabled)
-            stateChangedEmit=true; else
-            emit stateChanged(this);
+    isStateChanged=true;
+    if (!onlyOneEmitEnabled) emit stateChanged(this);
 }
 
 
@@ -147,14 +146,13 @@ void BaseObject::validationEmptyLinks(ListObjStr *l) const
 void BaseObject::_prepare_updateStates()
 {
     onlyOneEmitEnabled=true;
-    stateChangedEmit=false;
+    isStateChanged=false;
 }
 
 void BaseObject::_emit_after()
 {
-    if (stateChangedEmit) emit stateChanged(this);
+    if (isStateChanged) emit stateChanged(this);
     onlyOneEmitEnabled=false;
-    stateChangedEmit=false;
 }
 
 void BaseObject::addTagObject(QObject *ob,int key)

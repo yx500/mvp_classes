@@ -206,8 +206,8 @@ void MVP_Scene::drawBackground(QPainter *painter, const QRectF &rect)
         ProxyGraphicsItem * pv=qgraphicsitem_cast<ProxyGraphicsItem *>(item);
         if (pv){
             painter->save();
-            painter->setMatrix(pv->sceneMatrix(), true);
-            painter->setMatrix(pv->matrix(), true);
+            painter->setTransform(pv->sceneTransform(), true);
+            painter->setTransform(pv->transform(), true);
             pv->drawBackground(painter);
             customDrawBackground(painter,pv);
             painter->restore();
@@ -223,8 +223,8 @@ void MVP_Scene::drawForeground(QPainter *painter, const QRectF &rect)
         ProxyGraphicsItem * pv=qgraphicsitem_cast<ProxyGraphicsItem *>(item);
         if (pv){
             painter->save();
-            painter->setMatrix(pv->sceneMatrix(), true);
-            painter->setMatrix(pv->matrix(), true);
+            painter->setTransform(pv->sceneTransform(), true);
+            painter->setTransform(pv->transform(), true);
             pv->drawForeground(painter);
             customDrawForeground(painter,pv);
             painter->restore();

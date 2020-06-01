@@ -432,9 +432,9 @@ QPainterPath v_Base::groupShape() const
 void v_Base::groupPaint(QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
     painter->save();
-    QMatrix m=painter->matrix();
-    painter->setMatrix(proxyGraphicsItem->matrix(), true);
-    m=painter->matrix();
+    QTransform m=painter->transform();
+    painter->setTransform(proxyGraphicsItem->transform(), true);
+    m=painter->transform();
     paint(painter,option);
 
     foreach(QObject * b,children()){

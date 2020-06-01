@@ -12,7 +12,7 @@
 #include "mvp_enums.h"
 #include "libshared_global.h"
 #include "listobjstr.h"
-
+#include "signaldescription.h"
 
 
 QString objectId2Str(const quint64 &id);
@@ -104,7 +104,7 @@ protected:
 
 private:
     bool onlyOneEmitEnabled=false;
-    bool stateChangedEmit=false;
+    bool isStateChanged=false;
     quint64 _stateChangedCount=0;
 
 signals:

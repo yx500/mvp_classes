@@ -45,11 +45,14 @@ public:
     void setDrawModeisEditor(bool isEditor);
     TSceneDrawMode drawMode() const {return FDrawMode;}
 
-public slots:
+public Q_SLOTS:
     void slotInvalidate();
     void slotAnimate();
     void slotUpdateState();
-signals:
+
+ Q_SIGNALS:
+   void viewChanged();
+
 
 protected:
     Visual_Screen *FVisual_Screen;

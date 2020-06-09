@@ -192,7 +192,7 @@ void m_Otcep::resetStates()
 
 }
 
-void m_Otcep::acceptSLStates(m_Otcep *o)
+void m_Otcep::acceptSLStates(const m_Otcep *o)
 {
     FSTATE_MAR=o->STATE_MAR();
     FSTATE_SL_VAGON_CNT=o->STATE_SL_VAGON_CNT();
@@ -207,6 +207,8 @@ void m_Otcep::acceptSLStates(m_Otcep *o)
     vVag.clear();
     vVag=o->vVag;
 }
+
+
 
 void m_Otcep::updateAfterLoad()
 {

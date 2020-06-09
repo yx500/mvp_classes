@@ -146,7 +146,7 @@ public:
     virtual void updateAfterLoad();
     virtual QString defaultGroupName() const {return "ОТЦЕПЫ";}
     virtual bool isStoredXML() const{return false;}
-    void acceptSLStates(m_Otcep *o);
+    void acceptSLStates(const m_Otcep *o);
 
     QVector<tSlVagon> vVag;
     QList<m_RC *> vBusyRc;
@@ -157,6 +157,10 @@ public:
     m_RC * RCF=nullptr;
     m_RC * descr_RCS=nullptr;
     m_RC * descr_RCF=nullptr;
+
+    qreal FSTATE_V_INOUT[2][3];
+    int FSTATE_OT_RA[2][3];
+    qreal FSTATE_V_ZAD[3];
 
 
     void setBusyRC();
@@ -171,9 +175,7 @@ public slots:
 
 protected:
     int FNUM;
-    qreal FSTATE_V_INOUT[2][3];
-    int FSTATE_OT_RA[2][3];
-    qreal FSTATE_V_ZAD[3];
+
     m_Otceps*otceps;
     void updateStates_0();
     void updateStates_1();

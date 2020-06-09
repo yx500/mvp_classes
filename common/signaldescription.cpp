@@ -160,7 +160,7 @@ quint8 SignalDescription::value_1byte() const
 
 bool SignalDescription::is33() const
 {
-
+    if (FisInnerUse) return false;
     if (FisNotUse) return false;
     if (FChanelName.isEmpty()) return false;
     if (gtBuffer==nullptr) return true;

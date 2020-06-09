@@ -67,7 +67,7 @@ void m_RC_Gor_ZKR::updateAfterLoad()
 
 bool m_RC_Gor_ZKR::is33()
 {
-    if (m_RC_Gor::is33()) return true;
+//    if (m_RC_Gor::is33()) return true;
     return FSIGNAL_ROSPUSK.is33();
 }
 

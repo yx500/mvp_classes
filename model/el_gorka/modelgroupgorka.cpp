@@ -136,9 +136,20 @@ void ModelGroupGorka::updateAfterLoad()
     }
 }
 
+bool ModelGroupGorka::is33()
+{
+    return FSIGNAL_ROSPUSK.is33();
+}
+
 void ModelGroupGorka::updateStates()
 {
     updateRegim();
+    int p=0;
+    foreach (auto zkr, lzkr) {
+//        if (zkr->SIGNAL_ROSPUSK().value_1bit()==1) return zkr->PUT_NADVIG();
+        if (zkr->STATE_ROSPUSK()==1) p= zkr->PUT_NADVIG();
+    }
+    setSTATE_PUT_NADVIG(p);
     ModelRootGroup::updateStates();
 }
 
@@ -191,13 +202,6 @@ QList<m_RC_Gor *> ModelGroupGorka::marshrut(int put_nadvig,int m)
     return l;
 }
 
-int ModelGroupGorka::PUT_NADVIG() const
-{
-    foreach (auto zkr, lzkr) {
-        if (zkr->STATE_ROSPUSK()==1) return zkr->PUT_NADVIG();
-    }
-    return 0;
-}
 
 
 

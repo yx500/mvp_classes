@@ -27,20 +27,19 @@ public:
     MYPROP(SignalDescription,SIGNAL_PAUSA)
     MYPROP(SignalDescription,SIGNAL_STOP)
     MYSTATE(int,STATE_REGIM)
-    Q_PROPERTY(int PUT_NADVIG READ PUT_NADVIG  DESIGNABLE true STORED false)
+    MYSTATE(int,STATE_PUT_NADVIG)
 public:
     Q_INVOKABLE ModelGroupGorka(BaseObject *parent = nullptr);
     virtual ~ModelGroupGorka();
     virtual void resetStates();
     virtual void validation(ListObjStr *l) const;
     virtual void updateAfterLoad();
-
+    virtual bool is33();
     virtual void updateStates(); // основной жизненный цикл
 
     QList<m_RC_Gor*> marshrut(int put_nadvig, int m);
     QMap<int,int> mSP2MAR;
     QMap<int,int> mMAR2SP;
-    int PUT_NADVIG() const;
 
 signals:
     void regimChanged(int oldRegim,int newRegim);

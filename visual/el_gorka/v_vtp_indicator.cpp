@@ -37,7 +37,7 @@ void v_VTP_Indicator::setZAM1(ObjectLink p)
 {
     if (FZAM1!=p){
         FZAM1=p;
-        zam1=qobject_cast<m_Zam*>(reLink(this,FZAM1));
+        zam1=qobject_cast<m_Zam*>(updateLink(FZAM1));
         update();
     }
 }
@@ -45,7 +45,7 @@ void v_VTP_Indicator::setZAM2(ObjectLink p)
 {
     if (FZAM2!=p){
         FZAM2=p;
-        zam2=qobject_cast<m_Zam*>(reLink(this,FZAM2));
+        zam2=qobject_cast<m_Zam*>(updateLink(FZAM2));
         update();
     }
 }
@@ -54,7 +54,7 @@ void v_VTP_Indicator::setOTCEPS(ObjectLink p)
 {
     if (FOTCEPS!=p){
         FOTCEPS=p;
-        mOtceps=qobject_cast<m_Otceps*>(reLink(this,FOTCEPS));
+        mOtceps=qobject_cast<m_Otceps*>(updateLink(FOTCEPS));
         update();
     }
 }
@@ -71,17 +71,17 @@ void v_VTP_Indicator::updateAfterLoad()
     mOtceps=nullptr;
     v_Base::updateAfterLoad();
     if (!FZAM1.id()==0){
-        zam1=qobject_cast<m_Zam*>(reLink(this,FZAM1));
+        zam1=qobject_cast<m_Zam*>(updateLink(FZAM1));
         if (!zam1)
             qCritical() << objectName() << "Ошибочная ссылка ZAM1" <<endl ;
     }
     if (!FZAM2.id()==0){
-        zam2=qobject_cast<m_Zam*>(reLink(this,FZAM2));
+        zam2=qobject_cast<m_Zam*>(updateLink(FZAM2));
         if (!zam2)
             qCritical() << objectName() << "Ошибочная ссылка ZAM2" <<endl ;
     }
     if (!FOTCEPS.id()==0){
-        mOtceps=qobject_cast<m_Otceps*>(reLink(this,FOTCEPS));
+        mOtceps=qobject_cast<m_Otceps*>(updateLink(FOTCEPS));
         if (!mOtceps)
             qCritical() << objectName() << "Ошибочная ссылка OTCEPS" <<endl ;
     }

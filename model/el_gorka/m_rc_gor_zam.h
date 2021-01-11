@@ -6,7 +6,7 @@
 class m_RC_Gor_Zam : public m_RC_Gor
 {
     Q_OBJECT
-    MYPROP(ObjectLink, ZAM)
+    MYPROPLINK( ZAM)
 public:
     Q_INVOKABLE m_RC_Gor_Zam(QObject *parent = nullptr);
     virtual ~m_RC_Gor_Zam(){}

@@ -23,8 +23,8 @@ public:
     Q_PROPERTY(SignalDescription SIGNAL_PRV READ SIGNAL_PRV DESIGNABLE true)
 
 
-    MYPROP(ObjectLink, IPD)
-    MYPROP(ObjectLink, RTDS)
+    MYPROPLINK( IPD)
+    MYPROPLINK( RTDS)
 
     MYSTATE(bool, STATE_ZAM)
     MYSTATE(bool, STATE_BLOK)

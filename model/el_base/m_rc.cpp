@@ -34,19 +34,16 @@ m_RC::m_RC(QObject *parent) :
     FSIGNAL_ERR_LS(),FSIGNAL_ERR_LZ(),FSIGNAL_ERR_KZ()
 {
     for (int d=0;d<2;d++){
+        Fnext_link[d][1].setInNotUse(true);
         for (int m=0;m<2;m++){
-            Fnext[d][m].clear();
-            Fsv_m[d][m].clear();
+            Fnext_link[d][m].clear();
+            Fnext[d][m]=nullptr;
+            Fsv_m_links[d][m].clear();
+            Fsv_m_links[d][m].setInNotUse(true);
         }
     }
     FSTATE_BUSY=MVP_Enums::TRCBusy::busy_unknow;
     FSTATE_BLOCK=0;
-    Fnext[0][1].setInNotUse(true);
-    Fnext[1][1].setInNotUse(true);
-    Fsv_m[0][0].setInNotUse(true);
-    Fsv_m[0][1].setInNotUse(true);
-    Fsv_m[1][0].setInNotUse(true);
-    Fsv_m[1][1].setInNotUse(true);
     FSIGNAL_OTC1.setIsNoUse(true);
     FSIGNAL_OTC2.setIsNoUse(true);
     resetStates();
@@ -67,6 +64,30 @@ void m_RC::resetStates()
     dtFree=QDateTime();
 }
 
+void m_RC::updateAfterLoad()
+{
+    m_Base::updateAfterLoad();
+    for (int d=0;d<2;d++){
+        for (int m=0;m<2;m++){
+
+            updateLink(Fnext_link[d][m]);
+            Fnext[d][m]=qobject_cast<m_RC*>(Fnext_link[d][m].baseObject());
+
+            if ((!Fnext_link[d][m].isEmpty())&&(Fnext[d][m]==nullptr)){
+                qCritical() << objectName() << QString("Ошибочная ссылка NEXT d=%1 m=%2 ").arg(d).arg(m) <<endl ;
+            }
+            updateLink(Fsv_m_links[d][m]);
+            Fsv_m[d][m]=qobject_cast<m_Svet*>(Fsv_m_links[d][m].baseObject());
+
+
+            if ((!Fsv_m_links[d][m].isEmpty())&&(Fsv_m[d][m]==nullptr)){
+                qCritical() << objectName() << QString("Ошибочная ссылка M_SV d=%1 m=%2 ").arg(d).arg(m) <<endl ;
+            }
+
+            l_devices.push_back(Fsv_m[d][m]);
+        }
+    }
+}
 
 void m_RC::validation(ListObjStr *l) const
 {
@@ -77,18 +98,18 @@ void m_RC::validation(ListObjStr *l) const
     }
     for (int d=0;d<2;d++)
         for (int m=0;m<getNextCount(d);m++)
-            if ((!Fnext[d][m].isNotUse()) &&(Fnext[d][m].isNull()))
+            if ((!Fnext_link[d][m].isNotUse()) &&(Fnext_link[d][m].isNull()))
                 l->warning(this,QString("Не задана связь NEXT[%1][%2]").arg(d).arg(m));
     for (int d=0;d<2;d++)
         for (int m=0;m<getNextCount(d);m++)
-            if ((!Fsv_m[d][m].isNotUse()) &&(Fsv_m[d][m].isNull()))
+            if ((!Fsv_m_links[d][m].isNotUse()) &&(Fsv_m_links[d][m].isNull()))
                 l->warning(this,QString("Не задана светофор отправления SV_M[%1][%2]").arg(d).arg(m));
-    if ((!Fsv_m[0][0].isNull())&&(!Fsv_m[1][0].isNull())&&(Fsv_m[0][0]==Fsv_m[1][0]))
+    if ((!Fsv_m_links[0][0].isNull())&&(!Fsv_m_links[1][0].isNull())&&(Fsv_m_links[0][0]==Fsv_m_links[1][0]))
         l->warning(this,QString("Один светофор в разные стороны"));
 
     for (int d=0;d<2;d++){
         if (getNextCount(d)>1)
-            if ((!Fnext[d][0].isNull())&&(Fnext[d][0]==Fnext[d][1]))
+            if ((!Fnext_link[d][0].isNull())&&(Fnext_link[d][0]==Fnext_link[d][1]))
                 l->error(this,QString("2 связи на 1 объект d=%1").arg(d));
     }
 
@@ -97,7 +118,7 @@ void m_RC::validation(ListObjStr *l) const
             for (int d2=0;d2<2;d2++)
                 for (int m2=0;m2<getNextCount(d2);m2++)
                     if (d1!=d2){
-                        if ((!Fnext[d1][m1].isNull())&&(Fnext[d1][m1]==Fnext[d2][m2]))
+                        if ((!Fnext_link[d1][m1].isNull())&&(Fnext_link[d1][m1]==Fnext_link[d2][m2]))
                             l->error(this,QString("1 объект в 2ух направлениях"));
                     }
 
@@ -125,10 +146,12 @@ m_RC *m_RC::getNextRC(int d, int m) const
 {
     if (m==MVP_Enums::TStrelPol::pol_w) return nullptr;
     if (getNextCount(d)==1) m=0;
-    if ((d==0)&&(m==0)) return qobject_cast<m_RC *>(Fnext[0][0].obj());
-    if ((d==1)&&(m==0)) return qobject_cast<m_RC *>(Fnext[1][0].obj());
-    if ((d==0)&&(m==1)) return qobject_cast<m_RC *>(Fnext[0][1].obj());
-    if ((d==1)&&(m==1)) return qobject_cast<m_RC *>(Fnext[1][1].obj());
+    if ((d>=0)&&(m>=0)&&(d+m<=2))   return Fnext[d][m];
+    return nullptr;
+}
+m_Svet *m_RC::getSV_M(int d, int m) const
+{
+    if ((d>=0)&&(m>=0)&&(d+m<=2))   return (Fsv_m[d][m]);
     return nullptr;
 }
 
@@ -150,62 +173,35 @@ m_RC *m_RC::getNextRCpolcfb(int d) const
     return getNextRCcfb(d,STATE_POL());
 }
 
-m_Svet *m_RC::getSV_M(int d, int m) const
+
+
+
+
+void m_RC::setnextLink(const ObjectLink &p, int d, int m)
 {
-    return qobject_cast<m_Svet *>(Fsv_m[d][m].obj());
-}
-
-
-
-void m_RC::setLink(ObjectLink &lnk, const ObjectLink &link_new)
-{
-    lnk=link_new;
-    if ((link_new.obj()==nullptr)&&(link_new.storedFid!=0)) {
-        const BaseObject *B=superFindObjectById(this,link_new.storedFid);
-        if (B) lnk.linkObj(B);
+    if ((d>=0)&&(m>=0)&&(d+m<=2)){
+        Fnext[d][m]=qobject_cast<m_RC*>(Fnext_link[d][m].baseObject());
+        SETPROP(Fnext_link[d][m]);
     }
+
 }
-
-void m_RC::setsv_m(ObjectLink p, int d, int m)
-{
-    ObjectLink old_p=Fsv_m[d][m];
-    setLink(Fsv_m[d][m],p);
-    if (Fsv_m[d][m]!=old_p) doPropertyChanged();
-}
-
-void m_RC::updateAfterLoad()
-{
-    m_Base::updateAfterLoad();
-    for (int d=0;d<2;d++){
-        for (int m=0;m<2;m++){
-            if (Fnext[d][m].id()!=0){
-                const BaseObject *B=superFindObjectById(this,Fnext[d][m].id());
-                if (!B){
-                    qCritical() << objectName() << QString("Ошибочная ссылка NEXT d=%1 m=%2 ").arg(d).arg(m) <<endl ;
-                }
-                Fnext[d][m].linkObj(B);
-            }
-
-            if (Fsv_m[d][m].id()!=0){
-                const BaseObject *B=superFindObjectById(this,Fsv_m[d][m].id());
-                if (!B){
-                    qCritical() << objectName() << QString("Ошибочная ссылка M_SV d=%1 m=%2 ").arg(d).arg(m) <<endl ;
-                }
-                Fsv_m[d][m].linkObj(B);
-            }
-            _sv_m[d][m]=qobject_cast<m_Svet*>(reLink(this,Fsv_m[d][m]));
-            l_devices.push_back(_sv_m[d][m]);
-        }
-    }
-}
-
 void m_RC::linkNext(int d, int m, BaseObject *B)
 {
-    if ((d==0)&&(m==0)) setnext00(ObjectLink(B));
-    if ((d==1)&&(m==0)) setnext10(ObjectLink(B));
-    if ((d==0)&&(m==1)) setnext01(ObjectLink(B));
-    if ((d==1)&&(m==1)) setnext11(ObjectLink(B));
+    setnextLink(ObjectLink(B),d,m);
 }
+
+
+
+void m_RC::setsv_mLink(ObjectLink p, int d, int m)
+{
+    if ((d>=0)&&(m>=0)&&(d+m<=2)){
+        Fsv_m[d][m]=qobject_cast<m_Svet*>(Fsv_m_links[d][m].baseObject());
+        SETPROP(Fsv_m_links[d][m]);
+    }
+}
+
+
+
 
 bool m_RC::is33()
 {
@@ -242,6 +238,7 @@ void m_RC::updateStates()
         setSignalState(FSIGNAL_ERR_LS,FSTATE_ERR_LS);
         setSignalState(FSIGNAL_ERR_LZ,FSTATE_ERR_LZ);
         setSignalState(FSIGNAL_ERR_KZ,FSTATE_ERR_KZ);
+        setSignalState(FSIGNAL_CHECK_FREE_DB,FSTATE_CHECK_FREE_DB);
         next_rc[0]=getNextRCpolcfb(0);
         next_rc[1]=getNextRCpolcfb(1);
     }

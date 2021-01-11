@@ -74,26 +74,6 @@ BaseObject *superFindObjectById(QObject *O,const quint64 &id)
     if (superP!=nullptr) return findObjectById(superP,id);
     return nullptr;
 }
-BaseObject *reLink(const QObject *O,ObjectLink &lnk)
-{
-    if (lnk.id()==0) {
-        lnk.clear();
-        return nullptr;
-    }
-    if (O==nullptr) return nullptr;
-    const auto *B=qobject_cast<const BaseObject *>(O);
-    if ((B)&&(lnk.id()==B->id())) {
-        lnk.linkObj(B);
-        return const_cast<BaseObject *>(B);
-    }
-    const QObject * superP=superParent(O);
-    if (superP!=nullptr) B=findObjectById(superP,lnk.id());
-    if (B) lnk.linkObj(B);
-    return const_cast<BaseObject *>(B);
-}
-
-
-
 
 QList<BaseObject *> listAllBaseObjects(QObject *O)
 {
@@ -382,8 +362,8 @@ QObjectList linkedObjects(const QObject *O)
         if (type == qMetaTypeId<ObjectLink>()){
             QVariant val=metaProperty.read(O);
             ObjectLink p = val.value<ObjectLink>();
-            if (p.obj()!=nullptr){
-                l.push_back(p.obj());
+            if (p.baseObject()!=nullptr){
+                l.push_back(p.baseObject());
             }
         }
     }

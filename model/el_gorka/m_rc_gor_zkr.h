@@ -17,15 +17,15 @@ class m_RC_Gor_ZKR : public m_RC_Gor
 public:
 
 
-    MYPROP(ObjectLink, SVET)
-    MYPROP(ObjectLink, CONTR_NADVIG)
-    MYPROP(ObjectLink, RTDS1)
-    MYPROP(ObjectLink, RTDS2)
+    MYPROPLINK( SVET)
+    MYPROPLINK( CONTR_NADVIG)
+    MYPROPLINK( RTDS1)
+    MYPROPLINK( RTDS2)
 
-    MYPROP(ObjectLink, DSO11)
-    MYPROP(ObjectLink, DSO12)
-    MYPROP(ObjectLink, DSO21)
-    MYPROP(ObjectLink, DSO22)
+    MYPROPLINK( DSO11)
+    MYPROPLINK( DSO12)
+    MYPROPLINK( DSO21)
+    MYPROPLINK( DSO22)
 
     MYPROP(int,PUT_NADVIG)
     MYPROP(SignalDescription,SIGNAL_ROSPUSK)

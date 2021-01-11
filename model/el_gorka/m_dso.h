@@ -17,7 +17,7 @@ class m_DSO : public m_Base
 public:
 
 
-    MYPROP(ObjectLink,RC)
+    MYPROPLINK(RC)
     MYPROP(qreal,RC_OFFSET)
 
     MYPROP(SignalDescription,SIGNAL_DSODATA)

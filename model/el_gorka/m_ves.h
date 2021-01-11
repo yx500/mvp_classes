@@ -10,7 +10,7 @@ class m_Ves : public m_Base
 {
     Q_OBJECT
 public:
-    MYPROP(ObjectLink,RC)
+    MYPROPLINK(RC)
     MYPROP(SignalDescription,SIGNAL_STATE_VES)
 
     MYSTATE(quint64,STATE_OSY_COUNT)

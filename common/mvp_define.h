@@ -15,6 +15,16 @@
                                 F##n=p; \
                                 doPropertyChanged();}} \
                        const type &n()const  {return F##n;}
+#define MYPROPLINK(n) Q_PROPERTY(ObjectLink n READ n WRITE set##n DESIGNABLE true ) \
+                       protected: \
+                       ObjectLink F##n; \
+                       public: \
+                       void set##n(const ObjectLink &p){ \
+                            if(F##n!=p){ \
+                                F##n=p; \
+                                updateLink(F##n); \
+                                doPropertyChanged();}} \
+                       const ObjectLink &n()const  {return F##n;}
 
 #define MYSTATE(type,n) Q_PROPERTY(type n READ n WRITE set##n DESIGNABLE true STORED false) \
                        protected: \

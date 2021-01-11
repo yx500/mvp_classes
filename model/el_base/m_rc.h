@@ -39,6 +39,7 @@ public:
     MYPROP(SignalDescription,SIGNAL_ERR_LS)
     MYPROP(SignalDescription,SIGNAL_ERR_LZ)
     MYPROP(SignalDescription,SIGNAL_ERR_KZ)
+    MYPROP(SignalDescription,SIGNAL_CHECK_FREE_DB)
 
 
     MYSTATE(MVP_Enums::TRCBusy,STATE_BUSY)
@@ -47,30 +48,30 @@ public:
     MYSTATE(bool, STATE_ERR_LS)
     MYSTATE(bool, STATE_ERR_LZ)
     MYSTATE(bool, STATE_ERR_KZ)
+    MYSTATE(bool, STATE_CHECK_FREE_DB)
 
 
     virtual void setSTATE_POL(MVP_Enums::TStrelPol p) {Q_UNUSED(p);}
     virtual MVP_Enums::TStrelPol STATE_POL() const {return MVP_Enums::TStrelPol::pol_w;}
+    void setnextLink(const ObjectLink &p, int d, int m);
+    void setnext00(ObjectLink p){setnextLink(p,0,0);}
+    void setnext10(ObjectLink p){setnextLink(p,1,0);}
+    void setnext01(ObjectLink p){setnextLink(p,0,1);}
+    void setnext11(ObjectLink p){setnextLink(p,1,1);}
+    ObjectLink getnext00()const {return Fnext_link[0][0];}
+    ObjectLink getnext10()const {return Fnext_link[1][0];}
+    ObjectLink getnext01()const {return Fnext_link[0][1];}
+    ObjectLink getnext11()const {return Fnext_link[1][1];}
 
-    void setnext00(ObjectLink p){SETPROP(Fnext[0][0]);}
-    void setnext10(ObjectLink p){SETPROP(Fnext[1][0]);}
-    void setnext01(ObjectLink p){SETPROP(Fnext[0][1]);}
-    void setnext11(ObjectLink p){SETPROP(Fnext[1][1]);}
-    ObjectLink getnext00()const {return Fnext[0][0];}
-    ObjectLink getnext10()const {return Fnext[1][0];}
-    ObjectLink getnext01()const {return Fnext[0][1];}
-    ObjectLink getnext11()const {return Fnext[1][1];}
-
-    void setLink(ObjectLink &lnk,const ObjectLink &link_new);
-    void setsv_m(ObjectLink p,int d,int m);
-    void setsv_m00(ObjectLink p){setsv_m(p,0,0);}
-    void setsv_m10(ObjectLink p){setsv_m(p,1,0);}
-    void setsv_m01(ObjectLink p){setsv_m(p,0,1);}
-    void setsv_m11(ObjectLink p){setsv_m(p,1,1);}
-    ObjectLink getsv_m00()const {return Fsv_m[0][0];}
-    ObjectLink getsv_m10()const {return Fsv_m[1][0];}
-    ObjectLink getsv_m01()const {return Fsv_m[0][1];}
-    ObjectLink getsv_m11()const {return Fsv_m[1][1];}
+    void setsv_mLink(ObjectLink p,int d,int m);
+    void setsv_m00(ObjectLink p){setsv_mLink(p,0,0);}
+    void setsv_m10(ObjectLink p){setsv_mLink(p,1,0);}
+    void setsv_m01(ObjectLink p){setsv_mLink(p,0,1);}
+    void setsv_m11(ObjectLink p){setsv_mLink(p,1,1);}
+    ObjectLink getsv_m00()const {return Fsv_m_links[0][0];}
+    ObjectLink getsv_m10()const {return Fsv_m_links[1][0];}
+    ObjectLink getsv_m01()const {return Fsv_m_links[0][1];}
+    ObjectLink getsv_m11()const {return Fsv_m_links[1][1];}
 
 
     virtual int DIRECTM()const;
@@ -108,9 +109,10 @@ public:
     tos_RcTracking * rcs=nullptr; // ссылка на доп состояния используемые в work
 
 protected:
-    ObjectLink Fnext[2][2];
-    ObjectLink Fsv_m[2][2];
-    m_Svet *_sv_m[2][2];
+    ObjectLink Fnext_link[2][2]; // для  записи
+    m_RC * Fnext[2][2];           // для использ
+    ObjectLink Fsv_m_links[2][2];
+    m_Svet *Fsv_m[2][2];
     QList<m_Base *> l_devices;
 
 

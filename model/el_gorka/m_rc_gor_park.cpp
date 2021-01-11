@@ -43,7 +43,8 @@ void m_RC_Gor_Park::validation(ListObjStr *l) const
 void m_RC_Gor_Park::updateAfterLoad()
 {
     m_RC_Gor::updateAfterLoad();
-    _kzp=qobject_cast<m_KZP*>(reLink(this,FKZP));
+    updateLink(FKZP);
+    _kzp=qobject_cast<m_KZP*>(FKZP.baseObject());
     if (_kzp) addDevice(_kzp);
 }
 

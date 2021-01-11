@@ -22,7 +22,7 @@ void v_Strel_A_Indicator::setTARGET(ObjectLink p)
 {
     if (FTARGET!=p){
         FTARGET=p;
-        strel=qobject_cast<m_Base*>(reLink(this,FTARGET));
+        strel=qobject_cast<m_Base*>(updateLink(FTARGET));
         calculateGeometry();
     }
 }
@@ -32,7 +32,7 @@ void v_Strel_A_Indicator::updateAfterLoad()
 {
     v_Base::updateAfterLoad();
     if (FTARGET.id()!=0){
-        strel=qobject_cast<m_Base*>(reLink(this,FTARGET));
+        strel=qobject_cast<m_Base*>(updateLink(FTARGET));
         if (!strel)
             qCritical() << objectName() << "Ошибочная ссылка TARGET" <<endl ;
     }

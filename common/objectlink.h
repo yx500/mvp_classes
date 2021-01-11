@@ -11,11 +11,15 @@ class ObjectLink
     quint64 storedFid;
 
 
-    ObjectLink(){storedFid=0;O=nullptr;FisNotUsed=false;}
+    ObjectLink(){storedFid=0;B=nullptr;FisNotUsed=false;}
     ObjectLink(const ObjectLink &other){
-        storedFid=other.storedFid;O=other.obj();FisNotUsed=other.isNotUse();
+        storedFid=other.storedFid;B=other.baseObject();FisNotUsed=other.isNotUse();
     }
-    ObjectLink(QObject *o){
+//    ObjectLink(QObject *o){
+//        FisNotUsed=false;
+//        linkObj(o);
+//    }
+    ObjectLink(BaseObject *o){
         FisNotUsed=false;
         linkObj(o);
     }
@@ -30,7 +34,7 @@ class ObjectLink
     void fromString(QString s){
         storedFid=0;
         if (s.isEmpty()){FisNotUsed=true;} else {FisNotUsed=false;storedFid=str2objectId(s);}
-        O=nullptr;
+        B=nullptr;
     }
 
     static ObjectLink _fromString(const QString &s)    {
@@ -41,63 +45,38 @@ class ObjectLink
         return l.toString();
     }
 
-    QObject * obj()const {return O;}
 
     BaseObject * baseObject()const {
-        QObject *o=O;
-        return qobject_cast<BaseObject *>(o);
+        return B;
     }
     const quint64 &id() {return storedFid;}
     bool isNotUse() const {return FisNotUsed;}
     void setInNotUse(bool p){FisNotUsed=p;}
-    bool isNull() const {return O.isNull();}
+    bool isNull() const {return B.isNull();}
     bool isEmpty() const {return storedFid==0;}
 
-    void unLinkObj(){
-            O=nullptr;storedFid=0;
-    }
-
-    void linkObj(QObject* o){
-        BaseObject *B=qobject_cast<BaseObject *>(o);
-        if (B!=nullptr){
-            O=o;
-            storedFid=B->id();
-        } else {
-            O=nullptr;
-            storedFid=0;
-        }
-    }
     void linkObj(const BaseObject* B){
+        this->B=const_cast<BaseObject*>(B);
         if (B!=nullptr){
-            O=const_cast<BaseObject*>(B);
             storedFid=B->id();
         } else {
-            O=nullptr;
-            storedFid=0;
+            //storedFid=0;
         }
     }
-    void clear(){unLinkObj();}
+    void clear(){B=nullptr;;storedFid=0;}
     bool like(const ObjectLink &other){
         return storedFid==other.storedFid;
     }
     void setId(quint64 newId){storedFid=newId;}
 
     bool	operator == (const ObjectLink &other) const {
-        if (O!=nullptr) {
-            return O==other.obj();
-        } else {
             return storedFid==other.storedFid && (FisNotUsed==other.isNotUse());
-        }
     }
     bool	operator != (const ObjectLink &other) const {
-        if (O!=nullptr) {
-            return O!=other.obj();
-        } else {
             return storedFid!=other.storedFid || (FisNotUsed!=other.isNotUse());
-        }
     }
 protected:
-    QPointer<QObject> O;
+    QPointer<BaseObject> B;
     bool FisNotUsed;
 
 };

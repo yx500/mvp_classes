@@ -13,7 +13,7 @@ QString copyQObjects2XMLBOX(QList<QObject *>lcpy, bool bWithModels=true);
 QList<QObject *> pasteXMLBOX(QString &xmlCopyGroup, QObject *Parent,bool bWithModels=true);
 // ищет визуалы с моделью у суперпарента V
 QList<v_Model *> superFindElementsByModel(v_Base *V,m_Base * M);
-QList<v_Model *> stationFindElementsByModel(m_Base * M);
+//QList<v_Model *> stationFindElementsByModel(m_Base * M);
 
 
 QList<v_Model *> listVisualElementWithsModel(v_Base * V, BaseObject *B, const QObject *_superParent=0);

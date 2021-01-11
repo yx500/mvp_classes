@@ -33,10 +33,12 @@ void m_RIS::validation(ListObjStr *l) const
 void m_RIS::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    _controllerARS=qobject_cast<m_ControllerARS*>(reLink(this,FCONTR_ARS));
+    updateLink(FCONTR_ARS);
+    _controllerARS=qobject_cast<m_ControllerARS*>(FCONTR_ARS.baseObject());
     if (!_controllerARS)
         qCritical() << objectName() << "Ошибочная ссылка CONTR_ARS" <<endl ;
-    rc=qobject_cast<m_RC*>(reLink(this,FRC));
+    updateLink(FRC);
+    rc=qobject_cast<m_RC*>(FRC.baseObject());
     if (!rc)
         qCritical() << objectName() << "Ошибочная ссылка RC" <<endl ; else
         rc->addDevice(this);

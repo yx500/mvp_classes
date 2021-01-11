@@ -27,6 +27,7 @@ quint64 str2objectId(const QString &s);
 // обмен с внешним миром через SignalDescription
 // должен однозначно определять свое сотояние функцией updateStates()
 
+class ObjectLink;
 
 class LIBSHARED_EXPORT BaseObject : public QObject
 {
@@ -82,6 +83,7 @@ public:
     void _emit_after();
     quint64 stateChangedCount() const {return _stateChangedCount;}
 
+    BaseObject* updateLink(ObjectLink &l);
 
 public slots:
 

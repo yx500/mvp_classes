@@ -5,6 +5,7 @@
 #include <utility>
 #include "mvp_system.h"
 #include "objectlink.h"
+#include "baseobjecttools.h"
 
 
 QString objectId2Str(const quint64 &id){
@@ -139,6 +140,13 @@ void BaseObject::validationEmptyLinks(ListObjStr *l) const
                            metaProperty.name()
                            );
             }
+            if ((!p.isEmpty()&&(p.isNull()))){
+                l->error(this,"Объект не найден",
+                           MVP_ObjectFactory::instance()->property_rusname(metaObject(),metaProperty.name()),
+                           metaProperty.name()
+                           );
+            }
+
         }
     }
 }
@@ -153,6 +161,23 @@ void BaseObject::_emit_after()
 {
     if (isStateChanged) emit stateChanged(this);
     onlyOneEmitEnabled=false;
+}
+
+BaseObject* BaseObject::updateLink(ObjectLink &l)
+{
+    if (l.id()==0) {
+        l.clear();
+        return nullptr;
+    }
+    if (l.id()==id()) {
+        l.linkObj(this);
+        return this;
+    }
+    BaseObject *B=nullptr;
+    const QObject * superP=superParent(this);
+    if (superP!=nullptr) B=findObjectById(superP,l.id());
+    l.linkObj(B);
+    return B;
 }
 
 void BaseObject::addTagObject(QObject *ob,int key)

@@ -45,24 +45,25 @@ void m_RC_Gor_ZKR::validation(ListObjStr *l) const
 void m_RC_Gor_ZKR::updateAfterLoad()
 {
     m_RC_Gor::updateAfterLoad();
-    controllerARSNadvig=qobject_cast<m_ControllerARS*>(reLink(this,FCONTR_NADVIG));
+
+    controllerARSNadvig=qobject_cast<m_ControllerARS*>(updateLink(FCONTR_NADVIG));
     if (!controllerARSNadvig) qCritical() << objectName() << "Ошибочная ссылка CONTR_NADVIG" <<endl ; else addDevice(controllerARSNadvig);
 
-    svetZKR=qobject_cast<m_Svet_Gor_4N*>(reLink(this,FSVET));
+    svetZKR=qobject_cast<m_Svet_Gor_4N*>(updateLink(FSVET));
     if (!svetZKR) qCritical() << objectName() << "Ошибочная ссылка SVET" <<endl ; else addDevice(svetZKR);
-    rtds1=qobject_cast<m_RTDS*>(reLink(this,FRTDS1));
+    rtds1=qobject_cast<m_RTDS*>(updateLink(FRTDS1));
     if (!rtds1) qCritical() << objectName() << "Ошибочная ссылка RTDS1" <<endl ; else addDevice(rtds1);
-    rtds2=qobject_cast<m_RTDS*>(reLink(this,FRTDS2));
+    rtds2=qobject_cast<m_RTDS*>(updateLink(FRTDS2));
     if (!rtds2) qCritical() << objectName() << "Ошибочная ссылка RTDS2" <<endl ; else addDevice(rtds2);
 
-    dso[0][0]=qobject_cast<m_DSO*>(reLink(this,FDSO11));
-    dso[0][1]=qobject_cast<m_DSO*>(reLink(this,FDSO12));
-    dso[1][0]=qobject_cast<m_DSO*>(reLink(this,FDSO21));
-    dso[1][1]=qobject_cast<m_DSO*>(reLink(this,FDSO22));
-    if (!dso[0][0]) qCritical() << objectName() << "Ошибочная ссылка DSO11" <<endl ; else addDevice(dso[0][0]);
-    if (!dso[0][1]) qCritical() << objectName() << "Ошибочная ссылка DSO12" <<endl ; else addDevice(dso[0][1]);
-    if (!dso[1][0]) qCritical() << objectName() << "Ошибочная ссылка DSO21" <<endl ; else addDevice(dso[1][0]);
-    if (!dso[1][1]) qCritical() << objectName() << "Ошибочная ссылка DSO22" <<endl ; else addDevice(dso[1][1]);
+
+    dso[0][0]=qobject_cast<m_DSO*>(updateLink(FDSO11));
+    dso[0][1]=qobject_cast<m_DSO*>(updateLink(FDSO12));
+    dso[1][0]=qobject_cast<m_DSO*>(updateLink(FDSO21));
+    dso[1][1]=qobject_cast<m_DSO*>(updateLink(FDSO22));
+    for (int d=0;d<2;d++)
+        for (int m=0;m<2;m++)
+            if (!dso[d][m]) qCritical() << objectName() << QString("Ошибочная ссылка DSO%1%2").arg(d+1).arg(m+1) <<endl ; else addDevice(dso[0][0]);
 }
 
 bool m_RC_Gor_ZKR::is33()

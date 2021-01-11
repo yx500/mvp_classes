@@ -202,7 +202,11 @@ bool MVP_System::isObjectLoaded(QString fileName) const
 
 QString MVP_System::fileName4Object(QObject *O) const
 {
-    if (mQObject2FileName.contains(O)) return mQObject2FileName[O];
+    QObject *P=O;
+    while (P!=nullptr){
+        if (mQObject2FileName.contains(P)) return mQObject2FileName[P];
+        P=P->parent();
+    }
     return QString();
 }
 

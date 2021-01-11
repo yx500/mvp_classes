@@ -25,8 +25,8 @@ public:
     MYPROP(int, NEGAB_RC_CNT_M)
 
 
-    MYPROP(ObjectLink, IPD)
-    MYPROP(ObjectLink, RTDS)
+    MYPROPLINK( IPD)
+    MYPROPLINK( RTDS)
 
     MYSTATE(bool, STATE_PRP)
     MYSTATE(bool, STATE_PRM)

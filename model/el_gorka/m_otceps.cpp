@@ -91,7 +91,7 @@ void m_Otceps::updateAfterLoad()
     m_Base::updateAfterLoad();
 }
 
-QList<m_Otcep *> m_Otceps::otceps() const
+const QList<m_Otcep *> &m_Otceps::otceps() const
 {
     return l_otceps;
 

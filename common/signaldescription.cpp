@@ -13,7 +13,7 @@ IGtBufferInterface *setDefaultGetGtBufferInterface(IGtBufferInterface *i)
 
 SignalDescription::SignalDescription()
     :FChanelType(0),FChanelName(),FChanelOffset(0),
-    FisInvers(false),FisNotUse(false),FStoredSignalName()
+    FisInvers(false),FisNotUse(false),FisInnerUse(false),FStoredSignalName()
 {
        gtBuffer=nullptr;
 }
@@ -38,7 +38,7 @@ SignalDescription::SignalDescription(const QString &s)
 
 SignalDescription::SignalDescription(int type,const QString &name,int offset)
     :FChanelType(0),FChanelName(),FChanelOffset(0),
-    FisInvers(false),FisNotUse(false),FStoredSignalName()
+    FisInvers(false),FisNotUse(false),FisInnerUse(false),FStoredSignalName()
 {
     FChanelName=name;
     FChanelType=type;

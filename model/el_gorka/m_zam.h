@@ -23,9 +23,9 @@ class m_Zam : public m_Base
     MYPROP(SignalDescription,SIGNAL_OG)
     MYPROP(SignalDescription,SIGNAL_RRC)
 
-    MYPROP(ObjectLink, CONTR_ARS)
-    MYPROP(ObjectLink, RIS)
-    MYPROP(ObjectLink, RC)
+    MYPROPLINK( CONTR_ARS)
+    MYPROPLINK( RIS)
+    MYPROPLINK( RC)
 
 
     MYSTATE(bool,STATE_T1)

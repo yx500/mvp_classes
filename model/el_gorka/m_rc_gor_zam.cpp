@@ -24,6 +24,7 @@ void m_RC_Gor_Zam::validation(ListObjStr *l) const
 void m_RC_Gor_Zam::updateAfterLoad()
 {
     m_RC_Gor::updateAfterLoad();
-    _zam=qobject_cast<m_Zam*>(reLink(this,FZAM));
+    updateLink(FZAM);
+    _zam=qobject_cast<m_Zam*>(FZAM.baseObject());
     l_devices.push_back(_zam);
 }

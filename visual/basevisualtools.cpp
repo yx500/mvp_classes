@@ -181,22 +181,22 @@ QList<v_Model *> superFindElementsByModel(v_Base *V, m_Base *M)
     return l;
 }
 
-QList<v_Model *> stationFindElementsByModel(m_Base *M)
-{
-    QList<v_Model *> l;
-    if (M){
-        Station *S=stationParent(M);
-        if (S){
-            // ищем по детям
-            QList<v_Model *> lvm=S->findChildren<v_Model *>();
-            foreach(v_Model *vm,lvm){
-                if (vm->LNKMODEL().id()==M->id()) l.push_back(vm);
-            }
-        }
-    }
-    return l;
+//QList<v_Model *> stationFindElementsByModel(m_Base *M)
+//{
+//    QList<v_Model *> l;
+//    if (M){
+//        Station *S=stationParent(M);
+//        if (S){
+//            // ищем по детям
+//            QList<v_Model *> lvm=S->findChildren<v_Model *>();
+//            foreach(v_Model *vm,lvm){
+//                if (vm->LNKMODEL().id()==M->id()) l.push_back(vm);
+//            }
+//        }
+//    }
+//    return l;
 
-}
+//}
 
 
 

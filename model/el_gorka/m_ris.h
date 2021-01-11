@@ -8,8 +8,8 @@
 class m_RIS : public m_Base
 {
     Q_OBJECT
-    MYPROP(ObjectLink, CONTR_ARS)
-    MYPROP(ObjectLink, RC)
+    MYPROPLINK( CONTR_ARS)
+    MYPROPLINK( RC)
     MYPROP(SignalDescription,SIGNAL_RRC)
 
     MYSTATE(bool,STATE_RRC)

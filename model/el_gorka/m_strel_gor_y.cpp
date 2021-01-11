@@ -34,7 +34,7 @@ void m_Strel_Gor_Y::validation(ListObjStr *l) const
         l->warning(this,"Не задан код ТУ ПРП");
     if ((!FTU_PRM.isNotUse()) &&(FTU_PRM.isEmpty()))
         l->warning(this,"Не задан код ТУ ПРМ");
-     if ((!FTU_PRP.isNotUse()) &&(FTU_PRM==FTU_PRM))
+    if ((!FTU_PRP.isNotUse()) &&(FTU_PRM==FTU_PRM))
         l->error(this,"Одинаковый код ТУ ПРМ");
     if ((!FIPD.isNotUse())&&(FIPD.isNull()))
         l->error(this,"Не задан ИПД");
@@ -45,13 +45,13 @@ void m_Strel_Gor_Y::validation(ListObjStr *l) const
 void m_Strel_Gor_Y::updateAfterLoad()
 {
     m_Strel_Gor::updateAfterLoad();
-    ipd=qobject_cast<m_IPD*>(reLink(this,FIPD));
+    ipd=qobject_cast<m_IPD*>(updateLink(FIPD));
     if (!FIPD.isNotUse()){
         if (ipd==nullptr)
             qCritical() << objectName() << "Ошибочная ссылка IPD" <<endl ; else
             addDevice(ipd);
     }
-    rtds=qobject_cast<m_RTDS*>(reLink(this,FRTDS));
+    rtds=qobject_cast<m_RTDS*>(updateLink(FRTDS));
     if (!FRTDS.isNotUse()){
         if (rtds==nullptr)
             qCritical() << objectName() << "Ошибочная ссылка RTDS" <<endl ; else

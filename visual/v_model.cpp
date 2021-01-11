@@ -57,8 +57,9 @@ void v_Model::setLNKMODEL(ObjectLink p)
 {
     if (FLNKMODEL!=p){
         FLNKMODEL=p;
+        updateLink(FLNKMODEL);
         if (!FLNKMODEL.isNull()) {
-            BaseObject *B=qobject_cast<BaseObject *>(FLNKMODEL.obj());
+            BaseObject *B=FLNKMODEL.baseObject();
             if (B){
                 setObjectName(B->objectName());
                 setModelObject(B);
@@ -167,7 +168,7 @@ void v_Model::slotModelStateChanged(QObject *O)
 
 bool v_Model::isNotAccepted33(QColor &clrB)
 {
-    m_Base *M=qobject_cast<m_Base *>(FLNKMODEL.obj());
+    m_Base *M=qobject_cast<m_Base *>(FLNKMODEL.baseObject());
     if (!M) {
         clrB=getColor(Color_modelNotAccepted);
         return true;

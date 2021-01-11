@@ -45,7 +45,7 @@ void m_Strel_Gor::resetStates()
 
 int m_Strel_Gor::getNextCount(int d) const
 {
-    if (!Fnext[d][1].isNull()) return 2;
+    if (!Fnext_link[d][1].isNull()) return 2;
     return 1;
 }
 

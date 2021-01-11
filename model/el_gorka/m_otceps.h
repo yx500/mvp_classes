@@ -22,7 +22,7 @@ public:
     virtual void validation(ListObjStr *l) const;
     virtual bool isStoredXML() const{return true;}
     virtual void updateAfterLoad();
-    QList<m_Otcep*> otceps() const;
+    const QList<m_Otcep *> &otceps() const;
     m_Otcep * otcepByNum(int n);
     m_Otcep * otcepOnRc(m_RC* rc);
     m_Otcep *otcepADDR_SLOT(int ADDR_SLOT,int ADDR,int NTP);

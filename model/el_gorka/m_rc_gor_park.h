@@ -6,7 +6,7 @@
 class m_RC_Gor_Park : public m_RC_Gor
 {
     Q_OBJECT
-    MYPROP(ObjectLink, KZP)
+    MYPROPLINK( KZP)
     MYPROP(int, PARK_WAY)
     MYSTATE(int,STATE_KZP_D)
     MYSTATE(int,STATE_KZP_E)

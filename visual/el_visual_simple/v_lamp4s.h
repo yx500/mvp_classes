@@ -6,9 +6,9 @@
 class v_Lamp4s : public v_StaticText
 {
     Q_OBJECT
-    MYPROP(ObjectLink, LNKMODEL2)
-    MYPROP(ObjectLink, LNKMODEL3)
-    MYPROP(ObjectLink, LNKMODEL4)
+    MYPROPLINK( LNKMODEL2)
+    MYPROPLINK( LNKMODEL3)
+    MYPROPLINK( LNKMODEL4)
     MYPROP(QString, STATE1)
     MYPROP(QString, STATE2)
     MYPROP(QString, STATE3)

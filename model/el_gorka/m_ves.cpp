@@ -32,9 +32,9 @@ void m_Ves::validation(ListObjStr *l) const
 void m_Ves::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    rc=qobject_cast<m_RC*>(reLink(this,FRC));
+    rc=qobject_cast<m_RC*>(updateLink(FRC));
     if (rc==nullptr)
-        qWarning() << objectName() << "Весомер ссылается не на РЦ " << FRC.obj()->objectName(); else
+        qWarning() << objectName() << "Весомер ссылается не на РЦ " << FRC.baseObject()->objectName(); else
         rc->addDevice(this);
 }
 

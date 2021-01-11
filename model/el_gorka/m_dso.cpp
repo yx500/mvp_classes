@@ -38,9 +38,9 @@ void m_DSO::validation(ListObjStr *l) const
 void m_DSO::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    FRC.linkObj(superFindObjectById(this,FRC.id()));
-    if ((!FRC.isNull())&&(dynamic_cast<m_RC*>(FRC.obj())==nullptr)){
-        qWarning() << objectName() << "ДСО ссылается не на РЦ " << FRC.obj()->objectName();
+    updateLink(FRC);
+    if ((!FRC.isNull())&&(dynamic_cast<m_RC*>(FRC.baseObject())==nullptr)){
+        qWarning() << objectName() << "ДСО ссылается не на РЦ " << FRC.baseObject()->objectName();
         FRC.clear();
     }
 }

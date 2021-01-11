@@ -17,7 +17,6 @@ BaseObject *findObjectById(const QObject *O, const quint64 &id);
 QList<BaseObject *> findObjectByName(QObject *O, const QString &name);
 QList<BaseObject *> findObjectByIdstr(QObject *O, const QString &idstr);
 BaseObject *superFindObjectById(QObject *O, const quint64 &id);
-BaseObject *reLink(const QObject *O,ObjectLink &lnk);
 QList<BaseObject *> listAllBaseObjects(QObject *O);
 bool isInherited(const QMetaObject *o,const QString& className);
 bool isChildrenExists(QObject *parent,QObject *child);

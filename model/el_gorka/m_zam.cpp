@@ -78,14 +78,13 @@ void m_Zam::validation(ListObjStr *l) const
 void m_Zam::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    _controllerARS=qobject_cast<m_ControllerARS*>(reLink(this,FCONTR_ARS));
+    _controllerARS=qobject_cast<m_ControllerARS*>(updateLink(FCONTR_ARS));
     if (!_controllerARS)
         qCritical() << objectName() << "Ошибочная ссылка CONTR_ARS" <<endl ;
-    _rc=qobject_cast<m_RC*>(reLink(this,FRC));
-    _ris=qobject_cast<m_RIS*>(reLink(this,FRIS));
+    _ris=qobject_cast<m_RIS*>(updateLink(FRIS));
     if (!_ris)
         qCritical() << objectName() << "Ошибочная ссылка РИС" <<endl ;
-    _rc=qobject_cast<m_RC*>(reLink(this,FRC));
+    _rc=qobject_cast<m_RC*>(updateLink(FRC));
     if (!_rc)
         qCritical() << objectName() << "Ошибочная ссылка RC" <<endl ; else {
         _rc->addDevice(this);

@@ -15,6 +15,12 @@ m_Otceps::m_Otceps(QObject *parent) : m_Base(parent)
         l_otceps.push_back(new m_Otcep(this,i+1));
     }
     memset(&vagons,0,sizeof (vagons));
+    FSIGNAL_DATA_VAGON_0.setChanelName(QString("vag%1").arg(1));
+    FSIGNAL_DATA_VAGON_0.setChanelType(15);
+    for (int i=0;i<MaxVagon;i++){
+        chanelVag[i]=SignalDescription(15,QString("vag%1").arg(i+1),0);
+        chanelVag[i].acceptGtBuffer();
+    }
 }
 
 m_Otceps::~m_Otceps()
@@ -75,8 +81,7 @@ void m_Otceps::updateAfterLoad()
 
     }
     for (int i=0;i<MaxVagon;i++){
-        chanelVag[i]=SignalDescription::getBuffer(15,QString("vag%1").arg(i+1));
-        connect(chanelVag[i],&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
+        connect(chanelVag[i].getBuffer(),&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
     }
     if (modelGroupGorka){
         l_rc=parent()->findChildren<m_RC*>();
@@ -169,21 +174,21 @@ tSlVagon Map2tSlVagon(const QVariantHash &m)
 
 void m_Otceps::updateVagons()
 {
-    if (disableUpdateStates) return;
+    if (FSIGNAL_DATA_VAGON_0.isInnerUse()) return;
     bool changed=false;
     for (int j=0;j<MaxVagon;j++){
         if (FTYPE_DESCR==0){
-            tSlVagon * SlVagon=(tSlVagon *)chanelVag[j]->A.data();
+            tSlVagon * SlVagon=(tSlVagon *)chanelVag[j].getBuffer()->A.data();
             if (memcmp(&vagons[j],SlVagon,sizeof(tSlVagon))!=0){
                 vagons[j]=*SlVagon;
                 changed=true;
             }
         }
         if (FTYPE_DESCR==1){
-            if (_storedVagonsA[j]!=chanelVag[j]->A){
-                _storedVagonsA[j]=chanelVag[j]->A;
+            if (_storedVagonsA[j]!=chanelVag[j].getBuffer()->A){
+                _storedVagonsA[j]=chanelVag[j].getBuffer()->A;
                 changed=true;
-                QString S=QString::fromUtf8(chanelVag[j]->A);
+                QString S=QString::fromUtf8(chanelVag[j].getBuffer()->A);
                 QVariantHash m=MVP_System::QStringToQVariantHash(S);
                 tSlVagon SlVagon=Map2tSlVagon(m);
                 //            if ((v.IV>0) &&(v.IV<MaxVagon)
@@ -241,6 +246,12 @@ m_Otcep *m_Otceps::topOtcep() const
         if ((otcep->STATE_ENABLED())&&(otcep->STATE_LOCATION()==m_Otcep::locationOnPrib)) return otcep;
     }
     return nullptr;
+}
+
+bool m_Otceps::isFirstOtcep(m_Otcep *otcep)
+{
+    if (otcep==topOtcep()) return true;
+    return false;
 }
 
 void m_Otceps::updateStates()

@@ -145,6 +145,7 @@ void m_Otcep::resetStates()
     FSTATE_ERROR=0;
     FSTATE_ID_ROSP=0;
     FSTATE_SL_UR=0;
+    FSTATE_ERROR_TRACK=false;
 
     FSTATE_SL_VAGON_CNT=0;
     FSTATE_SL_OSY_CNT=0;

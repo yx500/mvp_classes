@@ -46,6 +46,9 @@ void ModelGroupGorka::validation(ListObjStr *l) const
     if (FSIGNAL_ROSPUSK.isEmpty()) l->error(this,"Сигнал не задан","РОСПУСК","SIGNAL_ROSPUSK");
     if (FSIGNAL_PAUSA.isEmpty()) l->error(this,"Сигнал не задан","ПАУЗА","SIGNAL_PAUSA");
     if (FSIGNAL_STOP.isEmpty()) l->error(this,"Сигнал не задан","СТОП","SIGNAL_STOP");
+    if ((!FSIGNAL_RRC.isNotUse())&&(FSIGNAL_RRC.isEmpty())) l->error(this,"Сигнал не задан","РРС","SIGNAL_RRC");
+    if ((!FSIGNAL_RRC_TU.isNotUse())&&(FSIGNAL_RRC_TU.isEmpty())) l->error(this,"Сигнал не задан","РРС ТУ","SIGNAL_RRC_TU");
+    if (!FSIGNAL_RRC_TU.isEmpty() && FSIGNAL_RRC.isEmpty()) l->error(this,"Сигнал РРС не задан при  заданном ТУ РРС","РРС ТУ","SIGNAL_RRC_TU");
 
 
     QList <m_RC_Gor_Park*> lrcp=findChildren<m_RC_Gor_Park*>();
@@ -71,11 +74,13 @@ void ModelGroupGorka::validation(ListObjStr *l) const
             l->warning(sv,QString("Не используемый светофор"));
     }
 
-    QList <m_Base*> lmb=findChildren<m_Base*>();
-    foreach (m_Base*m1, lmb) {
+    QList <const m_Base*> lmb=findChildren<const m_Base*>();
+    lmb.push_back(this);
+    foreach (const m_Base*m1, lmb) {
         if (!m1->isStoredXML()) continue;
+        if(QString(m1->metaObject()->className())=="ModelGroup")  continue;
         bool ex=false;
-        foreach (m_Base*m2, lmb) {
+        foreach (const m_Base*m2, lmb) {
             if (m1==m2) continue;
             if (isB1hasLinkToB2(m2,m1)){ex=true;break;}
             if (isB1hasLinkToB2(m1,m2)){ex=true;break;}
@@ -102,8 +107,17 @@ void ModelGroupGorka::validation(ListObjStr *l) const
                 l->error(m1,QString("Одинаковый контроллер"));
         }
     }
-
-
+    auto l_stry=findChildren<m_Strel_Gor_Y*>();
+    foreach (auto m1, l_stry) {
+        //if (abs(m1->TU_PRP().chanelOffset()-m1->TU_PRM().chanelOffset())
+        foreach (auto m2, l_stry){
+            if (m1==m2) continue;
+            if ((!m1->TU_PRP().isNotUse())&&(m1->TU_PRP()==m2->TU_PRP())) l->error(m1,"Одинаковый код ТУ ПРП c"+m2->idstr());
+            if ((!m1->TU_PRP().isNotUse())&&(m1->TU_PRM()==m2->TU_PRP())) l->error(m1,"Одинаковый код ТУ ПРП c"+m2->idstr());
+            if ((!m1->TU_PRM().isNotUse())&&(m1->TU_PRP()==m2->TU_PRP())) l->error(m1,"Одинаковый код ТУ ПРМ c"+m2->idstr());
+            if ((!m1->TU_PRM().isNotUse())&&(m1->TU_PRM()==m2->TU_PRP())) l->error(m1,"Одинаковый код ТУ ПРМ c"+m2->idstr());
+        }
+    }
 
 }
 
@@ -134,6 +148,9 @@ void ModelGroupGorka::updateAfterLoad()
             }
         }
     }
+    auto lo=findChildren<m_Otceps*>();
+    if (!lo.isEmpty())
+        FLNK_OTCEPS.linkObj(lo.first());
 }
 
 bool ModelGroupGorka::is33()
@@ -150,6 +167,7 @@ void ModelGroupGorka::updateStates()
         if (zkr->STATE_ROSPUSK()==1) p= zkr->PUT_NADVIG();
     }
     setSTATE_PUT_NADVIG(p);
+    setSignalState(FSIGNAL_RRC,FSTATE_RRC);
     ModelRootGroup::updateStates();
 }
 

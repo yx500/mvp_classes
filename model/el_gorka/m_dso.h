@@ -7,10 +7,13 @@
 // абстрактный класс для всех типов ДСО
 #pragma pack(push, 1)
 struct  DSO_Data{
-    quint8 direct;
-    qlonglong count;
+    qint32 V;   // Значение
+    qint8 D;   // посл. напр.
+    qint8 E;   // сбой
+    qint32 EV;   // кол-во сбоев
 };
 #pragma pack(pop)
+
 class m_DSO : public m_Base
 {
     Q_OBJECT
@@ -22,13 +25,18 @@ public:
 
     MYPROP(SignalDescription,SIGNAL_DSODATA)
 
+    MYPROPLINK(RC_NEXT)
+    MYPROPLINK(RC_PREV)
+
     MYSTATE(qlonglong,STATE_OSY_COUNT)
     MYSTATE(int,STATE_DIRECT)
     MYSTATE(int,STATE_ERROR)
     MYSTATE(int,STATE_SRAB)
+    MYSTATE(int,STATE_ERROR_TRACK)
+    MYSTATE(int,STATE_ERROR_CNT)
 
-public:
-    Q_INVOKABLE m_DSO(QObject *parent = nullptr);
+    public:
+        Q_INVOKABLE m_DSO(QObject *parent = nullptr);
     virtual ~m_DSO(){}
     virtual void resetStates();
     virtual QString defaultGroupName() const {return "ДСО";}

@@ -7,19 +7,23 @@
 #include <QVector>
 
 class m_Otceps;
-class tos_OtcepData;
 
 
 // описание отцепа
 // живет всегда, не создется. Меняется только состояние.
 
 enum TOtcepPart{
-    _pOtcepPartUnknow=0,
-    _pOtcepStart,
-    _pOtcepEnd,
+    _pOtcepPartUnknow=-1,
+    _pOtcepStart=0,
+    _pOtcepEnd=1,
     _pOtcepStartEnd,
     _pOtcepMiddle
 };
+
+
+enum {_normal_track=1,_broken_track=0};
+enum {_forw=0,_back=1};
+enum {_first=0,_last=1};
 
 
 class m_Otcep : public m_Base
@@ -56,6 +60,7 @@ public:
     MYSTATE(int, STATE_DIRECTION)
     MYSTATE(bool,STATE_NAGON)
     MYSTATE(int, STATE_ERROR)
+    MYSTATE(bool, STATE_ERROR_TRACK)
 
 
     MYSTATE(int, STATE_ID_ROSP_VAG)
@@ -169,7 +174,6 @@ public:
     virtual void updateStates();
     void update_descr();
 
-    tos_OtcepData *tos=nullptr; // доп данные для work, внешняя либа.
 public slots:
     void slotChanged(){updateStates();}
 

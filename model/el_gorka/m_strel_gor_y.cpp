@@ -34,7 +34,7 @@ void m_Strel_Gor_Y::validation(ListObjStr *l) const
         l->warning(this,"Не задан код ТУ ПРП");
     if ((!FTU_PRM.isNotUse()) &&(FTU_PRM.isEmpty()))
         l->warning(this,"Не задан код ТУ ПРМ");
-    if ((!FTU_PRP.isNotUse()) &&(FTU_PRM==FTU_PRM))
+    if ((!FTU_PRP.isNotUse()) &&(FTU_PRP==FTU_PRM))
         l->error(this,"Одинаковый код ТУ ПРМ");
     if ((!FIPD.isNotUse())&&(FIPD.isNull()))
         l->error(this,"Не задан ИПД");

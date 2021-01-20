@@ -30,6 +30,7 @@ bool m_Base::setSignalState(const SignalDescription &s,bool &state)
 m_Base::m_Base(QObject *parent) :
     BaseObject(parent)
 {
+    FOLD_ID=0;
     FEXTFLAGSRC.clear();
     FSTATE_33=false;
     resetStates();

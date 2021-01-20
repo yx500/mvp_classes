@@ -19,6 +19,14 @@ public:
     MYPROP(SignalDescription, SIGNAL_UVK_PRM)
     MYPROP(SignalDescription, SIGNAL_UVK_AV)
 
+    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER)
+    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_SP)
+    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_DB)
+    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_OTC)
+    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_TLG)
+    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_NGBSTAT)
+    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_NGBDYN)
+
     MYPROP(SignalDescription, TU_PRP)
     MYPROP(SignalDescription, TU_PRM)
     MYPROP(int, NEGAB_RC_CNT_P)

@@ -106,8 +106,6 @@ public:
     virtual bool is33();
     virtual void updateStates();
 
-    tos_RcTracking * rcs=nullptr; // ссылка на доп состояния используемые в work
-
 protected:
     ObjectLink Fnext_link[2][2]; // для  записи
     m_RC * Fnext[2][2];           // для использ

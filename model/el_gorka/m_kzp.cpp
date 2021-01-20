@@ -47,16 +47,15 @@ void m_KZP::validation(ListObjStr *l) const
 {
     m_Base::validation(l);
 
-    if (objectCountLinked2Object(this)==0){
-        l->warning(this,"Не используется");
-    }
 }
 
 void m_KZP::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    FSIGNAL_ADDR.acceptGtBuffer();
-    FSIGNAL_ADDR.getBuffer()->setMsecPeriodLive(10*1000);
+    if (!FSIGNAL_ADDR.isEmpty()){
+        FSIGNAL_ADDR.acceptGtBuffer();
+        FSIGNAL_ADDR.getBuffer()->setMsecPeriodLive(10*1000);
+    }
 
 }
 

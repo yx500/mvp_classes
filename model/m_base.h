@@ -12,6 +12,7 @@ class LIBSHARED_EXPORT m_Base : public BaseObject
     Q_OBJECT
 
 public:
+    MYPROP(int, OLD_ID)
     Q_PROPERTY(bool STATE_33 READ STATE_33 WRITE setSTATE_33 DESIGNABLE true STORED false) \
     MYPROP(QString,EXTFLAGSRC)
     void setSTATE_33(bool p);

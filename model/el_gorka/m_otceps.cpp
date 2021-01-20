@@ -177,24 +177,25 @@ void m_Otceps::updateVagons()
     if (FSIGNAL_DATA_VAGON_0.isInnerUse()) return;
     bool changed=false;
     for (int j=0;j<MaxVagon;j++){
-        if (FTYPE_DESCR==0){
+        //if (FTYPE_DESCR==0)
+        {
             tSlVagon * SlVagon=(tSlVagon *)chanelVag[j].getBuffer()->A.data();
             if (memcmp(&vagons[j],SlVagon,sizeof(tSlVagon))!=0){
                 vagons[j]=*SlVagon;
                 changed=true;
             }
         }
-        if (FTYPE_DESCR==1){
-            if (_storedVagonsA[j]!=chanelVag[j].getBuffer()->A){
-                _storedVagonsA[j]=chanelVag[j].getBuffer()->A;
-                changed=true;
-                QString S=QString::fromUtf8(chanelVag[j].getBuffer()->A);
-                QVariantHash m=MVP_System::QStringToQVariantHash(S);
-                tSlVagon SlVagon=Map2tSlVagon(m);
-                //            if ((v.IV>0) &&(v.IV<MaxVagon)
-                vagons[j]=SlVagon;
-            }
-        }
+//        if (FTYPE_DESCR==1){
+//            if (_storedVagonsA[j]!=chanelVag[j].getBuffer()->A){
+//                _storedVagonsA[j]=chanelVag[j].getBuffer()->A;
+//                changed=true;
+//                QString S=QString::fromUtf8(chanelVag[j].getBuffer()->A);
+//                QVariantHash m=MVP_System::QStringToQVariantHash(S);
+//                tSlVagon SlVagon=Map2tSlVagon(m);
+//                //            if ((v.IV>0) &&(v.IV<MaxVagon)
+//                vagons[j]=SlVagon;
+//            }
+//        }
     }
     if (!changed) return;
     tSlVagon & SlVagon0=vagons[0];

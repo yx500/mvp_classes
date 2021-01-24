@@ -23,7 +23,6 @@ class m_Zam : public m_Base
     MYPROP(SignalDescription,SIGNAL_OG)
     MYPROP(SignalDescription,SIGNAL_RRC)
 
-    MYPROPLINK( CONTR_ARS)
     MYPROPLINK( RIS)
     MYPROPLINK( RC)
 

@@ -45,6 +45,7 @@ public:
 
     virtual void updateStates();
     virtual void reset();
+    m_RC* rc_next[2];
 
 protected:
 

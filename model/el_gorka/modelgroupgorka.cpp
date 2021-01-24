@@ -118,7 +118,6 @@ void ModelGroupGorka::validation(ListObjStr *l) const
             if ((!m1->TU_PRM().isNotUse())&&(m1->TU_PRM()==m2->TU_PRP())) l->error(m1,"Одинаковый код ТУ ПРМ c"+m2->idstr());
         }
     }
-
 }
 
 
@@ -126,6 +125,7 @@ void ModelGroupGorka::validation(ListObjStr *l) const
 void ModelGroupGorka::updateAfterLoad()
 {
     ModelRootGroup::updateAfterLoad();
+    if (id()==0) setid(1000);
     // расставим значения
     QList<m_RC_Gor_Park*> l_rcp=findChildren<m_RC_Gor_Park*>();
     foreach (m_RC_Gor_Park*rcp, l_rcp) {
@@ -149,8 +149,13 @@ void ModelGroupGorka::updateAfterLoad()
         }
     }
     auto lo=findChildren<m_Otceps*>();
-    if (!lo.isEmpty())
+    if (!lo.isEmpty()){
         FLNK_OTCEPS.linkObj(lo.first());
+    } else {
+        m_Otceps *otceps=new m_Otceps(this);
+        otceps->setid(1000000);
+        FLNK_OTCEPS.linkObj(otceps);
+    }
 }
 
 bool ModelGroupGorka::is33()

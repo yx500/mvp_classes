@@ -70,20 +70,24 @@ void m_Zam::validation(ListObjStr *l) const
          l->error(this,"Не задан скоростемер");
     if (FRC.isNull())
          l->error(this,"Не задана РЦ");
-    if ((_ris!=nullptr)&&(_ris->controllerARS()!=_controllerARS))
-        l->error(this,"Не совпадают контроллеры с РИС");
+//    if ((_ris!=nullptr)&&(_ris->controllerARS()!=_controllerARS))
+//        l->error(this,"Не совпадают контроллеры с РИС");
 
 }
 
 void m_Zam::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
-    _controllerARS=qobject_cast<m_ControllerARS*>(updateLink(FCONTR_ARS));
+/*    _controllerARS=qobject_cast<m_ControllerARS*>(updateLink(FCONTR_ARS));
     if (!_controllerARS)
-        qCritical() << objectName() << "Ошибочная ссылка CONTR_ARS" <<endl ;
+        qCritical() << objectName() << "Ошибочная ссылка CONTR_ARS" <<endl */;
     _ris=qobject_cast<m_RIS*>(updateLink(FRIS));
-    if (!_ris)
+    if (!_ris){
         qCritical() << objectName() << "Ошибочная ссылка РИС" <<endl ;
+    } else {
+        _ris->updateAfterLoad();
+        _controllerARS=_ris->controllerARS();
+    }
     _rc=qobject_cast<m_RC*>(updateLink(FRC));
     if (!_rc)
         qCritical() << objectName() << "Ошибочная ссылка RC" <<endl ; else {

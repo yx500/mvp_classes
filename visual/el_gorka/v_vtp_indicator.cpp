@@ -70,17 +70,17 @@ void v_VTP_Indicator::updateAfterLoad()
 {
     mOtceps=nullptr;
     v_Base::updateAfterLoad();
-    if (!FZAM1.id()==0){
+    if (FZAM1.id()!=0){
         zam1=qobject_cast<m_Zam*>(updateLink(FZAM1));
         if (!zam1)
             qCritical() << objectName() << "Ошибочная ссылка ZAM1" <<endl ;
     }
-    if (!FZAM2.id()==0){
+    if (FZAM2.id()!=0){
         zam2=qobject_cast<m_Zam*>(updateLink(FZAM2));
         if (!zam2)
             qCritical() << objectName() << "Ошибочная ссылка ZAM2" <<endl ;
     }
-    if (!FOTCEPS.id()==0){
+    if (FOTCEPS.id()!=0){
         mOtceps=qobject_cast<m_Otceps*>(updateLink(FOTCEPS));
         if (!mOtceps)
             qCritical() << objectName() << "Ошибочная ссылка OTCEPS" <<endl ;

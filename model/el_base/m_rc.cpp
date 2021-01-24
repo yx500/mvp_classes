@@ -30,7 +30,7 @@ int m_RC::DIRECTM() const
 
 m_RC::m_RC(QObject *parent) :
     m_Base(parent) ,FLEN(0),
-    FSIGNAL_BUSY(),FSIGNAL_OTC1(),FSIGNAL_OTC2(),
+    FSIGNAL_BUSY(),
     FSIGNAL_ERR_LS(),FSIGNAL_ERR_LZ(),FSIGNAL_ERR_KZ()
 {
     for (int d=0;d<2;d++){
@@ -44,8 +44,6 @@ m_RC::m_RC(QObject *parent) :
     }
     FSTATE_BUSY=MVP_Enums::TRCBusy::busy_unknow;
     FSTATE_BLOCK=0;
-    FSIGNAL_OTC1.setIsNoUse(true);
-    FSIGNAL_OTC2.setIsNoUse(true);
     resetStates();
 
 }
@@ -58,10 +56,11 @@ void m_RC::resetStates()
     FSTATE_ERR_LS=false;
     FSTATE_ERR_LZ=false;
     FSTATE_ERR_KZ=false;
+    FSTATE_BUSY_DSO=MVP_Enums::TRCBusy::free;
     next_rc[0]=nullptr;
     next_rc[1]=nullptr;
-    dtBusy=QDateTime();
-    dtFree=QDateTime();
+//    dtBusy=QDateTime();
+//    dtFree=QDateTime();
 }
 
 void m_RC::updateAfterLoad()
@@ -216,29 +215,34 @@ void m_RC::updateStates()
 
     if (!FSTATE_33){
         MVP_Enums::TRCBusy B=MVP_Enums::TRCBusy::busy_unknow;
-        if (FSIGNAL_BUSY.isEmpty()){
+        if ((FSIGNAL_BUSY.isEmpty())&&(FSIGNAL_BUSY_DSO.isEmpty())){
             B=MVP_Enums::TRCBusy::busy_not_accepted;
         } else {
-            if (FSIGNAL_BUSY.value_1bit()==1){
-                if ((FSIGNAL_OTC1.value_1bit()==1)||(FSIGNAL_OTC2.value_1bit()==1)){
-                    B=MVP_Enums::TRCBusy::free;
-                } else {
+            if(((!FSIGNAL_BUSY.isEmpty())&&(FSIGNAL_BUSY.value_1bit()==1)) ||
+               ((!FSIGNAL_BUSY_DSO.isEmpty())&&(FSIGNAL_BUSY_DSO.value_1bit()==1))
+            ){
+//                if ((FSIGNAL_OTC1.value_1bit()==1)||(FSIGNAL_OTC2.value_1bit()==1)){
+//                    B=MVP_Enums::TRCBusy::free;
+//                } else {
                     B=MVP_Enums::TRCBusy::busy;
-                }
             }else{
                 B=MVP_Enums::TRCBusy::free;
             }
         }
+
+        if ((!FSIGNAL_BUSY_DSO.isInnerUse())&&(!FSIGNAL_BUSY_DSO.isEmpty())&&(FSIGNAL_BUSY_DSO.value_1bit()==1))
+            setSTATE_BUSY_DSO(MVP_Enums::TRCBusy::busy); else
+            setSTATE_BUSY_DSO(MVP_Enums::TRCBusy::free);
+
         if (B!=FSTATE_BUSY){
-            if (B==MVP_Enums::TRCBusy::busy) dtBusy=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
-            if (B==MVP_Enums::TRCBusy::free) dtFree=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
+//            if (B==MVP_Enums::TRCBusy::busy) dtBusy=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
+//            if (B==MVP_Enums::TRCBusy::free) dtFree=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
             setSTATE_BUSY(B);
         }
 
         setSignalState(FSIGNAL_ERR_LS,FSTATE_ERR_LS);
         setSignalState(FSIGNAL_ERR_LZ,FSTATE_ERR_LZ);
         setSignalState(FSIGNAL_ERR_KZ,FSTATE_ERR_KZ);
-        setSignalState(FSIGNAL_CHECK_FREE_DB,FSTATE_CHECK_FREE_DB);
         next_rc[0]=getNextRCpolcfb(0);
         next_rc[1]=getNextRCpolcfb(1);
     }

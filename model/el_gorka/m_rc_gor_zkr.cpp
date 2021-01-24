@@ -11,6 +11,7 @@ REGISTERPROPERTY(m_RC_Gor_ZKR,RTDS_USL_OR,"Условия срабатывани
 
 m_RC_Gor_ZKR::m_RC_Gor_ZKR(QObject *parent) : m_RC_Gor(parent)
 {
+    ris_nadvig=nullptr;
     controllerARSNadvig=nullptr;
     svetZKR=nullptr;
     FPUT_NADVIG=0;
@@ -46,8 +47,14 @@ void m_RC_Gor_ZKR::updateAfterLoad()
 {
     m_RC_Gor::updateAfterLoad();
 
-    controllerARSNadvig=qobject_cast<m_ControllerARS*>(updateLink(FCONTR_NADVIG));
-    if (!controllerARSNadvig) qCritical() << objectName() << "Ошибочная ссылка CONTR_NADVIG" <<endl ; else addDevice(controllerARSNadvig);
+    ris_nadvig=qobject_cast<m_RIS*>(updateLink(FRIS_NADVIG));
+    if (!ris_nadvig) {
+        qCritical() << objectName() << "Ошибочная ссылка CONTR_NADVIG" <<endl ;
+    }else{
+        ris_nadvig->updateAfterLoad();
+        controllerARSNadvig=ris_nadvig->controllerARS();
+        addDevice(ris_nadvig);
+    }
 
     svetZKR=qobject_cast<m_Svet_Gor_4N*>(updateLink(FSVET));
     if (!svetZKR) qCritical() << objectName() << "Ошибочная ссылка SVET" <<endl ; else addDevice(svetZKR);

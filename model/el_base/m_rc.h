@@ -33,22 +33,21 @@ public:
 
     MYPROP(qreal,LEN)
     MYPROP(SignalDescription,SIGNAL_BUSY)
-    MYPROP(SignalDescription,SIGNAL_OTC1)
-    MYPROP(SignalDescription,SIGNAL_OTC2)
 
     MYPROP(SignalDescription,SIGNAL_ERR_LS)
     MYPROP(SignalDescription,SIGNAL_ERR_LZ)
     MYPROP(SignalDescription,SIGNAL_ERR_KZ)
-    MYPROP(SignalDescription,SIGNAL_CHECK_FREE_DB)
+
+    MYPROP(SignalDescription,SIGNAL_BUSY_DSO)
 
 
     MYSTATE(MVP_Enums::TRCBusy,STATE_BUSY)
+    MYSTATE(MVP_Enums::TRCBusy,STATE_BUSY_DSO)
     MYSTATE(bool, STATE_BLOCK)
 
     MYSTATE(bool, STATE_ERR_LS)
     MYSTATE(bool, STATE_ERR_LZ)
     MYSTATE(bool, STATE_ERR_KZ)
-    MYSTATE(bool, STATE_CHECK_FREE_DB)
 
 
     virtual void setSTATE_POL(MVP_Enums::TStrelPol p) {Q_UNUSED(p);}
@@ -97,8 +96,8 @@ public:
     static QList<m_RC *> goGrafpolcfb(m_RC *rcStart,int d,int maxRC=100); // список РЦ
 
     m_RC * next_rc[2];
-    QDateTime dtBusy;
-    QDateTime dtFree;
+//    QDateTime dtBusy;
+//    QDateTime dtFree;
 
     void addDevice(m_Base *m);
     QList<m_Base *> devices() {return l_devices;}

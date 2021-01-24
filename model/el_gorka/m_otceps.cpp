@@ -113,8 +113,24 @@ m_Otcep *m_Otceps::otcepByNum(int n)
 m_Otcep *m_Otceps::otcepOnRc(m_RC *rc)
 {
     foreach (m_Otcep*otcep, l_otceps)
-        if ((otcep->STATE_LOCATION()!=m_Otcep::locationUnknow)&& (otcep->vBusyRc.indexOf(rc)>=0)) return  otcep;
-    return 0;
+        if ((otcep->STATE_LOCATION()!=m_Otcep::locationUnknow)&& (otcep->vBusyRc.contains(rc))) return  otcep;
+    return nullptr;
+}
+
+int m_Otceps::otcepCountOnRc(m_RC *rc)
+{
+    int count=0;
+    foreach (m_Otcep*otcep, l_otceps)
+        if ((otcep->STATE_LOCATION()!=m_Otcep::locationUnknow)&& (otcep->vBusyRc.contains(rc))) count++;
+    return count;
+}
+
+QList<m_Otcep *> m_Otceps::otcepsOnRc(m_RC *rc)
+{
+    QList<m_Otcep *>l;
+    foreach (m_Otcep*otcep, l_otceps)
+        if ((otcep->STATE_LOCATION()!=m_Otcep::locationUnknow)&& (otcep->vBusyRc.contains(rc))) l.push_back(otcep);
+    return l;
 }
 
 m_RC *m_Otceps::find_RC(int chanelOffset)

@@ -2,7 +2,7 @@
 #define M_RC_GOR_ZKR_H
 
 #include "m_rc_gor.h"
-#include "m_controllerars.h"
+#include "m_ris.h"
 #include "m_rc_gor.h"
 #include "m_svet_gor_4n.h"
 #include "m_rtds.h"
@@ -18,7 +18,7 @@ public:
 
 
     MYPROPLINK( SVET)
-    MYPROPLINK( CONTR_NADVIG)
+    MYPROPLINK( RIS_NADVIG)
     MYPROPLINK( RTDS1)
     MYPROPLINK( RTDS2)
 
@@ -62,6 +62,7 @@ public:
     virtual void updateStates();
 protected:
     m_ControllerARS *controllerARSNadvig;
+    m_RIS * ris_nadvig;
     m_Svet_Gor_4N *svetZKR;
     m_RTDS *rtds1;
     m_RTDS *rtds2;

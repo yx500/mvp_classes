@@ -26,6 +26,8 @@ public:
     const QList<m_Otcep *> &otceps() const;
     m_Otcep * otcepByNum(int n);
     m_Otcep * otcepOnRc(m_RC* rc);
+    int otcepCountOnRc(m_RC* rc);
+    QList<m_Otcep *>otcepsOnRc(m_RC* rc);
     m_Otcep *otcepADDR_SLOT(int ADDR_SLOT,int ADDR,int NTP);
     m_RC* find_RC(int chanelOffset);
 

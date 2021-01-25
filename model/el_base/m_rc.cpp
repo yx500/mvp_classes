@@ -4,6 +4,7 @@
 #include "baseobjecttools.h"
 
 #include "m_svet.h"
+#include "m_dso.h"
 
 #include "mvp_objectfactory.h"
 REGISTERPROPERTY(m_RC,NEXTDM00,"СЛЕД","Следующая РЦ","СВЯЗИ")
@@ -31,7 +32,7 @@ int m_RC::DIRECTM() const
 m_RC::m_RC(QObject *parent) :
     m_Base(parent) ,FLEN(0),
     FSIGNAL_BUSY(),
-    FSIGNAL_ERR_LS(),FSIGNAL_ERR_LZ(),FSIGNAL_ERR_KZ()
+    FSIGNAL_ERR_LS(),FSIGNAL_ERR_LZ(),FSIGNAL_ERR_KZ(),FSIGNAL_BUSY_DSO(),FSIGNAL_BUSY_DSO_ERR(),FSIGNAL_INFO_DSO()
 {
     for (int d=0;d<2;d++){
         Fnext_link[d][1].setInNotUse(true);
@@ -59,8 +60,11 @@ void m_RC::resetStates()
     FSTATE_BUSY_DSO=MVP_Enums::TRCBusy::free;
     next_rc[0]=nullptr;
     next_rc[1]=nullptr;
-//    dtBusy=QDateTime();
-//    dtFree=QDateTime();
+    FSTATE_BUSY_DSO_ERR=false;
+    FSTATE_OSY_COUNT=0;
+
+    //    dtBusy=QDateTime();
+    //    dtFree=QDateTime();
 }
 
 void m_RC::updateAfterLoad()
@@ -214,17 +218,23 @@ void m_RC::updateStates()
     m_Base::updateStates();
 
     if (!FSTATE_33){
+        setSignalState(FSIGNAL_BUSY_DSO_ERR,FSTATE_BUSY_DSO_ERR);
+
         MVP_Enums::TRCBusy B=MVP_Enums::TRCBusy::busy_unknow;
         if ((FSIGNAL_BUSY.isEmpty())&&(FSIGNAL_BUSY_DSO.isEmpty())){
             B=MVP_Enums::TRCBusy::busy_not_accepted;
         } else {
             if(((!FSIGNAL_BUSY.isEmpty())&&(FSIGNAL_BUSY.value_1bit()==1)) ||
-               ((!FSIGNAL_BUSY_DSO.isEmpty())&&(FSIGNAL_BUSY_DSO.value_1bit()==1))
-            ){
-//                if ((FSIGNAL_OTC1.value_1bit()==1)||(FSIGNAL_OTC2.value_1bit()==1)){
-//                    B=MVP_Enums::TRCBusy::free;
-//                } else {
-                    B=MVP_Enums::TRCBusy::busy;
+                    ((!FSIGNAL_BUSY_DSO.isEmpty())&&(FSIGNAL_BUSY_DSO.value_1bit()==1))
+                    ){
+                B=MVP_Enums::TRCBusy::busy;
+                if(FSTATE_BUSY_DSO_ERR)
+                    B=MVP_Enums::TRCBusy::busy_unknow;
+
+                //                if ((FSIGNAL_OTC1.value_1bit()==1)||(FSIGNAL_OTC2.value_1bit()==1)){
+                //                    B=MVP_Enums::TRCBusy::free;
+                //                } else {
+
             }else{
                 B=MVP_Enums::TRCBusy::free;
             }
@@ -235,8 +245,8 @@ void m_RC::updateStates()
             setSTATE_BUSY_DSO(MVP_Enums::TRCBusy::free);
 
         if (B!=FSTATE_BUSY){
-//            if (B==MVP_Enums::TRCBusy::busy) dtBusy=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
-//            if (B==MVP_Enums::TRCBusy::free) dtFree=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
+            //            if (B==MVP_Enums::TRCBusy::busy) dtBusy=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
+            //            if (B==MVP_Enums::TRCBusy::free) dtFree=FSIGNAL_BUSY.getBuffer()->dataChangedTime();
             setSTATE_BUSY(B);
         }
 
@@ -245,6 +255,13 @@ void m_RC::updateStates()
         setSignalState(FSIGNAL_ERR_KZ,FSTATE_ERR_KZ);
         next_rc[0]=getNextRCpolcfb(0);
         next_rc[1]=getNextRCpolcfb(1);
+
+        DSO_Data *d=(DSO_Data *)FSIGNAL_INFO_DSO.value_data(sizeof(DSO_Data));
+        if (d!=nullptr){
+            setSTATE_OSY_COUNT(d->V);
+        } else {
+            setSTATE_OSY_COUNT(0);
+        }
     }
 
 }

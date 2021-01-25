@@ -39,10 +39,16 @@ public:
     MYPROP(SignalDescription,SIGNAL_ERR_KZ)
 
     MYPROP(SignalDescription,SIGNAL_BUSY_DSO)
+    MYPROP(SignalDescription,SIGNAL_BUSY_DSO_ERR)
+    MYPROP(SignalDescription,SIGNAL_INFO_DSO)
+
 
 
     MYSTATE(MVP_Enums::TRCBusy,STATE_BUSY)
     MYSTATE(MVP_Enums::TRCBusy,STATE_BUSY_DSO)
+    MYSTATE(bool, STATE_BUSY_DSO_ERR)
+    MYSTATE(int,STATE_OSY_COUNT)
+
     MYSTATE(bool, STATE_BLOCK)
 
     MYSTATE(bool, STATE_ERR_LS)

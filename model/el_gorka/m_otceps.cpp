@@ -15,8 +15,9 @@ m_Otceps::m_Otceps(QObject *parent) : m_Base(parent)
         l_otceps.push_back(new m_Otcep(this,i+1));
     }
     memset(&vagons,0,sizeof (vagons));
-    FSIGNAL_DATA_VAGON_0.setChanelName(QString("vag%1").arg(1));
     FSIGNAL_DATA_VAGON_0.setChanelType(15);
+    FSIGNAL_DATA_VAGON_0.setChanelName(QString("vag%1").arg(1));
+
     for (int i=0;i<MaxVagon;i++){
         chanelVag[i]=SignalDescription(15,QString("vag%1").arg(i+1),0);
         chanelVag[i].acceptGtBuffer();

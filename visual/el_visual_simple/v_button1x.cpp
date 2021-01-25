@@ -28,10 +28,10 @@ void v_Button1x::d_paint(QPainter *painter, const QStyleOptionGraphicsItem *)
     }
 
     QStyleOptionButton ss;
-    ss.state.setFlag(QStyle::State_Enabled);
+    ss.state=QStyle::State_Enabled;
 
-    if (FSDOWN) ss.state.setFlag(QStyle::State_Sunken); else
-                ss.state.setFlag(QStyle::State_Raised);
+    if (FSDOWN) ss.state=QStyle::State_Sunken; else
+                ss.state=QStyle::State_Raised;
     ss.rect=allign_rect.toRect();
     QString sss=text.replace("\\n","\n");
     ss.text=sss;//text+'\n'+text;

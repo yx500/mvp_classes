@@ -25,8 +25,10 @@ void v_Regim_Indikator::resetStates()
 
 void v_Regim_Indikator::updateStates()
 {
-    regim=modelObject()->property("STATE_REGIM").toInt();
-    if (modelObject()->property("STATE_33")==1) regim=33;
+    if (modelObject()!=nullptr){
+        regim=modelObject()->property("STATE_REGIM").toInt();
+        if (modelObject()->property("STATE_33")==1) regim=33;
+    }
 }
 
 QString v_Regim_Indikator::getText()

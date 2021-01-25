@@ -89,7 +89,7 @@ const char *SignalDescription::value_data(int sz) const
     if (BUF!=nullptr){
         int chanelOffsetSz=FChanelOffset*sz;
         if (chanelOffsetSz+sz<=sz1)
-            return &BUF[FChanelOffset];
+            return &BUF[chanelOffsetSz];
     }
     return nullptr;
 }
@@ -213,7 +213,7 @@ void SignalDescription::setValue_data(const void *v, int sz) const
      if (gtBuffer==nullptr) return;
      int chanelOffset=FChanelOffset*sz;
      if (chanelOffset+sz>gtBuffer->A.size()) gtBuffer->A.resize(sz);
-     memcpy(gtBuffer->A.data(),v,sz);
+     memcpy(&gtBuffer->A.data()[chanelOffset],v,sz);
 }
 
 

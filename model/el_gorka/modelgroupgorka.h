@@ -46,6 +46,8 @@ public:
     QMap<int,int> mSP2MAR;
     QMap<int,int> mMAR2SP;
 
+    m_RC_Gor_ZKR *active_zkr() const;
+
 signals:
     void regimChanged(int oldRegim,int newRegim);
 
@@ -54,7 +56,7 @@ signals:
 protected:
     //m_Otceps * Otceps;
     void updateRegim();
-    QList<m_RC_Gor_ZKR*> lzkr;
+    QList<m_RC_Gor_ZKR*> l_zkr;
 
 
 };

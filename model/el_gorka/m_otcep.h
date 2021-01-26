@@ -55,8 +55,8 @@ public:
     MYSTATE(int, STATE_MAR)
     // основные слежение
     MYSTATE(int, STATE_MAR_F)
-    MYSTATE(QString,IDS_RCS)
-    MYSTATE(QString,IDS_RCF)
+    MYSTATE(QString,STATE_IDS_RCS)
+    MYSTATE(QString,STATE_IDS_RCF)
     MYSTATE(int, STATE_DIRECTION)
     MYSTATE(bool,STATE_NAGON)
     MYSTATE(int, STATE_ERROR)

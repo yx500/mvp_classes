@@ -126,6 +126,7 @@ void ModelGroupGorka::updateAfterLoad()
 {
     ModelRootGroup::updateAfterLoad();
     if (id()==0) setid(1000);
+
     // расставим значения
     QList<m_RC_Gor_Park*> l_rcp=findChildren<m_RC_Gor_Park*>();
     foreach (m_RC_Gor_Park*rcp, l_rcp) {
@@ -133,8 +134,8 @@ void ModelGroupGorka::updateAfterLoad()
         mMAR2SP[rcp->MINWAY()]=rcp->PARK_WAY();
 
     }
-    lzkr=findChildren<m_RC_Gor_ZKR*>();
-    foreach (auto rczkr, lzkr) {
+    l_zkr=findChildren<m_RC_Gor_ZKR*>();
+    foreach (auto rczkr, l_zkr) {
 
         for (int m=rczkr->MINWAY();m<=rczkr->MAXWAY();m++){
             QList<m_RC_Gor*> lm=marshrut(rczkr->PUT_NADVIG(),m);
@@ -167,7 +168,7 @@ void ModelGroupGorka::updateStates()
 {
     updateRegim();
     int p=0;
-    foreach (auto zkr, lzkr) {
+    foreach (auto zkr, l_zkr) {
 //        if (zkr->SIGNAL_ROSPUSK().value_1bit()==1) return zkr->PUT_NADVIG();
         if (zkr->STATE_ROSPUSK()==1) p= zkr->PUT_NADVIG();
     }
@@ -223,6 +224,13 @@ QList<m_RC_Gor *> ModelGroupGorka::marshrut(int put_nadvig,int m)
         }
     }
     return l;
+}
+
+m_RC_Gor_ZKR *ModelGroupGorka::active_zkr() const
+{
+    foreach (auto zkr, l_zkr) {
+        if (zkr->STATE_ROSPUSK()==1) return zkr;
+    }return nullptr;
 }
 
 

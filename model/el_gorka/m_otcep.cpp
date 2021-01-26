@@ -183,8 +183,8 @@ void m_Otcep::resetStates()
 
 
     FSTATE_CHANGE_COUNTER=0;
-    FIDS_RCS.clear();
-    FIDS_RCF.clear();
+    FSTATE_IDS_RCS.clear();
+    FSTATE_IDS_RCF.clear();
     RCS=nullptr;
     RCF=nullptr;
     vVag.clear();
@@ -244,9 +244,9 @@ void m_Otcep::setBusyRC()
     }
     QString S;
     if (RCS!=nullptr) S=RCS->idstr();else S="";
-    setIDS_RCS(S);
+    setSTATE_IDS_RCS(S);
     if (RCF!=nullptr) S=RCF->idstr();else S="";
-    setIDS_RCF(S);
+    setSTATE_IDS_RCF(S);
 }
 
 bool m_Otcep::is33()
@@ -391,10 +391,10 @@ void m_Otcep::updateStates_1()
         QString stateName="STATE_"+state;
         setProperty(qPrintable(stateName),m[state]);
     }
-    if (otceps->mIDS2Rc.contains(FIDS_RCS))
-            RCS=otceps->mIDS2Rc[FIDS_RCS]; else RCS=nullptr;
-    if (otceps->mIDS2Rc.contains(FIDS_RCF))
-            RCF=otceps->mIDS2Rc[FIDS_RCF]; else RCF=nullptr;
+    if (otceps->mIDS2Rc.contains(FSTATE_IDS_RCS))
+            RCS=otceps->mIDS2Rc[FSTATE_IDS_RCS]; else RCS=nullptr;
+    if (otceps->mIDS2Rc.contains(FSTATE_IDS_RCF))
+            RCF=otceps->mIDS2Rc[FSTATE_IDS_RCF]; else RCF=nullptr;
     setBusyRC();
 }
 

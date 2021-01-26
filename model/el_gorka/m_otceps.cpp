@@ -89,8 +89,8 @@ void m_Otceps::updateAfterLoad()
         foreach (m_RC *rc, l_rc) {
             if ((!rc->SIGNAL_BUSY().isNotUse()) &&(rc->SIGNAL_BUSY().chanelOffset()!=0)){
                 mOffset2Rc[rc->SIGNAL_BUSY().chanelOffset()]=rc;
-                mIDS2Rc[rc->idstr()]=rc;
             }
+            mIDS2Rc[rc->idstr()]=rc;
         }
 
     }

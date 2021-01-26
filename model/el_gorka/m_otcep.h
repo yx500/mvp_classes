@@ -35,7 +35,7 @@ class m_Otcep : public m_Base
     Q_PROPERTY(int STATE_SP_F READ STATE_SP_F WRITE setSTATE_SP_F DESIGNABLE true STORED false )
     MYPROP(SignalDescription,SIGNAL_DATA)
 public:
-    MYSTATE(bool, STATE_ENABLED)  // участвует в роспуске
+    MYSTATE(int, STATE_ENABLED)  // участвует в роспуске
     int NUM() const {return FNUM;}
     int STATE_SP() const;
     void setSTATE_SP(int p);
@@ -58,9 +58,9 @@ public:
     MYSTATE(QString,STATE_IDS_RCS)
     MYSTATE(QString,STATE_IDS_RCF)
     MYSTATE(int, STATE_DIRECTION)
-    MYSTATE(bool,STATE_NAGON)
+    MYSTATE(int,STATE_NAGON)
     MYSTATE(int, STATE_ERROR)
-    MYSTATE(bool, STATE_ERROR_TRACK)
+    MYSTATE(int, STATE_ERROR_TRACK)
 
 
     MYSTATE(int, STATE_ID_ROSP_VAG)
@@ -70,22 +70,22 @@ public:
     MYSTATE_R(int,  STATE_VAGON_CNT)
     MYSTATE_R(int,  STATE_OSY_CNT)
     MYSTATE_R(qreal,STATE_VES)     // Вес отцепа в тоннах/ось
-    MYSTATE_R(bool, STATE_BAZA)    // признак наличиия дб
+    MYSTATE_R(int, STATE_BAZA)    // признак наличиия дб
     MYSTATE_R(qreal,  STATE_LEN)     // длина в метрах
     // CЛ
     MYSTATE(int,  STATE_SL_VAGON_CNT)
     MYSTATE(int,  STATE_SL_OSY_CNT)
     MYSTATE(qreal,STATE_SL_VES)
     MYSTATE(qreal,STATE_SL_LEN)
-    MYSTATE(bool, STATE_SL_BAZA)
+    MYSTATE(int, STATE_SL_BAZA)
     MYSTATE(int, STATE_SL_UR)
     MYSTATE(int, STATE_SL_OSO)
     // ЗКР
-    MYSTATE(bool, STATE_ZKR_PROGRESS)    // отцеп не выехал с ЗКР
+    MYSTATE(int, STATE_ZKR_PROGRESS)    // отцеп не выехал с ЗКР
     MYSTATE(int,  STATE_ZKR_VAGON_CNT)
     MYSTATE(int,  STATE_ZKR_OSY_CNT)
     MYSTATE(qreal,STATE_ZKR_VES)
-    MYSTATE(bool, STATE_ZKR_BAZA)
+    MYSTATE(int, STATE_ZKR_BAZA)
     //MYSTATE(int, STATE_ZKR_KAT)
     MYSTATE(int, STATE_PUT_NADVIG)
     // KZP

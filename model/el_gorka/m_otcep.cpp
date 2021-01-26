@@ -111,9 +111,10 @@ qreal m_Otcep::STATE_VES() const
     if (FSTATE_ZKR_VES==0) return FSTATE_SL_VES;
     return FSTATE_ZKR_VES;
 }
-bool m_Otcep::STATE_BAZA() const
+int m_Otcep::STATE_BAZA() const
 {
-    return FSTATE_SL_BAZA | FSTATE_ZKR_BAZA;
+    if ((FSTATE_SL_BAZA!=0) || (FSTATE_ZKR_BAZA!=0)) return 1;
+    return 0;
 }
 qreal m_Otcep::STATE_LEN() const
 {

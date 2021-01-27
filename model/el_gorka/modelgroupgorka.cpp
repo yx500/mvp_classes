@@ -166,10 +166,11 @@ bool ModelGroupGorka::is33()
 
 void ModelGroupGorka::updateStates()
 {
+    setSTATE_33(is33());
     updateRegim();
     int p=0;
     foreach (auto zkr, l_zkr) {
-//        if (zkr->SIGNAL_ROSPUSK().value_1bit()==1) return zkr->PUT_NADVIG();
+        //        if (zkr->SIGNAL_ROSPUSK().value_1bit()==1) return zkr->PUT_NADVIG();
         if (zkr->STATE_ROSPUSK()==1) p= zkr->PUT_NADVIG();
     }
     setSTATE_PUT_NADVIG(p);
@@ -183,10 +184,11 @@ void ModelGroupGorka::updateRegim()
 {
     if  (FSIGNAL_ROSPUSK.isInnerUse())return;
     RegimRospusk r=regimUnknow;
-
-    if (FSIGNAL_ROSPUSK.value_1bit()==1) r=regimRospusk;
-    if (FSIGNAL_PAUSA.value_1bit()==1)   r=regimPausa;
-    if (FSIGNAL_STOP.value_1bit()==1)    r=regimStop;
+    if (!FSTATE_33){
+        if (FSIGNAL_ROSPUSK.value_1bit()==1) r=regimRospusk;
+        if (FSIGNAL_PAUSA.value_1bit()==1)   r=regimPausa;
+        if (FSIGNAL_STOP.value_1bit()==1)    r=regimStop;
+    }
     if (r!=FSTATE_REGIM){
         int r1=(int)FSTATE_REGIM;
         int r2=(int)r;

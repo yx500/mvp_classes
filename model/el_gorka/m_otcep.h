@@ -35,7 +35,6 @@ class m_Otcep : public m_Base
     Q_PROPERTY(int STATE_SP_F READ STATE_SP_F WRITE setSTATE_SP_F DESIGNABLE true STORED false )
     MYPROP(SignalDescription,SIGNAL_DATA)
 public:
-    MYSTATE(int, STATE_ENABLED)  // участвует в роспуске
     int NUM() const {return FNUM;}
     int STATE_SP() const;
     void setSTATE_SP(int p);
@@ -49,42 +48,43 @@ public:
         locationOnPark  // полностью в парке
     };
     Q_ENUM(TOtcepLocation)
+    MYSTATE(int, STATE_ENABLED)  // участвует в роспуске
     MYSTATE_S(int, STATE_LOCATION)
 
     MYSTATE(quint32, STATE_ID_ROSP)
     MYSTATE(int, STATE_MAR)
     // основные слежение
     MYSTATE(int, STATE_MAR_F)
-    MYSTATE(QString,STATE_IDS_RCS)
-    MYSTATE(QString,STATE_IDS_RCF)
+    MYSTATE(int, STATE_MAR_R)
     MYSTATE(int, STATE_DIRECTION)
     MYSTATE(int,STATE_NAGON)
     MYSTATE(int, STATE_ERROR)
     MYSTATE(int, STATE_ERROR_TRACK)
 
-
-    MYSTATE(int, STATE_ID_ROSP_VAG)
-    MYSTATE(int, STATE_SP_VAG)
+    MYSTATE(int, STATE_GAC_ACTIVE)
+    MYSTATE(int, STATE_ARS_ACTIVE)
 
     // основные характеристики выбиираются из СЛ или ЗКР
     MYSTATE_R(int,  STATE_VAGON_CNT)
     MYSTATE_R(int,  STATE_OSY_CNT)
-    MYSTATE_R(qreal,STATE_VES)     // Вес отцепа в тоннах/ось
+    MYSTATE_R(double,STATE_VES)     // Вес отцепа в тоннах/ось
     MYSTATE_R(int, STATE_BAZA)    // признак наличиия дб
-    MYSTATE_R(qreal,  STATE_LEN)     // длина в метрах
+    MYSTATE_R(double,  STATE_LEN)     // длина в метрах
     // CЛ
     MYSTATE(int,  STATE_SL_VAGON_CNT)
     MYSTATE(int,  STATE_SL_OSY_CNT)
-    MYSTATE(qreal,STATE_SL_VES)
-    MYSTATE(qreal,STATE_SL_LEN)
+    MYSTATE(double,STATE_SL_VES)
+    MYSTATE(double,STATE_SL_LEN)
     MYSTATE(int, STATE_SL_BAZA)
     MYSTATE(int, STATE_SL_UR)
     MYSTATE(int, STATE_SL_OSO)
+    MYSTATE(qreal, STATE_SL_STUPEN)
     // ЗКР
     MYSTATE(int, STATE_ZKR_PROGRESS)    // отцеп не выехал с ЗКР
+    MYSTATE(int, STATE_ZKR_S_IN)       // голова на ЗКР
     MYSTATE(int,  STATE_ZKR_VAGON_CNT)
     MYSTATE(int,  STATE_ZKR_OSY_CNT)
-    MYSTATE(qreal,STATE_ZKR_VES)
+    MYSTATE(double,STATE_ZKR_VES)
     MYSTATE(int, STATE_ZKR_BAZA)
     //MYSTATE(int, STATE_ZKR_KAT)
     MYSTATE(int, STATE_PUT_NADVIG)
@@ -97,7 +97,7 @@ public:
     };
     Q_ENUM(TOnParkState)
     MYSTATE(int, STATE_KZP_OS)
-    MYSTATE(int,          STATE_KZP_D)
+    MYSTATE(int, STATE_KZP_D)
 
     //динамика
     MYSTATE(qreal, STATE_V)
@@ -117,6 +117,12 @@ public:
     MYSTATE_RS(qreal, STATE_V_OUT_3)
     void setSTATE_V_INOUT(int io,int n,qreal p);
     const qreal& STATE_V_INOUT(int io,int n)const {return FSTATE_V_INOUT[io][n];}
+    MYSTATE_RS(int, STATE_ADDR_TP_1)
+    MYSTATE_RS(int, STATE_ADDR_TP_2)
+    MYSTATE_RS(int, STATE_ADDR_TP_3)
+    void setSTATE_ADDR_TP(int n,int p);
+    const int& STATE_ADDR_TP(int n)const {return FSTATE_ADDR_TP[n];}
+
     MYSTATE_RS(int, STATE_OT_1)     //0- растарможка 1-4 ступени максимал ступень работы замедлителя
     MYSTATE_RS(int, STATE_OT_2)
     MYSTATE_RS(int, STATE_OT_3)
@@ -134,15 +140,16 @@ public:
     void setSTATE_V_ZAD(int n,qreal p);
     const qreal& STATE_V_ZAD(int n)const {return FSTATE_V_ZAD[n];}
     MYSTATE(qreal, STATE_STUPEN)
-    MYSTATE(qreal, STATE_SL_STUPEN)
-
-
-    MYSTATE(int, STATE_CHANGE_COUNTER)
 
 
 
+    MYSTATE(int, STATE_TICK)
 
 
+
+
+    void states2descr_ext(t_NewDescr &D) const;
+    void descr_ext2states(const t_NewDescr &D);
 
 public:
     explicit m_Otcep(m_Otceps *parent,int num);
@@ -156,7 +163,6 @@ public:
     QVector<tSlVagon> vVag;
     QList<m_RC *> vBusyRc;
 
-    t_Descr  stored_Descr;
 
     m_RC * RCS=nullptr;
     m_RC * RCF=nullptr;
@@ -165,6 +171,7 @@ public:
 
     qreal FSTATE_V_INOUT[2][3];
     int FSTATE_OT_RA[2][3];
+    int FSTATE_ADDR_TP[3];
     qreal FSTATE_V_ZAD[3];
 
 
@@ -179,10 +186,11 @@ public slots:
 
 protected:
     int FNUM;
+    t_NewDescr stored_Descr;
 
     m_Otceps*otceps;
     void updateStates_0();
-    void updateStates_1();
+//    void updateStates_1();
     QByteArray _storedA;
 
 };

@@ -29,7 +29,8 @@ public:
     int otcepCountOnRc(m_RC* rc);
     QList<m_Otcep *>otcepsOnRc(m_RC* rc);
     m_Otcep *otcepADDR_SLOT(int ADDR_SLOT,int ADDR,int NTP);
-    m_RC* find_RC(int chanelOffset);
+    m_RC* find_RC(int chanelOffset) const ;
+    m_RC* find_RC_ID(quint64  id) const;
 
     QList<m_Otcep *> l_otceps;
 
@@ -44,7 +45,7 @@ public:
 
 
     QMap<int,m_RC *> mOffset2Rc;
-    QMap<QString,m_RC *> mIDS2Rc;
+    QMap<quint64,m_RC *> mID2Rc;
     ModelGroupGorka *modelGroupGorka=nullptr;
     SignalDescription chanelVag[MaxVagon];
     tSlVagon vagons[MaxVagon];

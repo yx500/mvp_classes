@@ -19,13 +19,13 @@ public:
     MYPROP(SignalDescription, SIGNAL_UVK_PRM)
     MYPROP(SignalDescription, SIGNAL_UVK_AV)
 
+    MYPROP(SignalDescription, SIGNAL_UVK_TLG)
+    MYPROP(SignalDescription, SIGNAL_UVK_NGBSTAT_PL)
+    MYPROP(SignalDescription, SIGNAL_UVK_NGBSTAT_MN)
+    MYPROP(SignalDescription, SIGNAL_UVK_NGBDYN_PL)
+    MYPROP(SignalDescription, SIGNAL_UVK_NGBDYN_MN)
+
     MYPROP(SignalDescription, SIGNAL_UVK_BL_PER)
-    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_SP)
-    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_DB)
-    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_OTC)
-    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_TLG)
-    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_NGBSTAT)
-    MYPROP(SignalDescription, SIGNAL_UVK_BL_PER_NGBDYN)
 
     MYPROP(SignalDescription, TU_PRP)
     MYPROP(SignalDescription, TU_PRM)
@@ -44,6 +44,12 @@ public:
     MYSTATE(bool, STATE_UVK_PRP)
     MYSTATE(bool, STATE_UVK_PRM)
     MYSTATE(bool, STATE_UVK_AV)
+
+    MYSTATE(bool, STATE_UVK_TLG)
+    MYSTATE(bool, STATE_UVK_NGBSTAT_PL)
+    MYSTATE(bool, STATE_UVK_NGBSTAT_MN)
+    MYSTATE(bool, STATE_UVK_NGBDYN_PL)
+    MYSTATE(bool, STATE_UVK_NGBDYN_MN)
 
 public:
     Q_INVOKABLE m_Strel_Gor_Y(QObject *parent = nullptr);

@@ -187,11 +187,12 @@ void v_VTP_Indicator::updateStates()
         setVisible(true);
     }
     if (otc!=0){
-        stupen=otc->stored_Descr.st;
-        vZ=otc->stored_Descr.V_zad/10.;vO=otc->stored_Descr.V_out/10.;
+        stupen=otc->STATE_STUPEN();
+        vZ=otc->STATE_V_ZAD_1();
+        vO=otc->STATE_V_OUT_1();
         if (zam!=nullptr){
-            if (zam->NTP()==2) {vZ=otc->stored_Descr.V_zad2/10.;vO=otc->stored_Descr.V_out2/10.;}
-            if (zam->NTP()==3) {vZ=otc->stored_Descr.V_zad3/10.;vO=otc->stored_Descr.V_out3/10.;}
+            if (zam->NTP()==2) {vZ=otc->STATE_V_ZAD_2();vO=otc->STATE_V_OUT_2();}
+            if (zam->NTP()==3) {vZ=otc->STATE_V_ZAD_3();vO=otc->STATE_V_OUT_3();}
         }
     }
     setSTATE_VF(vF);

@@ -6,6 +6,7 @@
 
 // абстрактный класс для всех типов ДСО
 #pragma pack(push, 1)
+
 struct  DSO_Data{
     qint32 V;   // Значение
     qint8 D;   // посл. напр.
@@ -13,6 +14,8 @@ struct  DSO_Data{
     qint32 EV;   // кол-во сбоев
 };
 #pragma pack(pop)
+
+enum {DSO_Data_Max=490/sizeof(DSO_Data)};
 
 class m_DSO : public m_Base
 {
@@ -27,6 +30,9 @@ public:
 
     MYPROPLINK(RC_NEXT)
     MYPROPLINK(RC_PREV)
+
+    MYPROPLINK(DSO_DUBL)
+    MYPROPLINK(DSO_PAIR)
 
     MYSTATE(qlonglong,STATE_OSY_COUNT)
     MYSTATE(int,STATE_DIRECT)
@@ -46,6 +52,10 @@ public:
     virtual void updateStates();
     virtual void reset();
     m_RC* rc_next[2];
+    m_RC* rc;
+    m_DSO *dso_dubl;
+    m_DSO *dso_pair;
+
 
 protected:
 

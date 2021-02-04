@@ -62,6 +62,7 @@ public:
     MYSTATE(int, STATE_ERROR_TRACK)
 
     MYSTATE(int, STATE_GAC_ACTIVE)
+    MYSTATE(int, STATE_GAC_W_STRA)
     MYSTATE(int, STATE_ARS_ACTIVE)
 
     // основные характеристики выбиираются из СЛ или ЗКР

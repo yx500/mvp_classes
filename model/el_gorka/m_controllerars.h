@@ -43,9 +43,7 @@ public:
     virtual QString defaultGroupName() const {return "АРС";}
     virtual void validation(ListObjStr *l) const;
     virtual void updateAfterLoad();
-    virtual int workLevel() const {return -100;} // первее стрелок
     static qreal TPVal(quint16 w);
-    QList<t_ARSDescrCellsBiostime> lARSDescrCellsPackets;
     bool isValidState() const;
     virtual bool is33();
     virtual void updateStates();

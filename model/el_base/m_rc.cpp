@@ -143,6 +143,10 @@ void m_RC::validation(ListObjStr *l) const
 
     if (FLEN<=0)
         l->warning(this,"Не задана длина РЦ");
+
+    if (FSIGNAL_INFO_DSO.chanelOffset()>DSO_Data_Max){
+        l->error(this,"Выход за пределы буфера","","SIGNAL_INFO_DSO");
+    }
 }
 
 m_RC *m_RC::getNextRC(int d, int m) const

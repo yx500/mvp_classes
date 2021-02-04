@@ -114,6 +114,7 @@ struct t_Descr_ext{
     uint8 STATE_ERROR_TRACK;
 
     uint8 STATE_GAC_ACTIVE;
+    uint8 STATE_GAC_W_STRA;
     uint8 STATE_ARS_ACTIVE;
     uint8 STATE_SL_BAZA;
     uint8 STATE_SL_UR;

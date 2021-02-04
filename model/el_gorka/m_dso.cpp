@@ -17,7 +17,9 @@ m_DSO::m_DSO(QObject *parent) :
     FRC_NEXT.clear();
     FRC_PREV.clear();
 
-    rc_next[0]=nullptr; rc_next[1]=nullptr;
+    rc=nullptr;rc_next[0]=nullptr; rc_next[1]=nullptr;
+    dso_dubl=nullptr;
+    dso_pair=nullptr;;
     resetStates();
 }
 
@@ -50,6 +52,21 @@ void m_DSO::validation(ListObjStr *l) const
             l->error(this,"Разные NEXT у ДСО и РЦ","","RC_NEXT");
     }
 
+    if ((!FDSO_DUBL.isNotUse())&&((FDSO_DUBL.isNull())||(qobject_cast<m_DSO*>(FDSO_DUBL.baseObject())==nullptr)))
+        l->warning(this,"Нет привязки к дубликату","","DSO_DUBL");
+    if ((!FDSO_PAIR.isNotUse())&&((FDSO_PAIR.isNull())||(qobject_cast<m_DSO*>(FDSO_PAIR.baseObject())==nullptr)))
+        l->warning(this,"Нет привязки к паре","","DSO_PAIR");
+
+    if (dso_dubl!=nullptr){
+        if (dso_dubl->dso_dubl!=this)
+            l->warning(this,"У дубля нет обратной привязки","","DSO_DUBL");
+    }
+
+
+    if (FSIGNAL_DSODATA.chanelOffset()>DSO_Data_Max){
+        l->error(this,"Выход за пределы буфера","","SIGNAL_DSODATA");
+    }
+
 }
 
 void m_DSO::updateAfterLoad()
@@ -59,6 +76,8 @@ void m_DSO::updateAfterLoad()
     if ((!FRC.isNull())&&(qobject_cast<m_RC*>(FRC.baseObject())==nullptr)){
         qWarning() << objectName() << "ДСО ссылается не на РЦ " << FRC.baseObject()->objectName();
         FRC.clear();
+    } else {
+        rc=qobject_cast<m_RC*>(FRC.baseObject());
     }
     rc_next[0]=nullptr;
     updateLink(FRC_NEXT);
@@ -75,6 +94,22 @@ void m_DSO::updateAfterLoad()
         FRC_PREV.clear();
     } else {
         rc_next[1]=qobject_cast<m_RC*>(FRC_PREV.baseObject());
+    }
+    dso_dubl=nullptr;
+    updateLink(FDSO_DUBL);
+    if ((!FDSO_DUBL.isNull())&&(qobject_cast<m_DSO*>(FDSO_DUBL.baseObject())==nullptr)){
+        qWarning() << objectName() << "ДСО ДУБЛЬ ссылается не на ДСО " << FDSO_DUBL.baseObject()->objectName();
+        FRC_PREV.clear();
+    } else {
+        dso_dubl=qobject_cast<m_DSO*>(FDSO_DUBL.baseObject());
+    }
+    dso_pair=nullptr;
+    updateLink(FDSO_PAIR);
+    if ((!FDSO_PAIR.isNull())&&(qobject_cast<m_DSO*>(FDSO_PAIR.baseObject())==nullptr)){
+        qWarning() << objectName() << "ДСО ПАРА ссылается не на ДСО " << FDSO_PAIR.baseObject()->objectName();
+        FDSO_PAIR.clear();
+    } else {
+        dso_pair=qobject_cast<m_DSO*>(FDSO_PAIR.baseObject());
     }
 }
 

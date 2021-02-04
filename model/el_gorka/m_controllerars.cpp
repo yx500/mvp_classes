@@ -39,7 +39,7 @@ void m_ControllerARS::resetStates()
     FSTATE_ERRCS=0;
     FSTATE_RC_PRED=0;
     FSTATE_UFO=0;
-    lARSDescrCellsPackets.clear();
+//    lARSDescrCellsPackets.clear();
 }
 
 void m_ControllerARS::validation(ListObjStr *l) const
@@ -108,16 +108,16 @@ void m_ControllerARS::updateStates()
             setSTATE_UFO(A->Cells[FADDR-1].RC.UFO);
             setSTATE_V(TPVal(A->Cells[FADDR-1].V));
             setSTATE_VOLEG(TPVal(A->Cells[FADDR-1].Voleg));
-            if ((lARSDescrCellsPackets.isEmpty())||
-                    (lARSDescrCellsPackets.first().biostime!=A->biostime) ||
-                    (memcmp(&lARSDescrCellsPackets.first().cell,&A->Cells[FADDR-1],sizeof(t_ARSDescrCell)))){
-                t_ARSDescrCellsBiostime AB;
-                AB.t=FSIGNAL_ADDR.getBuffer()->timeDataRecived;
-                AB.biostime=A->biostime;
-                memcpy(&AB.cell,&A->Cells[FADDR-1],sizeof(t_ARSDescrCell));
-                lARSDescrCellsPackets.push_front(AB);
-                if (lARSDescrCellsPackets.size()>1024) lARSDescrCellsPackets.pop_back();
-            }
+//            if ((lARSDescrCellsPackets.isEmpty())||
+//                    (lARSDescrCellsPackets.first().biostime!=A->biostime) ||
+//                    (memcmp(&lARSDescrCellsPackets.first().cell,&A->Cells[FADDR-1],sizeof(t_ARSDescrCell)))){
+//                t_ARSDescrCellsBiostime AB;
+//                AB.t=FSIGNAL_ADDR.getBuffer()->timeDataRecived;
+//                AB.biostime=A->biostime;
+//                memcpy(&AB.cell,&A->Cells[FADDR-1],sizeof(t_ARSDescrCell));
+//                lARSDescrCellsPackets.push_front(AB);
+//                if (lARSDescrCellsPackets.size()>1024) lARSDescrCellsPackets.pop_back();
+//            }
 
         } else {
             if (FSTATE_ADDR) resetStates();

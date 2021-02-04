@@ -235,14 +235,13 @@ void m_RC::updateStates()
                 B=MVP_Enums::TRCBusy::free;
             }
         }
+        if (!FSIGNAL_BUSY_DSO.isInnerUse()){
+            if ((!FSIGNAL_BUSY_DSO.isEmpty())&&(FSIGNAL_BUSY_DSO.value_1bit()==1))
+                setSTATE_BUSY_DSO(MVP_Enums::TRCBusy::busy); else
+                setSTATE_BUSY_DSO(B_DSO=MVP_Enums::TRCBusy::free);
+        }
 
-        if ((!FSIGNAL_BUSY_DSO.isInnerUse())&&(!FSIGNAL_BUSY_DSO.isEmpty())&&(FSIGNAL_BUSY_DSO.value_1bit()==1))
-            B_DSO=MVP_Enums::TRCBusy::busy; else
-            B_DSO=MVP_Enums::TRCBusy::free;
-
-
-
-        if ((B==MVP_Enums::TRCBusy::busy) || (B_DSO==MVP_Enums::TRCBusy::busy)){
+        if ((B==MVP_Enums::TRCBusy::busy) || (FSTATE_BUSY_DSO==MVP_Enums::TRCBusy::busy)){
             B=MVP_Enums::TRCBusy::busy;
         }
 
@@ -252,7 +251,6 @@ void m_RC::updateStates()
         }
 
         setSTATE_BUSY(B);
-        setSTATE_BUSY_DSO(B_DSO);
 
         setSignalState(FSIGNAL_ERR_LS,FSTATE_ERR_LS);
         setSignalState(FSIGNAL_ERR_LZ,FSTATE_ERR_LZ);

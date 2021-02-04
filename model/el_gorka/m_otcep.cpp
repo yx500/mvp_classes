@@ -180,6 +180,7 @@ void m_Otcep::resetStates()
     FSTATE_ZKR_BAZA=0;
     FSTATE_ZKR_VES=0;
     FSTATE_PUT_NADVIG=0;
+    FSTATE_ZKR_TLG=0;
 
 
     FSTATE_KZP_OS=kzpUnknow;
@@ -293,7 +294,7 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     if (RCF!=nullptr) D.D.end    =RCF->SIGNAL_BUSY().chanelOffset()+1; // Местоположение Хвоста отцепа |номер сигнала занятия|
     D.D.ves    =FSTATE_ZKR_VES; // Вес отцепа в тоннах
     D.D.osy    =FSTATE_ZKR_OSY_CNT; // Длинна ( в осях)
-    D.D.len    =FSTATE_SL_LEN; // Длинна ( в вагонах)
+    D.D.len    =FSTATE_ZKR_VAGON_CNT; // Длинна ( в вагонах)
     D.D.baza   =FSTATE_ZKR_BAZA; // Признак длиннобазности
     D.D.nagon  =FSTATE_NAGON; // Признак нагона
     if (FSTATE_LOCATION==m_Otcep::locationUnknow) D.D.end_slg=1; // Признак конца слежения (по последней РЦ на путях)
@@ -363,6 +364,9 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     D.E.STATE_D_RCF_XOFFSET=       FSTATE_D_RCF_XOFFSET;
     D.E.STATE_TICK=       FSTATE_TICK;
 
+//    D.E.STATE_ZKR_TLG =STATE_ZKR_TLG;
+
+
 
 }
 
@@ -370,7 +374,7 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
 {
     resetStates();
     if (D.D.num==0) FSTATE_ENABLED=false;else FSTATE_ENABLED=true;
-    FNUM=               D.D.num    ; // Номер отцепа 1-255 Живет в течении роспуска одного
+//    FNUM=               D.D.num    ; // Номер отцепа 1-255 Живет в течении роспуска одного
     // STATE_LOCATION
     FSTATE_ID_ROSP=          D.D.Id     ;
     FSTATE_MAR=         D.D.mar    ; // Резерв
@@ -460,6 +464,8 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
         // смещение головы, хвоста в сторону direct [0..LEN]
         FSTATE_D_RCS_XOFFSET=D.E.STATE_D_RCS_XOFFSET;
         FSTATE_D_RCF_XOFFSET=D.E.STATE_D_RCF_XOFFSET;
+
+//        FSTATE_ZKR_TLG=D.E.STATE_ZKR_TLG;
     }
     setSTATE_TICK(FSTATE_TICK+1);
 }

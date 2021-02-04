@@ -87,6 +87,7 @@ public:
     MYSTATE(int,  STATE_ZKR_OSY_CNT)
     MYSTATE(double,STATE_ZKR_VES)
     MYSTATE(int, STATE_ZKR_BAZA)
+    MYSTATE(int, STATE_ZKR_TLG)
     //MYSTATE(int, STATE_ZKR_KAT)
     MYSTATE(int, STATE_PUT_NADVIG)
     // KZP

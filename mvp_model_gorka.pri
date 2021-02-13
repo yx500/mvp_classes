@@ -18,3 +18,4 @@ for(dir, $$list($$MVP_DIR_LIST) ) {
           SOURCES+= $$files( $$dir/*.cpp)
 }
 
+

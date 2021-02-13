@@ -58,6 +58,7 @@ public:
     QByteArray A;
     int msecPeriodLive=0;
     bool static_mode=false; // признак что буффер не для обмена
+    bool shared_mem=false;
     void assign(const GtBuffer *B){
         type=B->type;
         name=B->name;

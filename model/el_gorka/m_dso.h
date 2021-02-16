@@ -25,6 +25,7 @@ public:
 
     MYPROPLINK(RC)
     MYPROP(qreal,RC_OFFSET)
+    MYPROP(qreal,NGBDYN_OFFSET)
 
     MYPROP(SignalDescription,SIGNAL_DSODATA)
 

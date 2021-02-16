@@ -11,6 +11,24 @@
 // для горок
 // добалены исключительные сигналы РОСПУСК ПАУЗА СТОП
 
+struct RcInMarsrut{
+    m_RC_Gor *rc;
+    int pol;
+};
+
+struct Marsrut{
+    QList<RcInMarsrut> l_rc;
+};
+struct MarsrutsOnPut{
+    QMap<int,Marsrut*> mN2M;
+};
+
+inline bool inway(int way,int minway,int maxway)
+{
+    if ((way>0)&&(way>=minway)&&(way<=maxway)) return true;
+    return false;
+}
+
 class LIBSHARED_EXPORT ModelGroupGorka : public ModelRootGroup
 {
     Q_OBJECT
@@ -42,7 +60,8 @@ public:
     virtual bool is33();
     virtual void updateStates(); // основной жизненный цикл
 
-    QList<m_RC_Gor*> marshrut(int put_nadvig, int m);
+    const Marsrut *getMarshrut(int putNadvig,int nm) const;
+
     QMap<int,int> mSP2MAR;
     QMap<int,int> mMAR2SP;
 
@@ -57,6 +76,7 @@ protected:
     //m_Otceps * Otceps;
     void updateRegim();
     QList<m_RC_Gor_ZKR*> l_zkr;
+    QMap<int,MarsrutsOnPut> mZ2M;
 
 
 };

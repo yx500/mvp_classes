@@ -40,6 +40,7 @@ public:
 
     MYPROP(SignalDescription,SIGNAL_BUSY_DSO)
     MYPROP(SignalDescription,SIGNAL_BUSY_DSO_ERR)
+    MYPROP(SignalDescription,SIGNAL_BUSY_DSO_STOP)
     MYPROP(SignalDescription,SIGNAL_INFO_DSO)
 
 
@@ -47,6 +48,7 @@ public:
     MYSTATE(MVP_Enums::TRCBusy,STATE_BUSY)
     MYSTATE(MVP_Enums::TRCBusy,STATE_BUSY_DSO)
     MYSTATE(bool, STATE_BUSY_DSO_ERR)
+    MYSTATE(bool, STATE_BUSY_DSO_STOP)
     MYSTATE(int,STATE_OSY_COUNT)
 
     MYSTATE(bool, STATE_BLOCK)

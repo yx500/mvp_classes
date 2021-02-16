@@ -160,9 +160,11 @@ void m_Otcep::resetStates()
     FSTATE_ID_ROSP=0;
     FSTATE_SL_UR=0;
     FSTATE_ERROR_TRACK=0;
+    FSTATE_IS_CURRENT=0;
 
     FSTATE_GAC_ACTIVE=0;
     FSTATE_GAC_W_STRA=0;
+    FSTATE_GAC_W_STRB=0;
     FSTATE_ARS_ACTIVE=0;
 
     FSTATE_SL_VAGON_CNT=0;
@@ -344,9 +346,11 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     if (RCS!=nullptr) D.E.STATE_ID_RCS=RCS->id();
     if (RCF!=nullptr) D.E.STATE_ID_RCF=RCF->id();
     D.E.STATE_ERROR_TRACK=       FSTATE_ERROR_TRACK;
+    D.E.STATE_IS_CURRENT=        FSTATE_IS_CURRENT;
 
     D.E.STATE_GAC_ACTIVE=       FSTATE_GAC_ACTIVE;
     D.E.STATE_GAC_W_STRA=       FSTATE_GAC_W_STRA;
+    D.E.STATE_GAC_W_STRB=       FSTATE_GAC_W_STRB;
     D.E.STATE_ARS_ACTIVE=       FSTATE_ARS_ACTIVE;
     D.E.STATE_SL_BAZA=       FSTATE_SL_BAZA;
     D.E.STATE_SL_UR=       FSTATE_SL_UR;
@@ -444,8 +448,10 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
         descr_RCS=otceps->find_RC_ID(D.E.STATE_ID_RCS);
         descr_RCF=otceps->find_RC_ID(D.E.STATE_ID_RCF);
         FSTATE_ERROR_TRACK= D.E.STATE_ERROR_TRACK;
+        FSTATE_IS_CURRENT= D.E.STATE_IS_CURRENT;
         FSTATE_GAC_ACTIVE=D.E.STATE_GAC_ACTIVE;
         FSTATE_GAC_W_STRA=D.E.STATE_GAC_W_STRA;
+        FSTATE_GAC_W_STRB=D.E.STATE_GAC_W_STRB;
         FSTATE_ARS_ACTIVE=D.E.STATE_ARS_ACTIVE;
         FSTATE_SL_BAZA=D.E.STATE_SL_BAZA;
         FSTATE_SL_UR=D.E.STATE_SL_UR;

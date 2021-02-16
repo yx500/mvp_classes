@@ -13,6 +13,7 @@ m_DSO::m_DSO(QObject *parent) :
 {
     FSIGNAL_DSODATA.clear();
     FRC_OFFSET=0;
+    FNGBDYN_OFFSET=0;
     FRC.clear();
     FRC_NEXT.clear();
     FRC_PREV.clear();

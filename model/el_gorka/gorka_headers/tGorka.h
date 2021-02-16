@@ -112,9 +112,11 @@ struct t_Descr_ext{
     long long  STATE_ID_RCS;
     long long STATE_ID_RCF;
     uint8 STATE_ERROR_TRACK;
+    uint8 STATE_IS_CURRENT;
 
     uint8 STATE_GAC_ACTIVE;
     uint8 STATE_GAC_W_STRA;
+    uint8 STATE_GAC_W_STRB;
     uint8 STATE_ARS_ACTIVE;
     uint8 STATE_SL_BAZA;
     uint8 STATE_SL_UR;

@@ -62,6 +62,7 @@ void m_RC::resetStates()
     next_rc[1]=nullptr;
     FSTATE_BUSY_DSO_ERR=false;
     FSTATE_OSY_COUNT=0;
+    FSTATE_BUSY_DSO_STOP=false;
 
     //    dtBusy=QDateTime();
     //    dtFree=QDateTime();
@@ -255,6 +256,9 @@ void m_RC::updateStates()
         setSignalState(FSIGNAL_ERR_LS,FSTATE_ERR_LS);
         setSignalState(FSIGNAL_ERR_LZ,FSTATE_ERR_LZ);
         setSignalState(FSIGNAL_ERR_KZ,FSTATE_ERR_KZ);
+
+        setSignalState(FSIGNAL_BUSY_DSO_STOP,FSTATE_BUSY_DSO_STOP);
+
         next_rc[0]=getNextRCpolcfb(0);
         next_rc[1]=getNextRCpolcfb(1);
 

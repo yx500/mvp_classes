@@ -118,6 +118,18 @@ void ModelGroupGorka::validation(ListObjStr *l) const
             if ((!m1->TU_PRM().isNotUse())&&(m1->TU_PRM()==m2->TU_PRP())) l->error(m1,"Одинаковый код ТУ ПРМ c"+m2->idstr());
         }
     }
+
+    foreach (auto pp, mZ2M.keys()) {
+        foreach (auto nm, mZ2M[pp].mN2M.keys()) {
+            auto m=getMarshrut(pp,nm);
+            foreach (auto rcm, m->l_rc) {
+                if (rcm.pol==MVP_Enums::pol_unknow){
+                    l->error(rcm.rc,QString("Проблема постороения маршрта pnadv=%1 mar=%2").arg(pp).arg(nm));
+                }
+            }
+        }
+
+    }
 }
 
 
@@ -135,20 +147,7 @@ void ModelGroupGorka::updateAfterLoad()
 
     }
     l_zkr=findChildren<m_RC_Gor_ZKR*>();
-    foreach (auto rczkr, l_zkr) {
 
-        for (int m=rczkr->MINWAY();m<=rczkr->MAXWAY();m++){
-            QList<m_RC_Gor*> lm=marshrut(rczkr->PUT_NADVIG(),m);
-            int n=0;
-            qreal absx=0;
-            foreach (auto rc, lm) {
-                rc->m_PN_M2N[rczkr->PUT_NADVIG()][m]=n;
-                rc->m_PN_M2X[rczkr->PUT_NADVIG()][m]=absx;
-                n++;
-                absx+=rc->LEN();
-            }
-        }
-    }
     auto lo=findChildren<m_Otceps*>();
     if (!lo.isEmpty()){
         FLNK_OTCEPS.linkObj(lo.first());
@@ -157,6 +156,66 @@ void ModelGroupGorka::updateAfterLoad()
         otceps->setid(1000000);
         FLNK_OTCEPS.linkObj(otceps);
     }
+
+    // собираем маршруты
+    mZ2M.clear();
+    foreach (auto zkr, l_zkr) {
+        MarsrutsOnPut mp;
+        mp.mN2M.clear();
+        foreach (auto nm, mMAR2SP.keys()) {
+            Marsrut *m=new Marsrut();
+            m->l_rc.clear();
+            m_RC_Gor*rcs=zkr;
+            RcInMarsrut rcm;
+            rcm.rc=nullptr;
+            while (rcs){
+                // обратная стр
+                if (rcs->getNextCount(_back)==2){
+                    if ((rcs->getNextRC(_back,0)==rcm.rc) && (rcm.rc!=nullptr)) rcm.pol=0; else
+                        if ((rcs->getNextRC(_back,1)==rcm.rc) && (rcm.rc!=nullptr)) rcm.pol=1; else
+                            rcm.pol=MVP_Enums::pol_unknow;
+                    rcm.rc=rcs;
+                    m->l_rc.push_back(rcm);
+                    rcs=qobject_cast<m_RC_Gor*>(rcs->getNextRC(0,0));
+                    continue;
+                }
+
+                rcm.pol=MVP_Enums::pol_unknow;
+                rcm.rc=rcs;
+
+                auto rcplus=qobject_cast<m_RC_Gor*>(rcs->getNextRC(0,0));
+                if ((rcplus!=nullptr)&&(inway(nm,rcplus->MINWAY(),rcplus->MAXWAY()))) {
+                    rcs=rcplus; rcm.pol=MVP_Enums::pol_plus;
+                } else {
+                    auto rcmnus=qobject_cast<m_RC_Gor*>(rcs->getNextRC(0,1));
+                    if ((rcmnus!=nullptr)&&(inway(nm,rcmnus->MINWAY(),rcmnus->MAXWAY()))) {
+                        rcs=rcmnus;  rcm.pol=MVP_Enums::pol_minus;
+                    } else {
+                        break;
+                    }
+                }
+                m->l_rc.push_back(rcm);
+            }
+            mp.mN2M[nm]=m;
+        }
+        mZ2M[zkr->PUT_NADVIG()]=mp;
+    }
+
+    foreach (auto rczkr, l_zkr) {
+        for (int m=rczkr->MINWAY();m<=rczkr->MAXWAY();m++){
+            auto  mm=getMarshrut(rczkr->PUT_NADVIG(),m);
+            if (mm==nullptr) continue;
+            int n=0;
+            qreal absx=0;
+            foreach (auto rcm, mm->l_rc) {
+                rcm.rc->m_PN_M2N[rczkr->PUT_NADVIG()][m]=n;
+                rcm.rc->m_PN_M2X[rczkr->PUT_NADVIG()][m]=absx;
+                n++;
+                absx+=rcm.rc->LEN();
+            }
+        }
+    }
+
 }
 
 bool ModelGroupGorka::is33()
@@ -196,36 +255,15 @@ void ModelGroupGorka::updateRegim()
         setSTATE_REGIM(r);
     }
 }
-bool inway(int way,int minway,int maxway)
-{
-    if ((way>0)&&(way>=minway)&&(way<=maxway)) return true;
-    return false;
-}
-QList<m_RC_Gor *> ModelGroupGorka::marshrut(int put_nadvig,int m)
-{
-    QList<m_RC_Gor *> l;
-    QList<m_RC_Gor_ZKR*> lzkr=findChildren<m_RC_Gor_ZKR*>();
-    m_RC_Gor*rcs=nullptr;
-    foreach (auto rczkr, lzkr) {
-        if (rczkr->PUT_NADVIG()==put_nadvig) rcs=rczkr;
 
 
-    }
-    l.push_back(rcs);
-    while (rcs){
-        auto rcplus=qobject_cast<m_RC_Gor*>(rcs->getNextRC(0,0));
-        if ((rcplus!=nullptr)&&(inway(m,rcplus->MINWAY(),rcplus->MAXWAY()))) {
-            rcs=rcplus;  l.push_back(rcs);
-        } else {
-            auto rcmnus=qobject_cast<m_RC_Gor*>(rcs->getNextRC(0,1));
-            if ((rcmnus!=nullptr)&&(inway(m,rcmnus->MINWAY(),rcmnus->MAXWAY()))) {
-                rcs=rcmnus;  l.push_back(rcs);
-            } else {
-                break;
-            }
-        }
-    }
-    return l;
+
+const Marsrut *ModelGroupGorka::getMarshrut(int putNadvig, int nm) const
+{
+    if (!mZ2M.contains(putNadvig)) return nullptr;
+    const MarsrutsOnPut & mp=mZ2M[putNadvig];
+    if (!mp.mN2M.contains(nm)) return nullptr;
+    return  mp.mN2M[nm];
 }
 
 m_RC_Gor_ZKR *ModelGroupGorka::active_zkr() const

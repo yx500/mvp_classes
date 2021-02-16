@@ -60,9 +60,11 @@ public:
     MYSTATE(int,STATE_NAGON)
     MYSTATE(int, STATE_ERROR)
     MYSTATE(int, STATE_ERROR_TRACK)
+    MYSTATE(int, STATE_IS_CURRENT)
 
     MYSTATE(int, STATE_GAC_ACTIVE)
     MYSTATE(int, STATE_GAC_W_STRA)
+    MYSTATE(int, STATE_GAC_W_STRB)
     MYSTATE(int, STATE_ARS_ACTIVE)
 
     // основные характеристики выбиираются из СЛ или ЗКР

@@ -59,6 +59,7 @@ public:
     int msecPeriodLive=0;
     bool static_mode=false; // признак что буффер не для обмена
     bool shared_mem=false;
+    bool tu_style=false;
     void assign(const GtBuffer *B){
         type=B->type;
         name=B->name;

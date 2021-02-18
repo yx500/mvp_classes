@@ -112,6 +112,7 @@ public:
     // смещение головы, хвоста в сторону direct [0..LEN]
     MYSTATE(qreal, STATE_D_RCS_XOFFSET)
     MYSTATE(qreal, STATE_D_RCF_XOFFSET)
+    MYSTATE(int,   STATE_D_ORDER_RC)
     // журнал для протокола
     MYSTATE_RS(qreal, STATE_V_IN_1)
     MYSTATE_RS(qreal, STATE_V_IN_2)

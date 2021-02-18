@@ -132,6 +132,7 @@ struct t_Descr_ext{
     uint16 STATE_V_DISO;
     uint16 STATE_D_RCS_XOFFSET;
     uint16 STATE_D_RCF_XOFFSET;
+    uint8 STATE_D_ORDER_RC;
     uint16 STATE_TICK;
 
 

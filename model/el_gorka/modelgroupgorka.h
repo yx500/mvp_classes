@@ -46,11 +46,13 @@ public:
     MYPROP(SignalDescription,SIGNAL_STOP)
     MYPROP(SignalDescription,SIGNAL_RRC)
     MYPROP(SignalDescription,SIGNAL_RRC_TU)
+    MYPROP(SignalDescription,SIGNAL_GAC_FINISH)
     MYPROP(ObjectLink,LNK_OTCEPS)
 
     MYSTATE(int,STATE_REGIM)
     MYSTATE(int,STATE_PUT_NADVIG)
     MYSTATE(bool,STATE_RRC)
+    MYSTATE(bool,STATE_GAC_FINISH)
 public:
     Q_INVOKABLE ModelGroupGorka(BaseObject *parent = nullptr);
     virtual ~ModelGroupGorka();

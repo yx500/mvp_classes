@@ -197,6 +197,7 @@ void m_Otcep::resetStates()
 
     FSTATE_D_RCS_XOFFSET=-1;
     FSTATE_D_RCF_XOFFSET=-1;
+    FSTATE_D_ORDER_RC=0;
 
     memset(FSTATE_V_INOUT,0,sizeof(FSTATE_V_INOUT));
     memset(FSTATE_OT_RA,0,sizeof(FSTATE_OT_RA));
@@ -366,6 +367,8 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     D.E.STATE_V_DISO=       FSTATE_V_DISO*10;
     D.E.STATE_D_RCS_XOFFSET=       FSTATE_D_RCS_XOFFSET;
     D.E.STATE_D_RCF_XOFFSET=       FSTATE_D_RCF_XOFFSET;
+    D.E.STATE_D_ORDER_RC=       FSTATE_D_ORDER_RC;
+
     D.E.STATE_TICK=       FSTATE_TICK;
 
 //    D.E.STATE_ZKR_TLG =STATE_ZKR_TLG;
@@ -470,6 +473,7 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
         // смещение головы, хвоста в сторону direct [0..LEN]
         FSTATE_D_RCS_XOFFSET=D.E.STATE_D_RCS_XOFFSET;
         FSTATE_D_RCF_XOFFSET=D.E.STATE_D_RCF_XOFFSET;
+        FSTATE_D_ORDER_RC=D.E.STATE_D_ORDER_RC;
 
 //        FSTATE_ZKR_TLG=D.E.STATE_ZKR_TLG;
     }

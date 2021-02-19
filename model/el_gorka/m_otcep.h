@@ -153,8 +153,8 @@ public:
 
 
 
-    void states2descr_ext(t_NewDescr &D) const;
-    void descr_ext2states(const t_NewDescr &D);
+
+
 
 public:
     explicit m_Otcep(m_Otceps *parent,int num);
@@ -185,6 +185,10 @@ public:
     virtual bool is33();
     virtual void updateStates();
     void update_descr();
+    void states2descr_ext(t_NewDescr &D) const;
+    void descr_ext2states(const t_NewDescr &D);
+
+    void inc_tick(){FSTATE_TICK++;}
 
 public slots:
     void slotChanged(){updateStates();}

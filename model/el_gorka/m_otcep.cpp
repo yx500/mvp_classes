@@ -11,6 +11,7 @@ void m_Otcep::setSTATE_LOCATION(const int &p)
     if (FSTATE_LOCATION!=p){
         //if (p==locationUnknow) resetStates();
         FSTATE_LOCATION=p;
+        FSTATE_TICK++;
         doStateChanged();
     }
 }

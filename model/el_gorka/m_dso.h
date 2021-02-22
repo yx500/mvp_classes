@@ -5,17 +5,20 @@
 #include "m_rc.h"
 
 // абстрактный класс для всех типов ДСО
-#pragma pack(push, 1)
+//#pragma pack(push, 1)
 
-struct  DSO_Data{
-    qint32 V;   // Значение
-    qint8 D;   // посл. напр.
-    qint8 E;   // сбой
-    qint32 EV;   // кол-во сбоев
-};
-#pragma pack(pop)
+//struct  DSO_Data{
+//    qint32 V;   // Значение
+//    qint8 D;   // посл. напр.
+//    qint8 E;   // сбой
+//    qint32 EV;   // кол-во сбоев
+//    float Vel; // скорость
+//};
+//#pragma pack(pop)
+#include "tGorka.h"
 
-enum {DSO_Data_Max=490/sizeof(DSO_Data)};
+
+enum {DSO_Data_Max=490/sizeof(t_OsyCell_21)};
 
 class m_DSO : public m_Base
 {

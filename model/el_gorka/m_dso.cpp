@@ -6,7 +6,6 @@
 
 
 
-
 m_DSO::m_DSO(QObject *parent) :
     m_Base(parent),
     FSTATE_OSY_COUNT(0),FSTATE_ERROR(0)
@@ -118,7 +117,7 @@ void m_DSO::updateStates()
 {
     m_Base::updateStates();
     if ((FSIGNAL_DSODATA.isUsed())&&(!FSIGNAL_DSODATA.isInnerUse())){
-        DSO_Data *d=(DSO_Data *)FSIGNAL_DSODATA.value_data(sizeof(DSO_Data));
+        t_OsyCell_21 *d=(t_OsyCell_21 *)FSIGNAL_DSODATA.value_data(sizeof(t_OsyCell_21));
         if (d!=nullptr){
             setSTATE_OSY_COUNT(d->V);
             setSTATE_DIRECT(d->D);

@@ -31,6 +31,8 @@ public:
     MYPROP(SignalDescription, TU_PRM)
     MYPROP(int, NEGAB_RC_CNT_P)
     MYPROP(int, NEGAB_RC_CNT_M)
+    MYPROP(qreal, NEGAB_VGRAN_P)
+    MYPROP(qreal, NEGAB_VGRAN_M)
 
 
     MYPROPLINK( IPD)
@@ -60,6 +62,7 @@ public:
     virtual void updateStates();
     m_IPD *get_ipd()const{return  ipd;}
     m_RTDS *get_rtds()const{return  rtds;}
+    QList<m_RC*> l_ngb_rc[2];
 
 protected:
     m_IPD *ipd;

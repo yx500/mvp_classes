@@ -32,7 +32,8 @@ int m_RC::DIRECTM() const
 m_RC::m_RC(QObject *parent) :
     m_Base(parent) ,FLEN(0),
     FSIGNAL_BUSY(),
-    FSIGNAL_ERR_LS(),FSIGNAL_ERR_LZ(),FSIGNAL_ERR_KZ(),FSIGNAL_BUSY_DSO(),FSIGNAL_BUSY_DSO_ERR(),FSIGNAL_INFO_DSO()
+    FSIGNAL_ERR_LS(),FSIGNAL_ERR_LZ(),FSIGNAL_ERR_KZ(),FSIGNAL_BUSY_DSO(),FSIGNAL_BUSY_DSO_ERR(),
+    FSIGNAL_BUSY_DSO_STOP(),FSIGNAL_BUSY_DSO_OSTOP(),FSIGNAL_INFO_DSO()
 {
     for (int d=0;d<2;d++){
         Fnext_link[d][1].setInNotUse(true);
@@ -63,6 +64,7 @@ void m_RC::resetStates()
     FSTATE_BUSY_DSO_ERR=false;
     FSTATE_OSY_COUNT=0;
     FSTATE_BUSY_DSO_STOP=false;
+    FSTATE_BUSY_DSO_OSTOP=false;
 
     //    dtBusy=QDateTime();
     //    dtFree=QDateTime();
@@ -258,18 +260,19 @@ void m_RC::updateStates()
         setSignalState(FSIGNAL_ERR_KZ,FSTATE_ERR_KZ);
 
         setSignalState(FSIGNAL_BUSY_DSO_STOP,FSTATE_BUSY_DSO_STOP);
+        setSignalState(FSIGNAL_BUSY_DSO_OSTOP,FSTATE_BUSY_DSO_OSTOP);
 
         next_rc[0]=getNextRCpolcfb(0);
         next_rc[1]=getNextRCpolcfb(1);
 
-        if (!FSIGNAL_INFO_DSO.isEmpty()){
-            DSO_Data *d=(DSO_Data *)FSIGNAL_INFO_DSO.value_data(sizeof(DSO_Data));
+        if ((!FSIGNAL_INFO_DSO.isEmpty())&&(!FSIGNAL_INFO_DSO.isInnerUse())){
+            t_OsyCell_21 *d=(t_OsyCell_21 *)FSIGNAL_INFO_DSO.value_data(sizeof(t_OsyCell_21));
             if (d!=nullptr){
                 setSTATE_OSY_COUNT(d->V);
             } else {
                 setSTATE_OSY_COUNT(0);
             }
-        } else setSTATE_OSY_COUNT(0);
+        }
     }
 
 }

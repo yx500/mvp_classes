@@ -16,6 +16,9 @@ m_Strel_Gor_Y::m_Strel_Gor_Y(QObject *parent) : m_Strel_Gor(parent)
     FIPD.clear();
     FRTDS.clear();
 
+    FNEGAB_VGRAN_P=0;
+    FNEGAB_VGRAN_M=0;
+
     ipd=nullptr;
     rtds=nullptr;
     resetStates();
@@ -57,6 +60,28 @@ void m_Strel_Gor_Y::updateAfterLoad()
             qCritical() << objectName() << "Ошибочная ссылка RTDS" <<endl ; else
             addDevice(rtds);
     }
+    m_RC *_rc=this;
+    l_ngb_rc[0].clear();
+    for (int i=0;i<NEGAB_RC_CNT_P();i++){
+        _rc=_rc->getNextRC(0,0);
+        if (_rc!=nullptr) {
+           l_ngb_rc[0].push_back(_rc) ;
+        } else {
+            break;
+        }
+    }
+    _rc=this;
+    l_ngb_rc[1].clear();
+    for (int i=0;i<NEGAB_RC_CNT_M();i++){
+        _rc=_rc->getNextRC(1,0);
+        if (_rc!=nullptr) {
+           l_ngb_rc[1].push_back(_rc) ;
+        } else {
+            break;
+        }
+    }
+
+
 
 
 

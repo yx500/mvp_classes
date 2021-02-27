@@ -154,8 +154,11 @@ void m_RC::validation(ListObjStr *l) const
 
 m_RC *m_RC::getNextRC(int d, int m) const
 {
+    if (getNextCount(d)==1) {
+        if ((d==0)||(d==1))   return Fnext[d][0];
+        return nullptr;
+    }
     if (m==MVP_Enums::TStrelPol::pol_w) return nullptr;
-    if (getNextCount(d)==1) m=0;
     if ((d>=0)&&(m>=0)&&(d+m<=2))   return Fnext[d][m];
     return nullptr;
 }
@@ -216,7 +219,10 @@ void m_RC::setsv_mLink(ObjectLink p, int d, int m)
 bool m_RC::is33()
 {
     if (m_Base::is33()) return true;
-    return FSIGNAL_BUSY.is33();
+    if (!FSIGNAL_BUSY.isEmpty()) return FSIGNAL_BUSY.is33();
+    if (!FSIGNAL_BUSY_DSO.isEmpty()) return FSIGNAL_BUSY_DSO.is33();
+    return false;
+
 }
 
 

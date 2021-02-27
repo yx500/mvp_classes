@@ -130,9 +130,16 @@ void m_Strel_Gor_Y::updateStates()
     setSignalState(FSIGNAL_UVK_PRM,FSTATE_UVK_PRM);
     setSignalState(FSIGNAL_UVK_AV,FSTATE_UVK_AV);
 
+
+
     setSignalState(FSIGNAL_UVK_TLG,FSTATE_UVK_TLG);
 //    setSignalState(FSIGNAL_UVK_NGBSTAT,FSTATE_UVK_NGBSTAT);
     setSignalState(FSIGNAL_UVK_NGBDYN_PL,FSTATE_UVK_NGBDYN_PL);
     setSignalState(FSIGNAL_UVK_NGBDYN_MN,FSTATE_UVK_NGBDYN_MN);
+
+//    qDebug()<< "setSTATE_A(true);";
+//    setSTATE_A(true);
+
+
 }
 

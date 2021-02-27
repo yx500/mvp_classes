@@ -41,6 +41,7 @@ void m_Strel_Gor::resetStates()
 {
     m_RC_Gor::resetStates();
     FSTATE_BLOCK=false;
+    FSTATE_POL=MVP_Enums::TStrelPol::pol_w;
 }
 
 int m_Strel_Gor::getNextCount(int d) const

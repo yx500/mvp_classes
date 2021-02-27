@@ -371,7 +371,7 @@ bool QObject2XML::isChanged(BaseObject *O,QString fullfn)
     if (!B) return false;
     if (!B->isStoredXML()) return false;
     if (B->XMLfile().isEmpty()) return true;
-    if (!QFileInfo(fullfn).exists()) return true;
+    if (!QFileInfo::exists(fullfn)) return true;
     QFile file(B->XMLfile());
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return false;
     QByteArray array1=file.readAll();

@@ -73,7 +73,7 @@ void m_Strel_Gor_Y::updateAfterLoad()
     _rc=this;
     l_ngb_rc[1].clear();
     for (int i=0;i<NEGAB_RC_CNT_M();i++){
-        _rc=_rc->getNextRC(1,0);
+        _rc=_rc->getNextRC(0,1);
         if (_rc!=nullptr) {
            l_ngb_rc[1].push_back(_rc) ;
         } else {

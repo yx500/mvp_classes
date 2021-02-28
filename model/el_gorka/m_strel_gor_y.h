@@ -25,6 +25,9 @@ public:
     MYPROP(SignalDescription, SIGNAL_UVK_NGBDYN_PL)
     MYPROP(SignalDescription, SIGNAL_UVK_NGBDYN_MN)
 
+    MYPROP(SignalDescription, SIGNAL_UVK_WSTRA)
+    MYPROP(SignalDescription, SIGNAL_UVK_WSTRB)
+
     MYPROP(SignalDescription, SIGNAL_UVK_BL_PER)
 
     MYPROP(SignalDescription, TU_PRP)
@@ -52,6 +55,9 @@ public:
     MYSTATE(bool, STATE_UVK_NGBSTAT_MN)
     MYSTATE(bool, STATE_UVK_NGBDYN_PL)
     MYSTATE(bool, STATE_UVK_NGBDYN_MN)
+
+    MYSTATE(bool, STATE_UVK_WSTRA)
+    MYSTATE(bool, STATE_UVK_WSTRB)
 
 public:
     Q_INVOKABLE m_Strel_Gor_Y(QObject *parent = nullptr);

@@ -213,7 +213,7 @@ void ModelGroupGorka::updateAfterLoad()
                 rcm.rc->m_PN_M2N[rczkr->PUT_NADVIG()][m]=n;
                 rcm.rc->m_PN_M2X[rczkr->PUT_NADVIG()][m]=absx;
                 n++;
-                absx+=rcm.rc->LEN();
+                absx+=rcm.rc->getLEN(rcm.pol);
             }
         }
     }

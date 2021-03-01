@@ -2,6 +2,7 @@
 
 #include "mvp_objectfactory.h"
 REGISTERELEMENT(m_Strel_Gor,"Горочная стрелка","MODEL ГОРКА")
+REGISTERPROPERTY(m_Strel_Gor,LEN2,"ДЛИНА М","Длина по минусу м","")
 REGISTERPROPERTY(m_Strel_Gor,NEXTM0,"СЛЕД.МИНУС","Следующая РЦ в минусовом направлении","СВЯЗИ")
 REGISTERPROPERTY(m_Strel_Gor,NEXTM1,"ПРЕД.МИНУС","Предыдущая РЦ в минусовом направлении","СВЯЗИ")
 REGISTERPROPERTY(m_Strel_Gor,DIRECTM,"НАПР.МИНУС","Направление минуса","СВЯЗИ")
@@ -16,6 +17,12 @@ void m_Strel_Gor::setSTATE_POL(MVP_Enums::TStrelPol p)
         emit stateChanged(this);
 
     }
+}
+
+const qreal &m_Strel_Gor::getLEN(int m)
+{
+    if ((m==1)&& (FLEN2!=0)) return FLEN2;
+    return FLEN;
 }
 
 m_Strel_Gor::m_Strel_Gor(QObject *parent):m_RC_Gor(parent)

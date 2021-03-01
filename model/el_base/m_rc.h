@@ -17,6 +17,7 @@ class tos_RcTracking;
 class m_RC : public m_Base
 {
     Q_OBJECT
+    Q_PROPERTY(qreal LEN READ LEN WRITE setLEN DESIGNABLE true )
     Q_PROPERTY(ObjectLink NEXTDM00 READ getnext00 WRITE setnext00 DESIGNABLE true )
     Q_PROPERTY(ObjectLink NEXTDM10 READ getnext10 WRITE setnext10 DESIGNABLE true )
     Q_PROPERTY(ObjectLink NEXTDM01 READ getnext01 WRITE setnext01 DESIGNABLE true )
@@ -29,9 +30,12 @@ class m_RC : public m_Base
     Q_PROPERTY(MVP_Enums::TStrelPol STATE_POL READ STATE_POL WRITE setSTATE_POL DESIGNABLE true STORED false)
 
 
+    void setLEN(const qreal &p);
 public:
 
-    MYPROP(qreal,LEN)
+//    MYPROP(qreal,LEN)
+    virtual const qreal& LEN(){return getLEN(0);}
+    virtual const qreal& getLEN(int m){Q_UNUSED(m); return FLEN;}
     MYPROP(SignalDescription,SIGNAL_BUSY)
 
     MYPROP(SignalDescription,SIGNAL_ERR_LS)
@@ -116,6 +120,7 @@ public:
     virtual void updateStates();
 
 protected:
+    qreal FLEN;
     ObjectLink Fnext_link[2][2]; // для  записи
     m_RC * Fnext[2][2];           // для использ
     ObjectLink Fsv_m_links[2][2];

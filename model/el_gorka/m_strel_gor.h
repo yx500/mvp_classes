@@ -6,9 +6,11 @@ class m_Strel_Gor: public m_RC_Gor
 {
     Q_OBJECT
 public:
+    MYPROP(qreal, LEN2)
     MYPROP(SignalDescription, SIGNAL_PLUS)
     MYPROP(SignalDescription, SIGNAL_MINUS)
     MYPROP(SignalDescription, SIGNAL_BLOCK)
+
 
     virtual void setSTATE_POL(MVP_Enums::TStrelPol p);
     virtual MVP_Enums::TStrelPol STATE_POL() const {return FSTATE_POL;}
@@ -18,6 +20,8 @@ public:
 
 
 public:
+    virtual const qreal& LEN(){return getLEN(FSTATE_POL);}
+    virtual const qreal& getLEN(int m);
 
     Q_INVOKABLE m_Strel_Gor(QObject *parent = nullptr);
     virtual ~m_Strel_Gor(){}

@@ -19,6 +19,10 @@ m_Strel_Gor_Y::m_Strel_Gor_Y(QObject *parent) : m_Strel_Gor(parent)
     FNEGAB_VGRAN_P=0;
     FNEGAB_VGRAN_M=0;
 
+    FNEGAB_RC_IDS_P="";
+    FNEGAB_RC_IDS_M="";
+
+
     ipd=nullptr;
     rtds=nullptr;
     resetStates();
@@ -43,6 +47,22 @@ void m_Strel_Gor_Y::validation(ListObjStr *l) const
         l->error(this,"Не задан ИПД");
     if ((!FRTDS.isNotUse())&&(FRTDS.isNull()))
         l->error(this,"Не задан РТДС");
+    auto sl=FNEGAB_RC_IDS_P.split(";");
+    foreach (auto ids, sl) {
+        auto lo=superFindObjectByIdstr(this,ids);
+        if (lo.isEmpty()) l->error(this,"Не найден негабарит NEGAB_RC_IDS_P");
+        if (lo.size()>1) l->error(this,"NEGAB_RC_IDS_P больше 1");
+        if (lo.size()==1)
+            if (qobject_cast<m_RC*>(lo.first())==nullptr) l->error(this,"NEGAB_RC_IDS_P не РЦ");
+    }
+    sl=FNEGAB_RC_IDS_M.split(";");
+    foreach (auto ids, sl) {
+        auto lo=superFindObjectByIdstr(this,ids);
+        if (lo.isEmpty()) l->error(this,"Не найден негабарит NEGAB_RC_IDS_M");
+        if (lo.size()>1) l->error(this,"NEGAB_RC_IDS_M больше 1");
+        if (lo.size()==1)
+            if (qobject_cast<m_RC*>(lo.first())==nullptr) l->error(this,"NEGAB_RC_IDS_M не РЦ");
+    }
 }
 
 void m_Strel_Gor_Y::updateAfterLoad()
@@ -62,22 +82,40 @@ void m_Strel_Gor_Y::updateAfterLoad()
     }
     m_RC *_rc=this;
     l_ngb_rc[0].clear();
-    for (int i=0;i<NEGAB_RC_CNT_P();i++){
+    for (int i=0;i<FNEGAB_RC_CNT_P;i++){
         _rc=_rc->getNextRC(0,0);
         if (_rc!=nullptr) {
            l_ngb_rc[0].push_back(_rc) ;
+           _rc->updateAfterLoad();
         } else {
             break;
         }
     }
     _rc=this;
     l_ngb_rc[1].clear();
-    for (int i=0;i<NEGAB_RC_CNT_M();i++){
+    for (int i=0;i<FNEGAB_RC_CNT_M;i++){
         _rc=_rc->getNextRC(0,1);
         if (_rc!=nullptr) {
            l_ngb_rc[1].push_back(_rc) ;
+           _rc->updateAfterLoad();
         } else {
             break;
+        }
+    }
+    auto sl=FNEGAB_RC_IDS_P.split(";");
+    foreach (auto ids, sl) {
+        auto lo=superFindObjectByIdstr(this,ids);
+        if (lo.size()==1) {
+            _rc=qobject_cast<m_RC*>(lo.first());
+            if (_rc!=nullptr) l_ngb_rc[0].push_back(_rc) ;
+        }
+    }
+    sl=FNEGAB_RC_IDS_M.split(";");
+    foreach (auto ids, sl) {
+        auto lo=superFindObjectByIdstr(this,ids);
+        if (lo.size()==1) {
+            _rc=qobject_cast<m_RC*>(lo.first());
+            if (_rc!=nullptr) l_ngb_rc[1].push_back(_rc) ;
         }
     }
 

@@ -51,15 +51,23 @@ QList<BaseObject *> findObjectByName(QObject *O, const QString &name)
     }
     return l;
 }
-QList<BaseObject *> findObjectByIdstr(QObject *O, const QString &idstr)
+QList<BaseObject *> findObjectByIdstr(const QObject *O, const QString &idstr)
 {
     QList<BaseObject *> l;
-    auto *B=qobject_cast<BaseObject *>(O);
+    auto BB=qobject_cast<const BaseObject *>(O);
+    BaseObject *B=const_cast<BaseObject *>(BB);
     if ((B)&&(B->idstr()==idstr)) l.push_back(B);
     foreach(QObject * o,O->children()){
         QList<BaseObject *> l1=findObjectByIdstr(o,idstr);
         if (!l1.empty()) l+=l1;
     }
+    return l;
+}
+QList<BaseObject *> superFindObjectByIdstr(const QObject *O, const QString &idstr)
+{
+    const QObject * superP=superParent(O);
+    if (superP!=nullptr) return findObjectByIdstr(superP,idstr);
+    QList<BaseObject *> l;
     return l;
 }
 
@@ -465,3 +473,4 @@ void deleteObjectList(QObjectList &l)
     }
     l.clear();
 }
+

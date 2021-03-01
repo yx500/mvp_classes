@@ -34,6 +34,8 @@ public:
     MYPROP(SignalDescription, TU_PRM)
     MYPROP(int, NEGAB_RC_CNT_P)
     MYPROP(int, NEGAB_RC_CNT_M)
+    MYPROP(QString, NEGAB_RC_IDS_P)
+    MYPROP(QString, NEGAB_RC_IDS_M)
     MYPROP(qreal, NEGAB_VGRAN_P)
     MYPROP(qreal, NEGAB_VGRAN_M)
 

@@ -29,8 +29,17 @@ int m_RC::DIRECTM() const
     return 0;
 }
 
+void m_RC::setLEN(const qreal &p)
+{
+    if(FLEN!=p){
+        FLEN=p;
+        doPropertyChanged();
+    }
+}
+
+
 m_RC::m_RC(QObject *parent) :
-    m_Base(parent) ,FLEN(0),
+    m_Base(parent),
     FSIGNAL_BUSY(),
     FSIGNAL_ERR_LS(),FSIGNAL_ERR_LZ(),FSIGNAL_ERR_KZ(),FSIGNAL_BUSY_DSO(),FSIGNAL_BUSY_DSO_ERR(),
     FSIGNAL_BUSY_DSO_STOP(),FSIGNAL_BUSY_DSO_OSTOP(),FSIGNAL_INFO_DSO()
@@ -46,6 +55,7 @@ m_RC::m_RC(QObject *parent) :
     }
     FSTATE_BUSY=MVP_Enums::TRCBusy::busy_unknow;
     FSTATE_BLOCK=0;
+    FLEN=0;
     resetStates();
 
 }
@@ -185,6 +195,7 @@ m_RC *m_RC::getNextRCpolcfb(int d) const
     if (getNextCount(d)==1) return getNextRCcfb(d,0);
     return getNextRCcfb(d,STATE_POL());
 }
+
 
 
 

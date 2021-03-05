@@ -21,7 +21,9 @@ void m_Strel_Gor::setSTATE_POL(MVP_Enums::TStrelPol p)
 
 const qreal &m_Strel_Gor::getLEN(int m)
 {
-    if ((m==1)&& (FLEN2!=0)) return FLEN2;
+    if ((m==1)&& (FLEN2!=0)) {
+        return FLEN2;
+    }
     return FLEN;
 }
 
@@ -30,6 +32,7 @@ m_Strel_Gor::m_Strel_Gor(QObject *parent):m_RC_Gor(parent)
     FSTATE_POL=MVP_Enums::TStrelPol::pol_plus;
     FSIGNAL_PLUS.clear();FSIGNAL_MINUS.clear();FSIGNAL_BLOCK.clear();
     FDIRECTM=0;
+    FLEN2=0;
     resetStates();
 }
 

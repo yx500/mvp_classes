@@ -36,6 +36,8 @@ public:
     MYPROP(SignalDescription,SIGNAL_STATE_OTCEP_UNKNOW)
     MYPROP(SignalDescription,SIGNAL_STATE_OTCEP_FREE)
     MYPROP(SignalDescription,SIGNAL_STATE_OTCEP_IN)
+    MYPROP(SignalDescription,SIGNAL_STATE_OTCEP_VAGADD)
+    MYPROP(SignalDescription,SIGNAL_STATE_OTCEP_BEVAGADD)
 
 
     MYPROP(bool,RTDS_USL_OR)
@@ -49,6 +51,8 @@ public:
     MYSTATE(bool, STATE_OTCEP_UNKNOW)
     MYSTATE(bool, STATE_OTCEP_FREE)
     MYSTATE(bool, STATE_OTCEP_IN)
+    MYSTATE(bool, STATE_OTCEP_VAGADD)
+    MYSTATE(bool, STATE_OTCEP_BEVAGADD)
 
 
 public:

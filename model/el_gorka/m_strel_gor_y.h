@@ -24,6 +24,8 @@ public:
     MYPROP(SignalDescription, SIGNAL_UVK_NGBSTAT_MN)
     MYPROP(SignalDescription, SIGNAL_UVK_NGBDYN_PL)
     MYPROP(SignalDescription, SIGNAL_UVK_NGBDYN_MN)
+    MYPROP(SignalDescription, SIGNAL_UVK_ANTVZ_PL)
+    MYPROP(SignalDescription, SIGNAL_UVK_ANTVZ_MN)
 
     MYPROP(SignalDescription, SIGNAL_UVK_WSTRA)
     MYPROP(SignalDescription, SIGNAL_UVK_WSTRB)
@@ -57,6 +59,8 @@ public:
     MYSTATE(bool, STATE_UVK_NGBSTAT_MN)
     MYSTATE(bool, STATE_UVK_NGBDYN_PL)
     MYSTATE(bool, STATE_UVK_NGBDYN_MN)
+    MYSTATE(bool, STATE_UVK_ANTVZ_PL)
+    MYSTATE(bool, STATE_UVK_ANTVZ_MN)
 
     MYSTATE(bool, STATE_UVK_WSTRA)
     MYSTATE(bool, STATE_UVK_WSTRB)

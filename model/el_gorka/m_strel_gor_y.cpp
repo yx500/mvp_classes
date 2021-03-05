@@ -141,6 +141,8 @@ void m_Strel_Gor_Y::resetStates()
     FSTATE_UVK_NGBSTAT_MN=false;
     FSTATE_UVK_NGBDYN_PL=false;
     FSTATE_UVK_NGBDYN_MN=false;
+    FSTATE_UVK_ANTVZ_PL=false;
+    FSTATE_UVK_ANTVZ_MN=false;
 
     FSTATE_UVK_WSTRA=false;
     FSTATE_UVK_WSTRB=false;
@@ -178,6 +180,9 @@ void m_Strel_Gor_Y::updateStates()
 //    setSignalState(FSIGNAL_UVK_NGBSTAT,FSTATE_UVK_NGBSTAT);
     setSignalState(FSIGNAL_UVK_NGBDYN_PL,FSTATE_UVK_NGBDYN_PL);
     setSignalState(FSIGNAL_UVK_NGBDYN_MN,FSTATE_UVK_NGBDYN_MN);
+    setSignalState(FSIGNAL_UVK_ANTVZ_PL,FSTATE_UVK_ANTVZ_PL);
+    setSignalState(FSIGNAL_UVK_ANTVZ_MN,FSTATE_UVK_ANTVZ_MN);
+
 
     setSignalState(FSIGNAL_UVK_WSTRA,FSTATE_UVK_WSTRA);
     setSignalState(FSIGNAL_UVK_WSTRA,FSTATE_UVK_WSTRB);

@@ -65,9 +65,12 @@ QList<BaseObject *> findObjectByIdstr(const QObject *O, const QString &idstr)
 }
 QList<BaseObject *> superFindObjectByIdstr(const QObject *O, const QString &idstr)
 {
+
+    QList<BaseObject *> l;
+    if (idstr.isEmpty()) return l;
     const QObject * superP=superParent(O);
     if (superP!=nullptr) return findObjectByIdstr(superP,idstr);
-    QList<BaseObject *> l;
+
     return l;
 }
 

@@ -134,7 +134,8 @@ struct t_Descr_ext{
     uint16 STATE_D_RCF_XOFFSET;
     uint8 STATE_D_ORDER_RC;
     uint16 STATE_TICK;
-
+    uint8 STATE_EXTNUM;
+    uint8 STATE_EXTNUMPART;
 
 };
 

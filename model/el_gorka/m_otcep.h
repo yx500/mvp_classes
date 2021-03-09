@@ -33,9 +33,11 @@ class m_Otcep : public m_Base
     Q_PROPERTY(int STATE_NUM READ NUM DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_SP READ STATE_SP WRITE setSTATE_SP DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_SP_F READ STATE_SP_F WRITE setSTATE_SP_F DESIGNABLE true STORED false )
+    Q_PROPERTY(QString STATE_USER_NUM READ USER_NUM DESIGNABLE true STORED false )
     MYPROP(SignalDescription,SIGNAL_DATA)
 public:
     int NUM() const {return FNUM;}
+    QString USER_NUM() const;
     int STATE_SP() const;
     void setSTATE_SP(int p);
     int STATE_SP_F() const;
@@ -53,6 +55,9 @@ public:
 
     MYSTATE(quint32, STATE_ID_ROSP)
     MYSTATE(int, STATE_MAR)
+    MYSTATE(int, STATE_EXTNUM)
+    MYSTATE(int, STATE_EXTNUMPART)
+
     // основные слежение
     MYSTATE(int, STATE_MAR_F)
     MYSTATE(int, STATE_MAR_R)

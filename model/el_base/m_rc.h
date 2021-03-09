@@ -13,7 +13,6 @@
 //
 //  00
 class m_Svet;
-class tos_RcTracking;
 class m_RC : public m_Base
 {
     Q_OBJECT

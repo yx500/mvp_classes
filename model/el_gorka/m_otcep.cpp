@@ -16,6 +16,15 @@ void m_Otcep::setSTATE_LOCATION(const int &p)
     }
 }
 
+QString m_Otcep::USER_NUM() const
+{
+    if (FSTATE_EXTNUM!=0){
+        if (FSTATE_EXTNUMPART!=0)  return QString("%1-%2").arg(FSTATE_EXTNUM).arg(FSTATE_EXTNUMPART);
+        return QString("%1").arg(FSTATE_EXTNUM);
+    }
+    return QString("%1").arg(FNUM);
+}
+
 int m_Otcep::STATE_SP() const
 {
     if (FSTATE_MAR==0) return 0;
@@ -200,6 +209,10 @@ void m_Otcep::resetStates()
     FSTATE_D_RCF_XOFFSET=-1;
     FSTATE_D_ORDER_RC=0;
 
+    FSTATE_EXTNUM=0;
+    FSTATE_EXTNUMPART=0;
+
+
     memset(FSTATE_V_INOUT,0,sizeof(FSTATE_V_INOUT));
     memset(FSTATE_OT_RA,0,sizeof(FSTATE_OT_RA));
     memset(FSTATE_V_ZAD,0,sizeof(FSTATE_V_ZAD));
@@ -372,6 +385,9 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
 
     D.E.STATE_TICK=       FSTATE_TICK;
 
+    D.E.STATE_EXTNUM=   FSTATE_EXTNUM;
+    D.E.STATE_EXTNUMPART=   FSTATE_EXTNUMPART;
+
 //    D.E.STATE_ZKR_TLG =STATE_ZKR_TLG;
 
 
@@ -475,6 +491,11 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
         FSTATE_D_RCS_XOFFSET=D.E.STATE_D_RCS_XOFFSET;
         FSTATE_D_RCF_XOFFSET=D.E.STATE_D_RCF_XOFFSET;
         FSTATE_D_ORDER_RC=D.E.STATE_D_ORDER_RC;
+
+        FSTATE_EXTNUM=D.E.STATE_EXTNUM;
+        FSTATE_EXTNUMPART=D.E.STATE_EXTNUMPART;
+
+
 
 //        FSTATE_ZKR_TLG=D.E.STATE_ZKR_TLG;
     }

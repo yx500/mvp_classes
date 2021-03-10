@@ -512,7 +512,7 @@ void m_Otcep::update_descr()
     }
     auto sz=sizeof(t_NewDescr);
     if ((unsigned int)FSIGNAL_DATA.getBuffer()->sizeData()<sz){
-        sz=sizeof(t_Descr);
+        sz=(unsigned int)FSIGNAL_DATA.getBuffer()->sizeData();
     }
 ;
     bool b_new=false;

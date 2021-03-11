@@ -126,7 +126,10 @@ public:
     MYSTATE_RS(qreal, STATE_V_OUT_2)
     MYSTATE_RS(qreal, STATE_V_OUT_3)
     void setSTATE_V_INOUT(int io,int n,qreal p);
-    const qreal& STATE_V_INOUT(int io,int n)const {return FSTATE_V_INOUT[io][n];}
+    const qreal& STATE_V_INOUT(int io,int n)const {
+        if (((io==0)||(io==1)) && ((n>=0) && (n<=2)))return FSTATE_V_INOUT[io][n];
+        return _undefV_;
+    }
     MYSTATE_RS(int, STATE_ADDR_TP_1)
     MYSTATE_RS(int, STATE_ADDR_TP_2)
     MYSTATE_RS(int, STATE_ADDR_TP_3)
@@ -165,6 +168,8 @@ public:
     explicit m_Otcep(m_Otceps *parent,int num);
     virtual ~m_Otcep(){}
     virtual void resetStates();
+    void resetTracking();
+
     virtual void updateAfterLoad();
     virtual QString defaultGroupName() const {return "ОТЦЕПЫ";}
     virtual bool isStoredXML() const{return false;}

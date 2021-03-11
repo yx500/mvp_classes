@@ -217,6 +217,9 @@ void m_Otcep::resetStates()
     memset(FSTATE_OT_RA,0,sizeof(FSTATE_OT_RA));
     memset(FSTATE_V_ZAD,0,sizeof(FSTATE_V_ZAD));
     memset(FSTATE_ADDR_TP,0,sizeof(FSTATE_ADDR_TP));
+    for (int io=0;io<2;io++){
+        for (int n=0;n<3;n++) {FSTATE_V_INOUT[io][n]=_undefV_;FSTATE_V_ZAD[n]=_undefV_;}
+    }
 
 
 
@@ -227,6 +230,36 @@ void m_Otcep::resetStates()
     vBusyRc.clear();
 
 
+}
+
+void m_Otcep::resetTracking()
+{
+    //снимаем только параметры TOS
+
+    if (FSTATE_LOCATION!=m_Otcep::locationOnPrib){
+        FSTATE_LOCATION=m_Otcep::locationUnknow;
+    }
+    FSTATE_MAR_F=0;
+    FSTATE_ZKR_PROGRESS=0;
+    FSTATE_ZKR_S_IN=0;
+
+    FSTATE_ERROR=0;
+    FSTATE_ERROR_TRACK=0;
+
+    //otcep->setSTATE_GAC_ACTIVE(0);
+    FSTATE_GAC_W_STRA=0;
+    FSTATE_GAC_W_STRB=0;
+
+    FSTATE_KZP_OS=m_Otcep::kzpUnknow;
+    FSTATE_V=_undefV_;
+    FSTATE_V_RC=_undefV_;
+    FSTATE_V_ARS=_undefV_;
+    FSTATE_V_KZP=_undefV_;
+    FSTATE_V_DISO=_undefV_;
+
+    RCS=nullptr;
+    RCF=nullptr;
+    vBusyRc.clear();
 }
 
 void m_Otcep::acceptSLStates(const m_Otcep *o)
@@ -329,11 +362,11 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     //D.D.old_mar;
     D.D.U_len  =FSTATE_SL_LEN;
     D.D.vagon  =FSTATE_SL_VAGON_CNT;
-    D.D.V_out  =FSTATE_V_INOUT[1][0];
-    D.D.V_in2  =FSTATE_V_INOUT[0][1];
-    D.D.V_out2 =FSTATE_V_INOUT[1][1];
-    D.D.V_in3  =FSTATE_V_INOUT[0][2];
-    D.D.V_out3 =FSTATE_V_INOUT[1][2];
+    D.D.V_out  =FSTATE_V_INOUT[1][0]*10;
+    D.D.V_in2  =FSTATE_V_INOUT[0][1]*10;
+    D.D.V_out2 =FSTATE_V_INOUT[1][1]*10;
+    D.D.V_in3  =FSTATE_V_INOUT[0][2]*10;
+    D.D.V_out3 =FSTATE_V_INOUT[1][2]*10;
     D.D.Id     =FSTATE_ID_ROSP;
     D.D.st     =FSTATE_STUPEN;
     D.D.ves_sl =FSTATE_SL_VES;

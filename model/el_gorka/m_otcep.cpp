@@ -331,7 +331,15 @@ void m_Otcep::updateStates()
 
 }
 
+qreal VD2STATE(uint16 v){
+    if (v==0xFFFF) return _undefV_;
+    return 1.*v/10.;
+}
 
+uint16 STATE2VD(qreal v){
+    if (v==_undefV_) return 0xFFFF;
+    return v*10.;
+}
 void m_Otcep::states2descr_ext(t_NewDescr &D) const
 {
     memset(&D,0,sizeof(D));
@@ -350,7 +358,7 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     if (FSTATE_LOCATION==m_Otcep::locationUnknow) D.D.end_slg=1; // Признак конца слежения (по последней РЦ на путях)
     D.D.err    =FSTATE_ERROR; // Признак неперевода стрелки
     D.D.dir    =FSTATE_DIRECTION; // Направление
-    D.D.V_rc   =FSTATE_V_RC*10; // Скорость по РЦ
+    D.D.V_rc   =STATE2VD(FSTATE_V_RC); // Скорость по РЦ
     D.D.V_zad  =FSTATE_V_ZAD[0]; // Скорость заданная
     D.D.Stupen =FSTATE_SL_STUPEN; // Ступень торможения
     D.D.osy1   =0; // Длинна ( в осях)
@@ -362,18 +370,18 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     //D.D.old_mar;
     D.D.U_len  =FSTATE_SL_LEN;
     D.D.vagon  =FSTATE_SL_VAGON_CNT;
-    D.D.V_out  =FSTATE_V_INOUT[1][0]*10;
-    D.D.V_in2  =FSTATE_V_INOUT[0][1]*10;
-    D.D.V_out2 =FSTATE_V_INOUT[1][1]*10;
-    D.D.V_in3  =FSTATE_V_INOUT[0][2]*10;
-    D.D.V_out3 =FSTATE_V_INOUT[1][2]*10;
+    D.D.V_out  =STATE2VD(FSTATE_V_INOUT[1][0]);
+    D.D.V_in2  =STATE2VD(FSTATE_V_INOUT[0][1]);
+    D.D.V_out2 =STATE2VD(FSTATE_V_INOUT[1][1]);;
+    D.D.V_in3  =STATE2VD(FSTATE_V_INOUT[0][2]);
+    D.D.V_out3 =STATE2VD(FSTATE_V_INOUT[1][2]);
     D.D.Id     =FSTATE_ID_ROSP;
     D.D.st     =FSTATE_STUPEN;
     D.D.ves_sl =FSTATE_SL_VES;
     D.D.r_mar  =FSTATE_MAR_R;
     for (int i=0;i<3;i++) D.D.t_ot[i]=FSTATE_OT_RA[0][i];// 0- растарможка 1-4 ступени максимал ступень работы замедлителя
     for (int i=0;i<3;i++) D.D.r_a[i] =FSTATE_OT_RA[1][i]; // 0-автомат режим ручного вмешательсва
-    D.D.V_in   =FSTATE_V_INOUT[0][0]; // Cкорость входа 1 ТП
+    D.D.V_in   =STATE2VD(FSTATE_V_INOUT[0][0]); // Cкорость входа 1 ТП
     //D.D.Kzp    ; // КЗП по расчету Антона
     //D.D.v_rosp ; // Скорость расформирования   - норма/быстро/медленно - 0/1/2
     //D.D.flag_ves; // Работоспособность весомера - да/нет/ - 0/1
@@ -408,10 +416,10 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     D.E.STATE_PUT_NADVIG=       FSTATE_PUT_NADVIG;
     D.E.STATE_KZP_OS=       FSTATE_KZP_OS;
     D.E.STATE_KZP_D=       FSTATE_KZP_D;
-    D.E.STATE_V=       FSTATE_V*10;
-    D.E.STATE_V_ARS=       FSTATE_V_ARS*10;
-    D.E.STATE_V_KZP=       FSTATE_V_KZP*10;
-    D.E.STATE_V_DISO=       FSTATE_V_DISO*10;
+    D.E.STATE_V=       STATE2VD(FSTATE_V);
+    D.E.STATE_V_ARS=       STATE2VD(FSTATE_V_ARS);
+    D.E.STATE_V_KZP=       STATE2VD(FSTATE_V_KZP);
+    D.E.STATE_V_DISO=       STATE2VD(FSTATE_V_DISO);
     D.E.STATE_D_RCS_XOFFSET=       FSTATE_D_RCS_XOFFSET;
     D.E.STATE_D_RCF_XOFFSET=       FSTATE_D_RCF_XOFFSET;
     D.E.STATE_D_ORDER_RC=       FSTATE_D_ORDER_RC;
@@ -468,13 +476,13 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
     //FSTATE_KZP_D=D.E.STATE_KZP_D;
 
 
-    // журнал для протокола
-    FSTATE_V_INOUT[0][0]=    D.D.V_in==65535 ? _undefV_:D.D.V_in/10.   ; // Cкорость входа 1 ТП
-    FSTATE_V_INOUT[1][0]=    D.D.V_out==65535 ? _undefV_:  D.D.V_out/10.  ;
-    FSTATE_V_INOUT[0][1]=    D.D.V_in2==65535 ? _undefV_:D.D.V_in2/10.  ;
-    FSTATE_V_INOUT[1][1]=    D.D.V_out2==65535 ? _undefV_:D.D.V_out2/10. ;
-    FSTATE_V_INOUT[0][2]=    D.D.V_in3==65535 ? _undefV_:D.D.V_in3/10.  ;
-    FSTATE_V_INOUT[1][2]=    D.D.V_out3==65535 ? _undefV_:D.D.V_out3/10. ;
+    // журнал для протокола);
+    FSTATE_V_INOUT[0][0]=    VD2STATE(D.D.V_in); // Cкорость входа 1 ТП
+    FSTATE_V_INOUT[1][0]=    VD2STATE(D.D.V_out);
+    FSTATE_V_INOUT[0][1]=    VD2STATE(D.D.V_in2);
+    FSTATE_V_INOUT[1][1]=    VD2STATE(D.D.V_out2);
+    FSTATE_V_INOUT[0][2]=    VD2STATE(D.D.V_in3);
+    FSTATE_V_INOUT[1][2]=    VD2STATE(D.D.V_out3);
 
     for (int i=0;i<3;i++){
         FSTATE_OT_RA[0][i]=D.D.t_ot[i]; // 0- растарможка 1-4 ступени максимал ступень работы замедлителя
@@ -515,11 +523,11 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
         FSTATE_KZP_OS=D.E.STATE_KZP_OS;
         FSTATE_KZP_D=D.E.STATE_KZP_D;
         //динамика
-        FSTATE_V=D.E.STATE_V/10.;
-        FSTATE_V_RC=        D.D.V_rc/10.   ; // Скорость по РЦ
-        FSTATE_V_ARS=D.E.STATE_V_ARS/10.;
-        FSTATE_V_KZP=D.E.STATE_V_KZP/10.;
-        FSTATE_V_DISO=D.E.STATE_V_DISO/10.;
+        FSTATE_V=VD2STATE(D.E.STATE_V);
+        FSTATE_V_RC=        VD2STATE(D.D.V_rc); // Скорость по РЦ
+        FSTATE_V_ARS=VD2STATE(D.E.STATE_V_ARS);
+        FSTATE_V_KZP=VD2STATE(D.E.STATE_V_KZP);
+        FSTATE_V_DISO=VD2STATE(D.E.STATE_V_DISO);
         // смещение головы, хвоста в сторону direct [0..LEN]
         FSTATE_D_RCS_XOFFSET=D.E.STATE_D_RCS_XOFFSET;
         FSTATE_D_RCF_XOFFSET=D.E.STATE_D_RCF_XOFFSET;

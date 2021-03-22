@@ -22,10 +22,17 @@ public:
     MYPROPLINK( RTDS1)
     MYPROPLINK( RTDS2)
 
-    MYPROPLINK( DSO11)
-    MYPROPLINK( DSO12)
-    MYPROPLINK( DSO21)
-    MYPROPLINK( DSO22)
+//    MYPROPLINK( DSO11)
+//    MYPROPLINK( DSO12)
+//    MYPROPLINK( DSO21)
+//    MYPROPLINK( DSO22)
+
+    MYPROPLINK( DSO_OSY)
+    MYPROPLINK( DSO_VAG_0)
+    MYPROPLINK( DSO_VAG_1)
+    MYPROPLINK( DSO_DB_0)
+    MYPROPLINK( DSO_DB_1)
+
 
     MYPROP(int,PUT_NADVIG)
     MYPROP(SignalDescription,SIGNAL_ROSPUSK)
@@ -66,7 +73,10 @@ public:
     m_RTDS *rtds_1() const {return rtds1;}
     m_RTDS *rtds_2() const {return rtds2;}
 
-    m_DSO *dso[2][2];
+    m_DSO *dso_osy;
+    m_DSO *dso_vag[2];
+    m_DSO *dso_db[2];
+
 
     virtual bool is33();
     virtual void updateStates();

@@ -5,6 +5,7 @@
 #include "m_rc.h"
 #include "tGorka.h"
 #include <QVector>
+#include "m_vagon.h"
 
 class m_Otceps;
 
@@ -34,6 +35,7 @@ class m_Otcep : public m_Base
     Q_PROPERTY(int STATE_SP READ STATE_SP WRITE setSTATE_SP DESIGNABLE true STORED false )
     Q_PROPERTY(int STATE_SP_F READ STATE_SP_F WRITE setSTATE_SP_F DESIGNABLE true STORED false )
     Q_PROPERTY(QString STATE_USER_NUM READ USER_NUM DESIGNABLE true STORED false )
+    Q_PROPERTY(int STATE_SL_VAGON_CNT READ STATE_SL_VAGON_CNT WRITE setSTATE_SL_VAGON_CNT DESIGNABLE true STORED false )
     MYPROP(SignalDescription,SIGNAL_DATA)
 public:
     int NUM() const {return FNUM;}
@@ -42,6 +44,9 @@ public:
     void setSTATE_SP(int p);
     int STATE_SP_F() const;
     void setSTATE_SP_F(int p);
+    int STATE_SL_VAGON_CNT() const;
+    void setSTATE_SL_VAGON_CNT(int p);
+    void changeVagonsCnt(int p);
 
     enum TOtcepLocation{
         locationUnknow=0, //
@@ -79,7 +84,7 @@ public:
     MYSTATE_R(int, STATE_BAZA)    // признак наличиия дб
     MYSTATE_R(double,  STATE_LEN)     // длина в метрах
     // CЛ
-    MYSTATE(int,  STATE_SL_VAGON_CNT)
+    //MYSTATE(int,  STATE_SL_VAGON_CNT)
     MYSTATE(int,  STATE_SL_OSY_CNT)
     MYSTATE(double,STATE_SL_VES)
     MYSTATE(double,STATE_SL_LEN)
@@ -87,6 +92,7 @@ public:
     MYSTATE(int, STATE_SL_UR)
     MYSTATE(int, STATE_SL_OSO)
     MYSTATE(qreal, STATE_SL_STUPEN)
+    MYSTATE(int, STATE_SL_VAGON_CNT_PRED)
     // ЗКР
     MYSTATE(int, STATE_ZKR_PROGRESS)    // отцеп не выехал с ЗКР
     MYSTATE(int, STATE_ZKR_S_IN)       // голова на ЗКР
@@ -168,14 +174,16 @@ public:
     explicit m_Otcep(m_Otceps *parent,int num);
     virtual ~m_Otcep(){}
     virtual void resetStates();
-    void resetTracking();
+    void resetTrackingStates();
+    void resetZKRStates();
 
     virtual void updateAfterLoad();
     virtual QString defaultGroupName() const {return "ОТЦЕПЫ";}
     virtual bool isStoredXML() const{return false;}
     void acceptSLStates(const m_Otcep *o);
 
-    QVector<tSlVagon> vVag;
+    QVector<m_Vagon> vVag;
+    void setVagon(m_Vagon *v);
     QList<m_RC *> vBusyRc;
 
 
@@ -205,6 +213,7 @@ public slots:
 
 protected:
     int FNUM;
+    int FSTATE_SL_VAGON_CNT;
     t_NewDescr stored_Descr;
 
     m_Otceps*otceps;

@@ -13,7 +13,6 @@ class m_Otceps : public m_Base
 {
     Q_OBJECT
     MYPROP(int,TYPE_DESCR)
-    MYPROP(SignalDescription,SIGNAL_DATA_VAGON_0)
 
 public:
     Q_INVOKABLE m_Otceps(QObject *parent = nullptr);
@@ -33,6 +32,7 @@ public:
     m_RC* find_RC_ID(quint64  id) const;
 
     QList<m_Otcep *> l_otceps;
+    QList<m_Vagon *> l_vagons;
 
     QList<m_Otcep *> enabledOtceps() const;
 
@@ -47,8 +47,6 @@ public:
     QMap<int,m_RC *> mOffset2Rc;
     QMap<quint64,m_RC *> mID2Rc;
     ModelGroupGorka *modelGroupGorka=nullptr;
-    SignalDescription chanelVag[MaxVagon];
-    tSlVagon vagons[MaxVagon];
 
 public slots:
     void updateVagons();

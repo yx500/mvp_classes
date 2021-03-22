@@ -136,6 +136,8 @@ struct t_Descr_ext{
     uint16 STATE_TICK;
     uint8 STATE_EXTNUM;
     uint8 STATE_EXTNUMPART;
+    uint8 STATE_ZKR_TLG;
+    uint8 STATE_SL_VAGON_CNT_PRED;
 
 };
 

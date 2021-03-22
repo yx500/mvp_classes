@@ -36,6 +36,9 @@ struct tSlVagon {
 
     uint8       Ur;      // условия роспуска
     uint16      Vnadv;
+    uint8       STATE_LOCATION;
+    uint8       STATE_N_IN_OTCEP;
+    uint8       STATE_ZKR_PROGRESS;
 //  char    strUR[32];  // 2*4 + 21 + 1 = цифрбукв отметки 4 штуки +x байта примечания +0 символ строки
 };
 //---------------------------------------------------------------------------

@@ -14,13 +14,9 @@ m_Otceps::m_Otceps(QObject *parent) : m_Base(parent)
     for (int i=0;i<MAXCOUNT_OTCEPS;i++){
         l_otceps.push_back(new m_Otcep(this,i+1));
     }
-    memset(&vagons,0,sizeof (vagons));
-    FSIGNAL_DATA_VAGON_0.setChanelType(15);
-    FSIGNAL_DATA_VAGON_0.setChanelName(QString("vag%1").arg(1));
 
     for (int i=0;i<MaxVagon;i++){
-        chanelVag[i]=SignalDescription(15,QString("vag%1").arg(i+1),0);
-        chanelVag[i].acceptGtBuffer();
+        l_vagons.push_back(new m_Vagon(this,i+1));
     }
 }
 
@@ -33,7 +29,6 @@ m_Otceps::~m_Otceps()
 void m_Otceps::resetStates()
 {
     m_Base::resetStates();
-    memset(&vagons,0,sizeof (vagons));
 }
 
 void m_Otceps::validation(ListObjStr *l) const
@@ -67,24 +62,14 @@ void m_Otceps::updateAfterLoad()
     modelGroupGorka=qobject_cast<ModelGroupGorka*>(parent());
     FTYPE_DESCR=0;
     foreach (m_Otcep*otcep, l_otceps) {
-        if (FTYPE_DESCR==0){
-            QString packetName=QString("descr%1").arg(otcep->NUM());
-            otcep->setSIGNAL_DATA(SignalDescription(9,packetName,0));
-        }
-//        if (FTYPE_DESCR==1){
-//            QString packetName=QString("descr%1").arg(otcep->NUM());
-//            otcep->setSIGNAL_DATA(SignalDescription(109,packetName,0));
-
-
-//        }
-        //connect(otcep->SIGNAL_DATA().getBuffer(),&GtBuffer::bufferChanged,otcep,&m_Otcep::updateStates);
-
         otcep->updateAfterLoad();
+    }
+    foreach (auto *v, l_vagons) {
 
+        v->updateAfterLoad();
     }
-    for (int i=0;i<MaxVagon;i++){
-        connect(chanelVag[i].getBuffer(),&GtBuffer::bufferChanged,this,&m_Otceps::updateVagons);
-    }
+
+
     if (modelGroupGorka){
         l_rc=parent()->findChildren<m_RC*>();
         foreach (m_RC *rc, l_rc) {
@@ -192,54 +177,16 @@ tSlVagon Map2tSlVagon(const QVariantHash &m)
 
 void m_Otceps::updateVagons()
 {
-    if (FSIGNAL_DATA_VAGON_0.isInnerUse()) return;
-    bool changed=false;
-    for (int j=0;j<MaxVagon;j++){
-        //if (FTYPE_DESCR==0)
-        {
-            tSlVagon * SlVagon=(tSlVagon *)chanelVag[j].getBuffer()->A.data();
-            if (memcmp(&vagons[j],SlVagon,sizeof(tSlVagon))!=0){
-                vagons[j]=*SlVagon;
-                changed=true;
-            }
-        }
-//        if (FTYPE_DESCR==1){
-//            if (_storedVagonsA[j]!=chanelVag[j].getBuffer()->A){
-//                _storedVagonsA[j]=chanelVag[j].getBuffer()->A;
-//                changed=true;
-//                QString S=QString::fromUtf8(chanelVag[j].getBuffer()->A);
-//                QVariantHash m=MVP_System::QStringToQVariantHash(S);
-//                tSlVagon SlVagon=Map2tSlVagon(m);
-//                //            if ((v.IV>0) &&(v.IV<MaxVagon)
-//                vagons[j]=SlVagon;
-//            }
-//        }
-    }
-    if (!changed) return;
-    tSlVagon & SlVagon0=vagons[0];
-    auto idrosp=SlVagon0.Id;
-    foreach (m_Otcep*otcep, l_otceps) {
-        //quint32 idr=0;
-        //int sp=0;
-        if (otcep->disableUpdateStates) continue;
-        otcep->vVag.clear();
-        int lenvag=0;
-        for (int j=0;j<MaxVagon;j++){
-            tSlVagon & SlVagon=vagons[j];
-            if (SlVagon.NO==0) break;
-            if (SlVagon.Id!=idrosp)break;
-            if (SlVagon.NO<0) continue;
-            if (otcep->NUM()==SlVagon.NO){
-                //idr=SlVagon.Id;
-                //sp=SlVagon.SP;
-                otcep->vVag.push_back(SlVagon);
-                int Ln=0;
-                if (SlVagon.Ln==0) Ln=15;
-                if (SlVagon.Ln>1000) Ln=SlVagon.Ln/1000;
-                lenvag+=Ln;
+    foreach(auto v,l_vagons){
+        if (v->SIGNAL_DATA().isInnerUse()) return;
+        if (v->STATE_NUM_OTCEP()!=0){
+            auto otcep=otcepByNum(v->STATE_NUM_OTCEP());
+            if (otcep){
+                otcep->setVagon(v);
             }
         }
     }
+
 }
 
 

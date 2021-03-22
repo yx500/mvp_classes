@@ -9,7 +9,11 @@
 void m_Otcep::setSTATE_LOCATION(const int &p)
 {
     if (FSTATE_LOCATION!=p){
-        //if (p==locationUnknow) resetStates();
+        if (FSTATE_ZKR_PROGRESS==1) {
+            for(m_Vagon &v:vVag){
+                v.setSTATE_LOCATION(FSTATE_LOCATION);
+            }
+        }
         FSTATE_LOCATION=p;
         FSTATE_TICK++;
         doStateChanged();
@@ -29,7 +33,7 @@ int m_Otcep::STATE_SP() const
 {
     if (FSTATE_MAR==0) return 0;
     if ((otceps) && (otceps->modelGroupGorka))
-     if (otceps->modelGroupGorka->mMAR2SP.contains(FSTATE_MAR)) return otceps->modelGroupGorka->mMAR2SP[FSTATE_MAR];
+        if (otceps->modelGroupGorka->mMAR2SP.contains(FSTATE_MAR)) return otceps->modelGroupGorka->mMAR2SP[FSTATE_MAR];
     return 0;
 }
 
@@ -42,7 +46,7 @@ int m_Otcep::STATE_SP_F() const
 {
     if (FSTATE_MAR_F==0) return 0;
     if ((otceps) && (otceps->modelGroupGorka))
-     if (otceps->modelGroupGorka->mMAR2SP.contains(FSTATE_MAR_F)) return otceps->modelGroupGorka->mMAR2SP[FSTATE_MAR_F];
+        if (otceps->modelGroupGorka->mMAR2SP.contains(FSTATE_MAR_F)) return otceps->modelGroupGorka->mMAR2SP[FSTATE_MAR_F];
     return 0;
 }
 
@@ -51,6 +55,38 @@ void m_Otcep::setSTATE_SP_F(int p)
     if (otceps->modelGroupGorka->mSP2MAR.contains(p)) setSTATE_MAR_F(otceps->modelGroupGorka->mSP2MAR[p]);else
         setSTATE_MAR_F(0);
 }
+
+int m_Otcep::STATE_SL_VAGON_CNT() const
+{
+    return FSTATE_SL_VAGON_CNT;
+}
+
+void m_Otcep::setSTATE_SL_VAGON_CNT(int p)
+{
+    if (FSTATE_SL_VAGON_CNT!=p){
+        changeVagonsCnt(p);
+        FSTATE_SL_VAGON_CNT=p;
+        doStateChanged();
+    }
+}
+
+void m_Otcep::changeVagonsCnt(int p)
+{
+    if (p<vVag.size()){
+        while (vVag.size()>p) vVag.removeLast();
+    } else {
+        if (p>vVag.size()){
+            while (vVag.size()<p){
+                m_Vagon v;
+                v.setSTATE_SP(STATE_SP());
+                v.setSTATE_NUM_OTCEP(FNUM);
+                v.setSTATE_N_IN_OTCEP(vVag.size());
+                vVag.push_back(v);
+            }
+        }
+    }
+}
+
 void m_Otcep::setSTATE_V_IN_1(const qreal &p){setSTATE_V_INOUT(0,0,p);}
 void m_Otcep::setSTATE_V_IN_2(const qreal &p){setSTATE_V_INOUT(0,1,p);}
 void m_Otcep::setSTATE_V_IN_3(const qreal &p){setSTATE_V_INOUT(0,2,p);}
@@ -184,6 +220,7 @@ void m_Otcep::resetStates()
     FSTATE_SL_BAZA=0;
     FSTATE_SL_UR=0;
     FSTATE_SL_OSO=0;
+    FSTATE_SL_VAGON_CNT_PRED=0;
 
     FSTATE_ZKR_PROGRESS=0;
     FSTATE_ZKR_S_IN=0;
@@ -232,7 +269,7 @@ void m_Otcep::resetStates()
 
 }
 
-void m_Otcep::resetTracking()
+void m_Otcep::resetTrackingStates()
 {
     //снимаем только параметры TOS
 
@@ -260,12 +297,30 @@ void m_Otcep::resetTracking()
     RCS=nullptr;
     RCF=nullptr;
     vBusyRc.clear();
+    for (m_Vagon &v:vVag){
+        v.resetTrackingStates();
+    }
+}
+
+void m_Otcep::resetZKRStates()
+{
+    FSTATE_ZKR_TLG=0;
+    FSTATE_ZKR_VES=0;
+    FSTATE_ZKR_BAZA=0;
+    FSTATE_ZKR_S_IN=0;
+    FSTATE_ZKR_OSY_CNT=0;
+    FSTATE_ZKR_PROGRESS=0;
+    FSTATE_ZKR_VAGON_CNT=0;
+    for (m_Vagon &v:vVag){
+        v.resetZKRStates();
+    }
+
 }
 
 void m_Otcep::acceptSLStates(const m_Otcep *o)
 {
     FSTATE_MAR=o->STATE_MAR();
-    FSTATE_SL_VAGON_CNT=o->STATE_SL_VAGON_CNT();
+
     FSTATE_SL_OSY_CNT=o->STATE_SL_OSY_CNT();
     FSTATE_SL_LEN=o->STATE_SL_LEN();
     FSTATE_SL_VES=o->STATE_SL_VES();
@@ -273,9 +328,24 @@ void m_Otcep::acceptSLStates(const m_Otcep *o)
     FSTATE_SL_UR=o->STATE_SL_UR();
     FSTATE_SL_OSO=o->STATE_SL_OSO();
     for (int i=0;i<3;i++) FSTATE_V_ZAD[i]=o->STATE_V_ZAD(i);
-
+    FSTATE_SL_VAGON_CNT_PRED=o->STATE_SL_VAGON_CNT_PRED();
     vVag.clear();
-    vVag=o->vVag;
+    for (int i=0;i<o->vVag.size();i++){
+        auto v=o->vVag[i];
+        v.setSTATE_NUM_OTCEP(FNUM);
+        vVag.push_back(v);
+    }
+    setSTATE_SL_VAGON_CNT(o->STATE_SL_VAGON_CNT());
+
+}
+
+void m_Otcep::setVagon(m_Vagon *v)
+{
+    if ((v->STATE_NUM_OTCEP()==FNUM)/*&&(v->STATE_ID_ROSPUSK()==FSTATE_ID_ROSP)*/){
+        if ((v->STATE_N_IN_OTCEP()>0)&&(v->STATE_N_IN_OTCEP()<=vVag.size())){
+            vVag[v->STATE_N_IN_OTCEP()-1].assign(v);
+        }
+    }
 }
 
 
@@ -283,8 +353,12 @@ void m_Otcep::acceptSLStates(const m_Otcep *o)
 void m_Otcep::updateAfterLoad()
 {
     m_Base::updateAfterLoad();
+    QString packetName=QString("descr%1").arg(FNUM);
+    FSIGNAL_DATA=SignalDescription(9,packetName,0);
     FSIGNAL_DATA.acceptGtBuffer();
-    connect(FSIGNAL_DATA.getBuffer(),&GtBuffer::bufferChanged,this,&m_Otcep::slotChanged);
+    FSIGNAL_DATA.getBuffer()->setSizeData(sizeof(t_NewDescr));
+    if (!FSIGNAL_DATA.isInnerUse())
+        connect(FSIGNAL_DATA.getBuffer(),&GtBuffer::bufferChanged,this,&m_Otcep::slotChanged);
 }
 
 
@@ -326,8 +400,8 @@ void m_Otcep::updateStates()
     m_Base::updateStates();
     if (FSTATE_33) return ;
     updateStates_0();
-//    if (FSIGNAL_DATA.chanelType()==9) updateStates_0();
-//    if (FSIGNAL_DATA.chanelType()==109) updateStates_1();
+    //    if (FSIGNAL_DATA.chanelType()==9) updateStates_0();
+    //    if (FSIGNAL_DATA.chanelType()==109) updateStates_1();
 
 }
 
@@ -365,7 +439,7 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     D.D.osy2   =0; // Длинна ( в осях)
     D.D.V_zad2 =FSTATE_V_ZAD[1]; // Скорость заданная 2TP
     D.D.V_zad3 =FSTATE_V_ZAD[2]; // Скорость заданная  3TP
-   // D.D.pricel ;
+    // D.D.pricel ;
     //D.D.old_num;
     //D.D.old_mar;
     D.D.U_len  =FSTATE_SL_LEN;
@@ -386,7 +460,7 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     //D.D.v_rosp ; // Скорость расформирования   - норма/быстро/медленно - 0/1/2
     //D.D.flag_ves; // Работоспособность весомера - да/нет/ - 0/1
     //D.D.flag_r  ; // Признак ручной установки скорости
-   // D.D.FirstVK ;
+    // D.D.FirstVK ;
     //D.D.LastVK  ;
 
     for (int i=0;i<3;i++) D.D.addr_tp[i]=STATE_ADDR_TP(i); // Занятый замедлитель
@@ -429,7 +503,9 @@ void m_Otcep::states2descr_ext(t_NewDescr &D) const
     D.E.STATE_EXTNUM=   FSTATE_EXTNUM;
     D.E.STATE_EXTNUMPART=   FSTATE_EXTNUMPART;
 
-//    D.E.STATE_ZKR_TLG =STATE_ZKR_TLG;
+    D.E.STATE_ZKR_TLG =FSTATE_ZKR_TLG;
+    D.E.STATE_SL_VAGON_CNT_PRED =FSTATE_SL_VAGON_CNT_PRED;
+
 
 
 
@@ -439,7 +515,7 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
 {
     resetStates();
     if (D.D.num==0) FSTATE_ENABLED=false;else FSTATE_ENABLED=true;
-//    FNUM=               D.D.num    ; // Номер отцепа 1-255 Живет в течении роспуска одного
+    //    FNUM=               D.D.num    ; // Номер отцепа 1-255 Живет в течении роспуска одного
     // STATE_LOCATION
     FSTATE_ID_ROSP=          D.D.Id     ;
     FSTATE_MAR=         D.D.mar    ; // Резерв
@@ -538,7 +614,8 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
 
 
 
-//        FSTATE_ZKR_TLG=D.E.STATE_ZKR_TLG;
+        FSTATE_ZKR_TLG=D.E.STATE_ZKR_TLG;
+        FSTATE_SL_VAGON_CNT_PRED=D.E.STATE_SL_VAGON_CNT_PRED;
     }
     setSTATE_TICK(FSTATE_TICK+1);
 }
@@ -555,7 +632,7 @@ void m_Otcep::update_descr()
     if ((unsigned int)FSIGNAL_DATA.getBuffer()->sizeData()<sz){
         sz=(unsigned int)FSIGNAL_DATA.getBuffer()->sizeData();
     }
-;
+    ;
     bool b_new=false;
     if (memcmp(&stored_Descr,Descr,sz)!=0){
         memcpy(&stored_Descr,Descr,sz);
@@ -574,23 +651,23 @@ void m_Otcep::updateStates_0()
 {
     // стандартная обработка
     update_descr();
-//    if (stored_Descr.end_slg!=0) // Признак конца слежения (по последней РЦ на путях)
-//        setSTATE_LOCATION(locationUnknow); else
-//        setSTATE_LOCATION(locationOnSpusk);
-//    if ((RCS!=descr_RCS)||(RCF!=descr_RCF)) {
+    //    if (stored_Descr.end_slg!=0) // Признак конца слежения (по последней РЦ на путях)
+    //        setSTATE_LOCATION(locationUnknow); else
+    //        setSTATE_LOCATION(locationOnSpusk);
+    //    if ((RCS!=descr_RCS)||(RCF!=descr_RCF)) {
 
-//        RCS=descr_RCS;
-//        RCF=descr_RCF;
-//        setBusyRC();
-//        m_RC_Gor_ZKR * zkr=qobject_cast<m_RC_Gor_ZKR*>(RCF);
-//        if (zkr!=nullptr){
-//            setSTATE_ZKR_PROGRESS(true);
-//            setSTATE_PUT_NADVIG(zkr->PUT_NADVIG());
-//        } else {
-//            setSTATE_ZKR_PROGRESS(false);
-//        }
+    //        RCS=descr_RCS;
+    //        RCF=descr_RCF;
+    //        setBusyRC();
+    //        m_RC_Gor_ZKR * zkr=qobject_cast<m_RC_Gor_ZKR*>(RCF);
+    //        if (zkr!=nullptr){
+    //            setSTATE_ZKR_PROGRESS(true);
+    //            setSTATE_PUT_NADVIG(zkr->PUT_NADVIG());
+    //        } else {
+    //            setSTATE_ZKR_PROGRESS(false);
+    //        }
 
-//    }
+    //    }
 }
 
 //void m_Otcep::updateStates_1()

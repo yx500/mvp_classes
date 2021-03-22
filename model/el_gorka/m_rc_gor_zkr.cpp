@@ -20,7 +20,9 @@ m_RC_Gor_ZKR::m_RC_Gor_ZKR(QObject *parent) : m_RC_Gor(parent)
     FSIGNAL_STATE_ERROR_NERASCEP.clear();
     FSIGNAL_STATE_ERROR_OSYCOUNT.clear();
     FRTDS_USL_OR=false;
-    memset(dso,0,sizeof(dso));
+    dso_osy=nullptr;
+    memset(dso_vag,0,sizeof(dso_vag));
+    memset(dso_db,0,sizeof(dso_db));
     resetStates();
 }
 
@@ -69,13 +71,17 @@ void m_RC_Gor_ZKR::updateAfterLoad()
     if (!rtds2) qCritical() << objectName() << "Ошибочная ссылка RTDS2" <<endl ; else addDevice(rtds2);
 
 
-    dso[0][0]=qobject_cast<m_DSO*>(updateLink(FDSO11));
-    dso[0][1]=qobject_cast<m_DSO*>(updateLink(FDSO12));
-    dso[1][0]=qobject_cast<m_DSO*>(updateLink(FDSO21));
-    dso[1][1]=qobject_cast<m_DSO*>(updateLink(FDSO22));
-    for (int d=0;d<2;d++)
-        for (int m=0;m<2;m++)
-            if (!dso[d][m]) qCritical() << objectName() << QString("Ошибочная ссылка DSO%1%2").arg(d+1).arg(m+1) <<endl ; else addDevice(dso[0][0]);
+    dso_osy=qobject_cast<m_DSO*>(updateLink(FDSO_OSY));
+    dso_vag[0]=qobject_cast<m_DSO*>(updateLink(FDSO_VAG_0));
+    dso_vag[1]=qobject_cast<m_DSO*>(updateLink(FDSO_VAG_1));
+    dso_db[0]=qobject_cast<m_DSO*>(updateLink(FDSO_DB_0));
+    dso_db[1]=qobject_cast<m_DSO*>(updateLink(FDSO_DB_1));
+
+    if (!dso_osy) qCritical() << objectName() << QString("Ошибочная ссылка DSO_OSY") <<endl ; else addDevice(dso_osy);
+    for (int i=0;i<2;i++){
+            if (!dso_vag[i]) qCritical() << objectName() << QString("Ошибочная ссылка DSO_VAG_%1").arg(i) <<endl ; else addDevice(dso_vag[i]);
+            if (!dso_db[i]) qCritical() << objectName() << QString("Ошибочная ссылка FDSO_DB_%1").arg(i) <<endl ; else addDevice(dso_db[i]);
+    }
 }
 
 bool m_RC_Gor_ZKR::is33()

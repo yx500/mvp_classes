@@ -21,7 +21,7 @@ public:
     MYSTATE(int, STATE_N_IN_OTCEP)
     MYSTATE(int, STATE_IV)   // Номер вагона по НСЛ
     MYSTATE(int, STATE_SP)
-    MYSTATE(long, STATE_NUMV) // Номер вагона физический
+    MYSTATE(quint32, STATE_NUMV) // Номер вагона физический
     MYSTATE(int, STATE_MASSG)   // масса груза
     MYSTATE(int, STATE_MASSV)   // масса
     MYSTATE(int, STATE_LN)   // длина в мм
@@ -58,5 +58,8 @@ protected:
 
 
 };
+
+QVariantHash tSlVagon2Map(const tSlVagon &v);
+//tSlVagon Map2tSlVagon(const QVariantHash &m);
 
 #endif // M_VAGON_H

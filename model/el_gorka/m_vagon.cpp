@@ -132,7 +132,7 @@ void m_Vagon::fromSlVagon(tSlVagon &slv)
 
     FSTATE_ROD=slv.Rod;
     FSTATE_DB=slv.aDb;
-    FSTATE_KTP=slv.aNg;
+    FSTATE_NG=slv.aNg;
     FSTATE_KTP=slv.ktp;
     FSTATE_OSO=slv.OSO;
 
@@ -165,8 +165,7 @@ void m_Vagon::assign(const m_Vagon *v)
     FSTATE_ROD=v->STATE_ROD();
     FSTATE_DB=v->STATE_DB();
     FSTATE_KTP=v->STATE_KTP();
-    FSTATE_KTP=v->STATE_KTP();
-    FSTATE_OSO=v->STATE_OSO();
+    FSTATE_NG=v->STATE_NG();
 
     FSTATE_UR=v->STATE_UR();
 
@@ -183,7 +182,7 @@ bool m_Vagon::is33()
 
 void m_Vagon::updateStates()
 {
-    const tSlVagon *v=(const tSlVagon *)FSIGNAL_DATA.value_data(sizeof(t_Descr));
+    const tSlVagon *v=(const tSlVagon *)FSIGNAL_DATA.value_data(sizeof(tSlVagon));
     if (v==nullptr){
         setSTATE_ENABLED(false);
         return ;
@@ -204,3 +203,47 @@ void m_Vagon::updateStates()
 
     }
 }
+
+
+QVariantHash tSlVagon2Map(const tSlVagon &v)
+{
+    QVariantHash m;
+    m["ID_ROSPUSK"]=v.Id;
+    m["NUM_OTCEP"]=v.NO;
+    m["IV"]=v.IV;
+    m["SP"]=v.SP;
+    m["NUMV"]=v.NumV;
+    m["MASSG"]=v.MassG;
+    m["MASSV"]=v.MassV;
+    m["LN"]=v.Ln;
+    m["ROD"]=v.Rod;
+    m["DB"]=v.aDb;
+    m["NG"]=v.aNg;
+    m["KTP"]=v.ktp;
+    m["OSO"]=v.OSO;
+    m["UR"]=v.Ur;
+//    m["Vnadv"]=v.Vnadv;
+    return m;
+
+}
+
+//tSlVagon Map2tSlVagon(const QVariantHash &m)
+//{
+//    tSlVagon v;
+//    memset(&v,0,sizeof(v));
+//    v.Id=m["Id"].toInt();
+//    v.NO=m["NO"].toInt();
+//    v.IV=m["IV"].toInt();
+//    v.NumV=m["NumV"].toInt();
+//    v.MassG=m["MassG"].toInt();
+//    v.MassV=m["MassV"].toInt();
+//    v.Ln=m["Ln"].toInt();
+//    v.Rod=m["Rod"].toInt();
+//    v.aDb=m["aDb"].toInt();
+//    v.aNg=m["aNg"].toInt();
+//    v.ktp=m["ktp"].toInt();
+//    v.OSO=m["OSO"].toInt();
+//    v.Ur=m["Ur"].toInt();
+//    v.Vnadv=m["Vnadv"].toInt();
+//    return v;
+//}

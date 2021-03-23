@@ -32,4 +32,3 @@ for(dir, $$list($$MVP_DIR_LIST) ) {
 
 
 QT+=svg
-

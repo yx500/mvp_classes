@@ -61,7 +61,6 @@ protected:
 
 
 };
-QVariantHash tSlVagon2Map(const tSlVagon &v);
-tSlVagon Map2tSlVagon(const QVariantHash &m);
+
 
 #endif // M_OTCEPS_H

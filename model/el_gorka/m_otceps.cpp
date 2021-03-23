@@ -133,47 +133,7 @@ QList<m_Otcep *> m_Otceps::enabledOtceps() const
         if (otcep->STATE_ENABLED()) l.push_back(otcep);
     return  l;
 }
-QVariantHash tSlVagon2Map(const tSlVagon &v)
-{
-    QVariantHash m;
-    m["Id"]=v.Id;
-    m["NO"]=v.NO;
-    m["IV"]=v.IV;
-    m["NumV"]=v.NumV;
-    m["MassG"]=v.MassG;
-    m["MassV"]=v.MassV;
-    m["Ln"]=v.Ln;
-    m["Rod"]=v.Rod;
-    m["aDb"]=v.aDb;
-    m["aNg"]=v.aNg;
-    m["ktp"]=v.ktp;
-    m["OSO"]=v.OSO;
-    m["Ur"]=v.Ur;
-    m["Vnadv"]=v.Vnadv;
-    return m;
 
-}
-
-tSlVagon Map2tSlVagon(const QVariantHash &m)
-{
-    tSlVagon v;
-    memset(&v,0,sizeof(v));
-    v.Id=m["Id"].toInt();
-    v.NO=m["NO"].toInt();
-    v.IV=m["IV"].toInt();
-    v.NumV=m["NumV"].toInt();
-    v.MassG=m["MassG"].toInt();
-    v.MassV=m["MassV"].toInt();
-    v.Ln=m["Ln"].toInt();
-    v.Rod=m["Rod"].toInt();
-    v.aDb=m["aDb"].toInt();
-    v.aNg=m["aNg"].toInt();
-    v.ktp=m["ktp"].toInt();
-    v.OSO=m["OSO"].toInt();
-    v.Ur=m["Ur"].toInt();
-    v.Vnadv=m["Vnadv"].toInt();
-    return v;
-}
 
 void m_Otceps::updateVagons()
 {

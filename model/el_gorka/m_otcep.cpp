@@ -530,7 +530,7 @@ void m_Otcep::descr_ext2states(const t_NewDescr &D)
     //FSTATE_GAC_ACTIVE=D.E.STATE_GAC_ACTIVE;
     //FSTATE_ARS_ACTIVE=D.E.STATE_ARS_ACTIVE;
     // CЛ
-    FSTATE_SL_VAGON_CNT=    D.D.vagon  ;
+    setSTATE_SL_VAGON_CNT(    D.D.vagon)  ;
     FSTATE_ZKR_OSY_CNT=     D.D.osy    ; // Длинна ( в осях)
     FSTATE_SL_VES=           D.D.ves_sl ;
     FSTATE_SL_LEN =         D.D.U_len  ;
@@ -640,6 +640,7 @@ void m_Otcep::update_descr()
     }
     if (b_new){
         descr_ext2states(stored_Descr);
+        updateVagons();
         setBusyRC();
         doStateChanged();
 
@@ -668,6 +669,16 @@ void m_Otcep::updateStates_0()
     //        }
 
     //    }
+}
+
+void m_Otcep::updateVagons()
+{
+    foreach (auto v, otceps->l_vagons) {
+        if (!v->STATE_ENABLED()) continue;
+        if (v->STATE_NUM_OTCEP()==FNUM){
+            setVagon(v);
+        }
+    }
 }
 
 //void m_Otcep::updateStates_1()

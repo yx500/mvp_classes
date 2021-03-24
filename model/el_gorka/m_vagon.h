@@ -50,11 +50,13 @@ public:
 
     virtual bool is33();
     virtual void updateStates();
+    void inc_tick(){FSTATE_TICK++;}
 public slots:
     void slotChanged(){updateStates();}
 protected:
-    int FNUM;
+    int FNUM=0;
     tSlVagon stored_SlVagon;
+    m_Otceps*otceps=nullptr;
 
 
 };

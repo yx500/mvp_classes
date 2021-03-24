@@ -320,6 +320,7 @@ void m_Otcep::resetZKRStates()
 void m_Otcep::acceptSLStates(const m_Otcep *o)
 {
     FSTATE_MAR=o->STATE_MAR();
+    FSTATE_ID_ROSP=o->STATE_ID_ROSP();
 
     FSTATE_SL_OSY_CNT=o->STATE_SL_OSY_CNT();
     FSTATE_SL_LEN=o->STATE_SL_LEN();
@@ -640,7 +641,7 @@ void m_Otcep::update_descr()
     }
     if (b_new){
         descr_ext2states(stored_Descr);
-        updateVagons();
+        if (otceps!=nullptr) otceps->otceps2Vagons();
         setBusyRC();
         doStateChanged();
 
@@ -652,34 +653,9 @@ void m_Otcep::updateStates_0()
 {
     // стандартная обработка
     update_descr();
-    //    if (stored_Descr.end_slg!=0) // Признак конца слежения (по последней РЦ на путях)
-    //        setSTATE_LOCATION(locationUnknow); else
-    //        setSTATE_LOCATION(locationOnSpusk);
-    //    if ((RCS!=descr_RCS)||(RCF!=descr_RCF)) {
-
-    //        RCS=descr_RCS;
-    //        RCF=descr_RCF;
-    //        setBusyRC();
-    //        m_RC_Gor_ZKR * zkr=qobject_cast<m_RC_Gor_ZKR*>(RCF);
-    //        if (zkr!=nullptr){
-    //            setSTATE_ZKR_PROGRESS(true);
-    //            setSTATE_PUT_NADVIG(zkr->PUT_NADVIG());
-    //        } else {
-    //            setSTATE_ZKR_PROGRESS(false);
-    //        }
-
-    //    }
 }
 
-void m_Otcep::updateVagons()
-{
-    foreach (auto v, otceps->l_vagons) {
-        if (!v->STATE_ENABLED()) continue;
-        if (v->STATE_NUM_OTCEP()==FNUM){
-            setVagon(v);
-        }
-    }
-}
+
 
 //void m_Otcep::updateStates_1()
 //{

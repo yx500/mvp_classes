@@ -135,21 +135,6 @@ QList<m_Otcep *> m_Otceps::enabledOtceps() const
 }
 
 
-void m_Otceps::updateVagons()
-{
-    foreach(auto v,l_vagons){
-        if (v->SIGNAL_DATA().isInnerUse()) return;
-        if (v->STATE_NUM_OTCEP()!=0){
-            auto otcep=otcepByNum(v->STATE_NUM_OTCEP());
-            if (otcep){
-                otcep->setVagon(v);
-            }
-        }
-    }
-
-}
-
-
 m_Otcep *m_Otceps::otcepADDR_SLOT(int ADDR_SLOT,int ADDR,int NTP)
 {
     if ((NTP>=1)&&(NTP<=3)){
@@ -189,4 +174,57 @@ void m_Otceps::updateStates()
     if (disableUpdateStates) return;
     m_Base::updateStates();
     //    updateVagons();
+}
+
+void m_Otceps::otceps2Vagons()
+{
+    // перестроим модель вагонов
+    foreach (auto v, l_vagons) {
+        v->resetStates();
+    }
+    int iall=0;
+    foreach (auto otcep, otceps()) {
+        if (otcep->STATE_ENABLED()) {
+            if (otcep->vVag.size()>0){
+                for (int i=0;i<otcep->vVag.size();i++){
+                    auto v=&otcep->vVag[i];
+                    if (iall<l_vagons.size()){
+                        auto vall=l_vagons[iall];
+                        vall->assign(v);
+                        vall->setSTATE_SP(otcep->STATE_SP());
+                        vall->setSTATE_ENABLED(otcep->STATE_ENABLED());
+                        vall->setSTATE_ID_ROSPUSK(otcep->STATE_ID_ROSP());
+                        vall->setSTATE_N_IN_OTCEP(i+1);
+                        vall->setSTATE_TICK(otcep->STATE_TICK());
+                    }
+                    iall++;
+                }
+            }  else {
+                // добавляем пустой вагон
+                if (l_vagons.size()<iall+1){
+                    auto vall=l_vagons[iall];
+                    vall->setSTATE_SP(otcep->STATE_SP());
+                    vall->setSTATE_ENABLED(otcep->STATE_ENABLED());
+                    vall->setSTATE_ID_ROSPUSK(otcep->STATE_ID_ROSP());
+                    vall->setSTATE_LOCATION(otcep->STATE_LOCATION());
+                    vall->setSTATE_N_IN_OTCEP(0);
+                    vall->setSTATE_TICK(otcep->STATE_TICK());
+                }
+            }
+        }
+    }
+}
+
+void m_Otceps::vagons2Otceps()
+{
+    foreach (auto otcep, otceps()) {
+        if (otcep->STATE_ENABLED()) {
+            foreach (auto v, l_vagons) {
+                if (!v->STATE_ENABLED()) continue;
+                if (v->STATE_NUM_OTCEP()==otcep->NUM()){
+                    otcep->setVagon(v);
+                }
+            }
+        }
+    }
 }

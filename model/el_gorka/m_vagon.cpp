@@ -16,6 +16,8 @@ m_Vagon::m_Vagon(const m_Vagon &v): m_Base(nullptr)
 m_Vagon::m_Vagon(m_Otceps *parent, int num): m_Base(parent)
 {
     FNUM=num;
+    otceps=qobject_cast<m_Otceps*>(parent);
+
 }
 
 
@@ -182,6 +184,7 @@ bool m_Vagon::is33()
 
 void m_Vagon::updateStates()
 {
+    if (FSIGNAL_DATA.isInnerUse()) return;
     const tSlVagon *v=(const tSlVagon *)FSIGNAL_DATA.value_data(sizeof(tSlVagon));
     if (v==nullptr){
         setSTATE_ENABLED(false);
@@ -199,6 +202,7 @@ void m_Vagon::updateStates()
     }
     if (b_new){
         fromSlVagon(stored_SlVagon);
+        if (otceps!=nullptr) otceps->vagons2Otceps();
         doStateChanged();
 
     }

@@ -43,13 +43,16 @@ public:
 
     virtual void updateStates();
 
+    void otceps2Vagons();
+    void vagons2Otceps();
+
 
     QMap<int,m_RC *> mOffset2Rc;
     QMap<quint64,m_RC *> mID2Rc;
     ModelGroupGorka *modelGroupGorka=nullptr;
 
 public slots:
-    void updateVagons();
+
 
 
 protected:

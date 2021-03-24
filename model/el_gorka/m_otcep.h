@@ -218,7 +218,7 @@ protected:
 
     m_Otceps*otceps;
     void updateStates_0();
-    void updateVagons();
+
 //    void updateStates_1();
     QByteArray _storedA;
 

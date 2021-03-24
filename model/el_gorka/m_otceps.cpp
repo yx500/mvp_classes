@@ -201,14 +201,16 @@ void m_Otceps::otceps2Vagons()
                 }
             }  else {
                 // добавляем пустой вагон
-                if (l_vagons.size()<iall+1){
+                if (iall<l_vagons.size()){
                     auto vall=l_vagons[iall];
+                    vall->setSTATE_NUM_OTCEP(otcep->NUM());
                     vall->setSTATE_SP(otcep->STATE_SP());
                     vall->setSTATE_ENABLED(otcep->STATE_ENABLED());
                     vall->setSTATE_ID_ROSPUSK(otcep->STATE_ID_ROSP());
                     vall->setSTATE_LOCATION(otcep->STATE_LOCATION());
                     vall->setSTATE_N_IN_OTCEP(0);
                     vall->setSTATE_TICK(otcep->STATE_TICK());
+                    iall++;
                 }
             }
         }

@@ -28,7 +28,7 @@ void m_Vagon::resetStates()
     FSTATE_LOCATION=m_Otcep::locationUnknow;
     FSTATE_ZKR_PROGRESS=0;
 
-    FSTATE_TICK++;
+    FSTATE_TICK=0;
 
     FSTATE_ID_ROSPUSK=0;
     FSTATE_NUM_OTCEP=0;
@@ -45,7 +45,7 @@ void m_Vagon::resetStates()
     FSTATE_ROD=0;
     FSTATE_DB=0;
     FSTATE_KTP=0;
-    FSTATE_KTP=0;
+    FSTATE_NG=0;
     FSTATE_OSO=0;
 
     FSTATE_UR=0;

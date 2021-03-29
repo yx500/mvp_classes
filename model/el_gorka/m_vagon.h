@@ -45,6 +45,7 @@ public:
     virtual ~m_Vagon(){}
     virtual void resetStates();
     virtual void updateAfterLoad();
+    virtual bool isStoredXML() const{return false;}
     void resetTrackingStates();
     void resetZKRStates();
 

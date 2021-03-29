@@ -27,6 +27,7 @@ ModelGroupGorka::ModelGroupGorka(BaseObject *parent) :
     FSIGNAL_PAUSA.clear();
     FSIGNAL_STOP.clear();
     FSIGNAL_GAC_FINISH.clear();
+    FSIGNAL_OSAGA.clear();
     resetStates();
 
 }
@@ -39,6 +40,7 @@ void ModelGroupGorka::resetStates()
 {
     FSTATE_REGIM=regimUnknow;
     FSTATE_GAC_FINISH=false;
+    FSTATE_OSAGA=false;
 }
 
 void ModelGroupGorka::validation(ListObjStr *l) const
@@ -237,6 +239,7 @@ void ModelGroupGorka::updateStates()
     setSTATE_PUT_NADVIG(p);
     setSignalState(FSIGNAL_RRC,FSTATE_RRC);
     setSignalState(FSIGNAL_GAC_FINISH,FSTATE_GAC_FINISH);
+    setSignalState(FSIGNAL_OSAGA,FSTATE_OSAGA);
     ModelRootGroup::updateStates();
 }
 

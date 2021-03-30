@@ -15,6 +15,7 @@ public:
     MYSTATE(int, STATE_ENABLED)  // участвует в роспуске
     MYSTATE(int, STATE_LOCATION)
     MYSTATE(int, STATE_ZKR_PROGRESS)    // вагон не выехал с ЗКР
+    MYSTATE(int, STATE_IS_CURRENT)
 
     MYSTATE(quint32, STATE_ID_ROSPUSK)  // идентификатор роспуска
     MYSTATE(int, STATE_NUM_OTCEP)

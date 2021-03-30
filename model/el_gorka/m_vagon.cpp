@@ -27,6 +27,7 @@ void m_Vagon::resetStates()
     FSTATE_ENABLED=false;
     FSTATE_LOCATION=m_Otcep::locationUnknow;
     FSTATE_ZKR_PROGRESS=0;
+    FSTATE_IS_CURRENT=0;
 
     FSTATE_TICK=0;
 
@@ -108,6 +109,7 @@ tSlVagon m_Vagon::toSlVagon() const
     slv.STATE_LOCATION=FSTATE_LOCATION;
     slv.STATE_N_IN_OTCEP=FSTATE_N_IN_OTCEP;
     slv.STATE_ZKR_PROGRESS=FSTATE_ZKR_PROGRESS;
+    slv.STATE_IS_CURRENT=FSTATE_IS_CURRENT;
 
     if (FSTATE_ENABLED==0) slv.NO=0;
 
@@ -142,6 +144,7 @@ void m_Vagon::fromSlVagon(tSlVagon &slv)
     FSTATE_LOCATION=slv.STATE_LOCATION;
     FSTATE_N_IN_OTCEP=slv.STATE_N_IN_OTCEP;
     FSTATE_ZKR_PROGRESS=slv.STATE_ZKR_PROGRESS;
+    FSTATE_IS_CURRENT=slv.STATE_IS_CURRENT;
     if (FSTATE_NUM_OTCEP==0) FSTATE_ENABLED=0; else FSTATE_ENABLED=1;
 }
 
@@ -174,6 +177,7 @@ void m_Vagon::assign(const m_Vagon *v)
     FSTATE_LOCATION=v->STATE_LOCATION();
     FSTATE_N_IN_OTCEP=v->STATE_N_IN_OTCEP();
     FSTATE_ZKR_PROGRESS=v->STATE_ZKR_PROGRESS();
+    FSTATE_IS_CURRENT=v->STATE_IS_CURRENT();
 }
 
 bool m_Vagon::is33()

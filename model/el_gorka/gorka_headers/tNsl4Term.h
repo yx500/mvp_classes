@@ -39,6 +39,7 @@ struct tSlVagon {
     uint8       STATE_LOCATION;
     uint8       STATE_N_IN_OTCEP;
     uint8       STATE_ZKR_PROGRESS;
+    uint8       STATE_IS_CURRENT;
 //  char    strUR[32];  // 2*4 + 21 + 1 = цифрбукв отметки 4 штуки +x байта примечания +0 символ строки
 };
 //---------------------------------------------------------------------------

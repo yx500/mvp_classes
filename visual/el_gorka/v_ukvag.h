@@ -22,7 +22,7 @@ signals:
 protected:
     QRectF  R;
     QRectF  boundrect_text;
-    m_UkVag* _m_UkVag;
+    m_UkVag* _m_UkVag=nullptr;
 
     virtual void d_paint(QPainter *painter, const QStyleOptionGraphicsItem *);
 

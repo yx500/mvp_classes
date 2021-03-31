@@ -9,6 +9,7 @@ class m_UkVag : public m_Base
    Q_OBJECT
 public:
     MYPROP(SignalDescription,SIGNAL_DATA)
+    MYPROP(SignalDescription,SIGNAL_SET)
     MYSTATE(int,STATE_VAL1)
     MYSTATE(int,STATE_VAL2)
     MYSTATE(int,STATE_VAL3)

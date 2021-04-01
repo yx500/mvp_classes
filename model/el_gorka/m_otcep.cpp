@@ -311,6 +311,8 @@ void m_Otcep::resetZKRStates()
     FSTATE_ZKR_OSY_CNT=0;
     FSTATE_ZKR_PROGRESS=0;
     FSTATE_ZKR_VAGON_CNT=0;
+    FSTATE_DIRECTION=0;
+    FSTATE_ERROR=0;
     for (m_Vagon &v:vVag){
         v.resetZKRStates();
     }

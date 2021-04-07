@@ -273,14 +273,15 @@ void m_Otcep::resetTrackingStates()
 {
     //снимаем только параметры TOS
 
-    if (FSTATE_LOCATION!=m_Otcep::locationOnPrib){
+    if (FSTATE_LOCATION==m_Otcep::locationOnPrib){
+         FSTATE_MAR_F=0;
+         FSTATE_ERROR=0;
+    } else {
         FSTATE_LOCATION=m_Otcep::locationUnknow;
     }
-    FSTATE_MAR_F=0;
+
     FSTATE_ZKR_PROGRESS=0;
     FSTATE_ZKR_S_IN=0;
-
-    FSTATE_ERROR=0;
     FSTATE_ERROR_TRACK=0;
 
     //otcep->setSTATE_GAC_ACTIVE(0);
@@ -304,6 +305,7 @@ void m_Otcep::resetTrackingStates()
 
 void m_Otcep::resetZKRStates()
 {
+    FSTATE_MAR_F=0;
     FSTATE_ZKR_TLG=0;
     FSTATE_ZKR_VES=0;
     FSTATE_ZKR_BAZA=0;
@@ -313,6 +315,12 @@ void m_Otcep::resetZKRStates()
     FSTATE_ZKR_VAGON_CNT=0;
     FSTATE_DIRECTION=0;
     FSTATE_ERROR=0;
+    memset(FSTATE_ADDR_TP,0,sizeof(FSTATE_ADDR_TP));
+    memset(FSTATE_OT_RA,0,sizeof(FSTATE_OT_RA));
+    memset(FSTATE_ADDR_TP,0,sizeof(FSTATE_ADDR_TP));
+    for (int io=0;io<2;io++){
+        for (int n=0;n<3;n++) {FSTATE_V_INOUT[io][n]=_undefV_;FSTATE_V_ZAD[n]=_undefV_;}
+    }
     for (m_Vagon &v:vVag){
         v.resetZKRStates();
     }

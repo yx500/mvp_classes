@@ -44,7 +44,7 @@ void v_UkVag::d_paint(QPainter *painter, const QStyleOptionGraphicsItem *)
     int flags=Qt::AlignCenter;
     QString text="--";
     if (_m_UkVag)
-        text=QString("%1 %2 %3").arg(_m_UkVag->STATE_VAL1()).arg(_m_UkVag->STATE_VAL2()).arg(_m_UkVag->STATE_VAL3());
+        text=QString("%1 %2 %3").arg(_m_UkVag->STATE_D1()).arg(_m_UkVag->STATE_D2()).arg(_m_UkVag->STATE_D3());
     if (ISEDITORMODE) text=objectName();
     painter->drawText(R,flags,text,&boundrect_text);
 
